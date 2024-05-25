@@ -1,0 +1,6 @@
+
+
+enum DeliveryButtonStates {
+  idle,
+  inactive,
+}
