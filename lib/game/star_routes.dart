@@ -41,6 +41,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     /* Initialize World */
     worldData = WorldData();
 
+
     /* Initialize Controls */
     dpad = DPad();
     orbitButton = OrbitButton();
@@ -57,10 +58,6 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
       }
     }
 
-
-
-
-
     world = StarWorld(userShip: userShip, worldData: worldData);
     camera = CameraComponent(world: world,
         hudComponents: [dpad, orbitButton, deliveryButton, miniMap,
@@ -70,10 +67,9 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
       Background(),
       world,
     ]);
-
+    // await Future.wait(worldData.planets.map((planet) => planet.loadSprite()));
     camera.follow(userShip);
-    overlays.remove(LoadingScreen.id);
-    overlays.add(MainMenuScreen.id);
+
   }
 
   void updateClosestPlanets(){

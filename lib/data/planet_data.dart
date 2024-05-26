@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 
 class PlanetData{
 
@@ -24,6 +25,8 @@ class PlanetData{
   Vector2 spriteSize;
   int numSprites;
   Color miniMapColor;
+  late Image spriteImage;
+
 
   /* Constructor */
   PlanetData({
@@ -41,5 +44,9 @@ class PlanetData{
     this.miniMapColor = const Color(0xEEFFFFFF),
   });
 
+
+  Future<void> loadSprite() async{
+    spriteImage = await Flame.images.load("planets/$spriteName.png");
+  }
 
 }

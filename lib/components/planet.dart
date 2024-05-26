@@ -14,20 +14,18 @@ import 'package:star_routes/data/planet_data.dart';
 class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
 
   PlanetData planetData;
-  late Image image;
 
-  Planet({required this.planetData})
-  {
-    // this.planetData = planetData;
-  }
+  Planet({required this.planetData});
 
   @override
   Future<void> onLoad() async {
 
-    image = await Flame.images.load("planets/${planetData.spriteName}.png");
+    // image = await Flame.images.load("planets/${planetData.spriteName}.png");
 
+    // Start timer
+    // DateTime startTime = DateTime.now();
     final spriteSheet = SpriteSheet(
-      image: image,
+      image: planetData.spriteImage,
       srcSize: planetData.spriteSize,
     );
 
@@ -45,8 +43,9 @@ class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
     anchor = Anchor.center;
     priority = 1;
 
-    // print("Planet Parent: ${parent}");
-
+    // End timer
+    DateTime endTime = DateTime.now();
+    // print("Planet Load Time: ${endTime.difference(startTime).inMilliseconds}ms");
   }
 
 

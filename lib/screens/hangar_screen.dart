@@ -60,21 +60,13 @@ class _MainMenuScreenState extends State<HangarScreen> {
           Expanded(
             child: PageView(
               children: <Widget>[
-                HangarSlide(
-                  imagePath: 'assets/images/space_ships/small_courier.png',
-                  shipName: 'Star Cruiser',
-                  description: 'A fast and agile ship for quick missions.',
-                ),
-                HangarSlide(
-                  imagePath: 'assets/images/space_ships/small_courier.png',
-                  shipName: 'Battle Frigate',
-                  description: 'A heavily armed ship for combat missions.',
-                ),
-                // HangarSlide(
-                //   imagePath: 'assets/ship3.png',
-                //   shipName: 'Cargo Hauler',
-                //   description: 'A large ship for transporting goods.',
-                // ),
+                ...widget.game.worldData.spaceShips.map((shipData) {
+                  return HangarSlide(
+                    spriteName: shipData.spriteName,
+                    shipName: shipData.shipClassName,
+                    description: "shipData.description",
+                  );
+                }).toList(),
                 // Add more slides as needed
               ],
             ),

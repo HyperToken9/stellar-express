@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/assets.dart';
 import 'package:star_routes/game/tappable_region.dart';
+import 'package:star_routes/screens/dashboard_screen.dart';
 
 import 'package:star_routes/states/dashboard_button.dart';
 
@@ -38,6 +39,8 @@ class DashboardButton extends SpriteGroupComponent<DashboardButtonStates> with H
           size: size,
           onTap: () {
             print("Dashboard button pressed");
+            game.overlays.add(DashboardScreen.id);
+            gameRef.pauseEngine();
           },
           onRelease: () {},
           buttonEnabled: () => true

@@ -4,12 +4,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class HangarSlide extends StatelessWidget {
-  final String imagePath;
+  final String spriteName;
   final String shipName;
   final String description;
 
   HangarSlide({
-    required this.imagePath,
+    required this.spriteName,
     required this.shipName,
     required this.description,
   });
@@ -24,12 +24,9 @@ class HangarSlide extends StatelessWidget {
           Transform.rotate(
               angle: pi/3,
               child: Container(
-                foregroundDecoration: BoxDecoration(
-                  // color: Colors.yellow.withOpacity(0.5),
-                ),
                 width: 350,
-                padding: EdgeInsets.symmetric(horizontal: 50.0),
-                child: Image.asset(imagePath,
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: Image.asset("assets/images/space_ships/$spriteName.png",
                 // width: 300,
                 // height: 200,
                 fit: BoxFit.contain,

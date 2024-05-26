@@ -10,7 +10,12 @@ class LoadingScreen extends StatefulWidget {
   final StarRoutes game;
   static const String id = "loading";
 
-  const LoadingScreen({super.key, required this.game});
+  /* Pre load image */
+  // final image = Image.asset('assets/images/user_interface/title.png');
+
+  AssetImage image = AssetImage('assets/images/user_interface/title.png');
+
+  LoadingScreen({super.key, required this.game});
 
   @override
   State<LoadingScreen> createState() => _MainMenuScreenState();
@@ -19,6 +24,7 @@ class LoadingScreen extends StatefulWidget {
 class _MainMenuScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
+    // print("Loading Screen Built");
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -26,16 +32,72 @@ class _MainMenuScreenState extends State<LoadingScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             // Load an image
-            Image.asset('assets/images/user_interface/title.png'),
+            Container(
+              child: Image(
+                image: widget.image,
+              ),
+            ),
 
-            SpinKitFadingCircle(
-              color: Colors.blue.shade200,
-              size: 100,
-            )
+            AnimatedProgressBar(),
 
           ],
         ),
       ),
+    );
+  }
+}
+
+
+class AnimatedProgressBar extends StatefulWidget {
+  @override
+  _AnimatedProgressBarState createState() => _AnimatedProgressBarState();
+}
+
+class _AnimatedProgressBarState extends State<AnimatedProgressBar>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 25),
+    )..addListener(() {
+      setState(() {});
+    });
+    _controller!.repeat(reverse: false);
+  }
+
+  @override
+  void dispose() {
+    _controller!.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        LinearProgressIndicator(
+          value: _controller!.value,
+          minHeight: 10,
+          backgroundColor: Colors.grey[300],
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            if (_controller!.isAnimating) {
+              _controller!.stop();
+            } else {
+              _controller!.repeat(reverse: false);
+            }
+          },
+          child: Text(_controller!.isAnimating ? 'Pause' : 'Resume'),
+        ),
+      ],
     );
   }
 }
