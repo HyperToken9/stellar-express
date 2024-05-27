@@ -7,29 +7,28 @@ import 'package:flame/flame.dart';
 class PlanetData{
 
   /* Identification Data */
-  String planetName;
+  final String planetName;
 
   /* Physical Data */
-  Vector2 location;
-  double radius;
-  double mass;
+  final Vector2 location;
+  final double radius;
+  final double mass;
 
   /* Cultural Data */
-  int population;
-  List<String> occupations;
-  List<String> exports;
-  List<String> imports;
+  final int population;
+  final List<String> occupations;
+  final List<String> exports;
+  final List<String> imports;
 
   /* Sprite Data */
-  String spriteName;
-  Vector2 spriteSize;
-  int numSprites;
-  Color miniMapColor;
-  late Image spriteImage;
+  final String spriteName;
+  final spriteSize;
+  final int numSprites;
+  final Color miniMapColor;
 
 
   /* Constructor */
-  PlanetData({
+  const PlanetData({
     required this.planetName,
     required this.location,
     required this.radius,
@@ -43,10 +42,5 @@ class PlanetData{
     required this.numSprites,
     this.miniMapColor = const Color(0xEEFFFFFF),
   });
-
-
-  Future<void> loadSprite() async{
-    spriteImage = await Flame.images.load("planets/$spriteName.png");
-  }
 
 }

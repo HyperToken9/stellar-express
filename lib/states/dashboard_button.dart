@@ -1,8 +1,8 @@
 
 
 enum DashboardButtonStates {
-  idle,
-  pressed,
+  dashBoardClosed,
+  // pressed,
   // activated,
-  inactive,
+  dashBoardOpen,
 }

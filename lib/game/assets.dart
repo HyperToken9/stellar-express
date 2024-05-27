@@ -28,6 +28,7 @@ class Assets{
 
   static const miniMap = "control_interface/mini_map.png";
   static const menuButton = "control_interface/menu_button.png";
+  static const closeMenuButton = "control_interface/close_menu_button.png";
 
 
 }

@@ -19,11 +19,9 @@ class StarWorld extends World with HasGameRef<StarRoutes>, CollisionCallbacks{
   Ship userShip;
   double cullingMargin = 2000;
 
-  WorldData worldData;
-
   List<Planet> planetComponents = [];
 
-  StarWorld({ required this.userShip, required this.worldData });
+  StarWorld({ required this.userShip });
 
   @override
   Future<void> onLoad() async {
@@ -33,7 +31,7 @@ class StarWorld extends World with HasGameRef<StarRoutes>, CollisionCallbacks{
     // Time this for loop
 
     // DateTime startTime = DateTime.now();
-    for (PlanetData data in worldData.planets){
+    for (PlanetData data in WorldData.planets){
 
       final planet = Planet(planetData: data);
       planetComponents.add(planet);

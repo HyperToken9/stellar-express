@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 
+import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/game/star_routes.dart';
-
 import 'package:star_routes/screen_components/hangar_slide.dart';
 
 class HangarScreen extends StatefulWidget {
@@ -20,23 +20,6 @@ class HangarScreen extends StatefulWidget {
 class _MainMenuScreenState extends State<HangarScreen> {
 
   @override
-  void initState() {
-    super.initState();
-    BackButtonInterceptor.add(myInterceptor);
-  }
-
-  @override
-  void dispose() {
-    BackButtonInterceptor.remove(myInterceptor);
-    super.dispose();
-  }
-
-  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    widget.game.overlays.remove('hangar');
-    return true;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -48,7 +31,7 @@ class _MainMenuScreenState extends State<HangarScreen> {
               // (horizontal: 22.0, vertical: 32.0),
             child: Text(
               'Hangar'.toUpperCase(),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24.0,
                 fontFamily: 'Audiowide',
                 color: Colors.white,
@@ -60,7 +43,7 @@ class _MainMenuScreenState extends State<HangarScreen> {
           Expanded(
             child: PageView(
               children: <Widget>[
-                ...widget.game.worldData.spaceShips.map((shipData) {
+                ...SpaceShipData.spaceShips.map((shipData) {
                   return HangarSlide(
                     spriteName: shipData.spriteName,
                     shipName: shipData.shipClassName,
@@ -75,4 +58,23 @@ class _MainMenuScreenState extends State<HangarScreen> {
       ),
     );
   }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    widget.game.overlays.remove(HangarScreen.id);
+    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+
 }

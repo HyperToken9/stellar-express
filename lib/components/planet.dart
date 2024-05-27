@@ -20,12 +20,12 @@ class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
   @override
   Future<void> onLoad() async {
 
-    // image = await Flame.images.load("planets/${planetData.spriteName}.png");
+    final image = await Flame.images.load("planets/${planetData.spriteName}.png");
 
     // Start timer
     // DateTime startTime = DateTime.now();
     final spriteSheet = SpriteSheet(
-      image: planetData.spriteImage,
+      image: image,
       srcSize: planetData.spriteSize,
     );
 

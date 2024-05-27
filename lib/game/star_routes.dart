@@ -3,6 +3,8 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:star_routes/controls/mini_map.dart';
 
+import 'package:star_routes/data/player_data.dart';
+import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/world_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
 
@@ -19,11 +21,11 @@ import 'package:star_routes/screens/loading_screen.dart';
 import 'package:star_routes/screens/main_menu_screen.dart';
 
 
+
 class StarRoutes extends FlameGame with HasCollisionDetection{
 
+  late PlayerData playerData;
   late Ship userShip;
-
-  late WorldData worldData;
 
   late DPad dpad;
   late OrbitButton orbitButton;
@@ -38,8 +40,10 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   @override
   Future<void> onLoad() async {
 
-    /* Initialize World */
-    worldData = WorldData();
+    /* Initialize Player Data */
+    playerData = PlayerData();
+
+    // print(MissionData.makeMission(playerData));
 
 
     /* Initialize Controls */
@@ -51,14 +55,9 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     swapShipButton = SwapShipButton();
 
     /* Initialize User Ship */
-    for (SpaceShipData data in worldData.spaceShips){
-      if (data.isEquipped){
-        print("Equipped Ship: ${data.shipClassName}");
-        userShip = Ship(spaceShipData: data);
-      }
-    }
+    userShip = Ship();
 
-    world = StarWorld(userShip: userShip, worldData: worldData);
+    world = StarWorld(userShip: userShip);
     camera = CameraComponent(world: world,
         hudComponents: [dpad, orbitButton, deliveryButton, miniMap,
                         dashboardButton, swapShipButton]);
@@ -69,6 +68,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     ]);
     // await Future.wait(worldData.planets.map((planet) => planet.loadSprite()));
     camera.follow(userShip);
+    adjustCameraZoom(objectSize: userShip.size, screenPercentage: 20);
 
   }
 
@@ -110,20 +110,35 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
   void setCameraZoom(){
     // print("Camera Zoom Set Point: $cameraZoomSetPoint");
-    if (cameraZoomSetPoint > 2.5){
-      cameraZoomSetPoint = 2.5;
-      // print("Trying to overzoom");
-    }
-
-    if (cameraZoomSetPoint < 0.5){
-      cameraZoomSetPoint = 0.5;
-      // print("Trying to underzoom");
-    }
+    // if (cameraZoomSetPoint > 2.5){
+    //   cameraZoomSetPoint = 2.5;
+    //   print("Trying to overzoom");
+    // }
+    //
+    // if (cameraZoomSetPoint < 0.5){
+    //   cameraZoomSetPoint = 0.5;
+    //   print("Trying to underzoom");
+    // }
 
     camera.viewfinder.zoom += (cameraZoomSetPoint
                              - camera.viewfinder.zoom) * 0.01;
 
   }
+
+
+  void adjustCameraZoom({required Vector2 objectSize, required double screenPercentage}) {
+    print("Object Size: $objectSize");
+    Vector2 screenSize = size;
+
+    Vector2 targetSize = screenSize * screenPercentage / 100;
+
+    Vector2 targetZoom = Vector2(targetSize.x  / objectSize.x, targetSize.y / objectSize.y);
+    print("Target Zoom: $targetZoom");
+    cameraZoomSetPoint = targetZoom.x;
+
+    print("Camera Zoom Set Point: $cameraZoomSetPoint");
+  }
+
 
   @override
   void update(double dt) {
@@ -131,7 +146,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
     updateClosestPlanets();
 
-    detectCameraZoom();
+    // detectCameraZoom();
 
     setCameraZoom();
 

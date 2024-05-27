@@ -6,6 +6,7 @@ import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/config.dart';
 
 import 'package:star_routes/data/planet_data.dart';
+import 'package:star_routes/data/world_data.dart';
 
 class MiniMapScreen extends StatefulWidget {
 
@@ -73,7 +74,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
     Vector2 shipPosition = widget.game.userShip.position;
     Vector2 shipSize = widget.game.userShip.size;
 
-    final List<PlanetData> planets = widget.game.worldData.planets;
+    final List<PlanetData> planets = WorldData.planets;
     planets.add(fakePlanetData);
 
     print("Length of Planets: ${planets.length}");

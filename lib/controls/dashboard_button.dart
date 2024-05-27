@@ -14,23 +14,24 @@ class DashboardButton extends SpriteGroupComponent<DashboardButtonStates> with H
   Future<void> onLoad() async {
 
     final dashboardButton = await Sprite.load(Assets.menuButton);
-    final exitOrbitButton = await Sprite.load(Assets.menuButton);
+    final closeDashboadButton = await Sprite.load(Assets.closeMenuButton);
 
 
-    double dim = 70;
+    double dim = 50;
 
     size = Vector2(dim, dim);
 
-    Vector2 margin = Vector2(12, 54);
+    Vector2 margin = Vector2(12, 40);
     position.x = gameRef.size.x - margin.x;
     position.y = margin.y;
 
     anchor = Anchor.topRight;
 
-    current = DashboardButtonStates.idle;
+    current = DashboardButtonStates.dashBoardClosed;
 
     sprites = {
-      DashboardButtonStates.idle: dashboardButton,
+      DashboardButtonStates.dashBoardClosed: dashboardButton,
+      DashboardButtonStates.dashBoardOpen: closeDashboadButton,
     };
 
     add(
@@ -39,8 +40,16 @@ class DashboardButton extends SpriteGroupComponent<DashboardButtonStates> with H
           size: size,
           onTap: () {
             print("Dashboard button pressed");
-            game.overlays.add(DashboardScreen.id);
-            gameRef.pauseEngine();
+            if (current == DashboardButtonStates.dashBoardClosed) {
+              current = DashboardButtonStates.dashBoardOpen;
+              game.overlays.add(DashboardScreen.id);
+              // gameRef.pauseEngine();
+            } else if (current == DashboardButtonStates.dashBoardOpen){
+              current = DashboardButtonStates.dashBoardClosed;
+              game.overlays.remove(DashboardScreen.id);
+              // gameRef.resumeEngine();
+            }
+
           },
           onRelease: () {},
           buttonEnabled: () => true

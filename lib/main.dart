@@ -19,7 +19,7 @@ void main() {
       game: game,
       loadingBuilder: (context) => LoadingScreen(game: game),
       // initialActiveOverlays: const [MainMenuScreen.id],
-      initialActiveOverlays: [DashboardScreen.id],
+      // initialActiveOverlays: const [MainMenuScreen.id],
       overlayBuilderMap: {
         LoadingScreen.id: (context, _) => LoadingScreen(game: game),
         MainMenuScreen.id: (context, _) => MainMenuScreen(game: game),

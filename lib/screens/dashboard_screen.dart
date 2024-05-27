@@ -2,8 +2,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:star_routes/game/star_routes.dart';
+
+import 'package:star_routes/data/mission_data.dart';
 
 import 'package:star_routes/screen_components/missions_page.dart';
 
@@ -20,38 +22,17 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
+
   /*Tab controller */
   late TabController _tabController;
-  // = TabController(length: 3, vsync: this)
-  
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
-  
+
   @override
   Widget build(BuildContext context) {
-    late PageController _pageController= PageController();
-    int _currentIndex = 0;
 
-    @override
-    void initState() {
-      super.initState();
-      // _pageController
-    }
+    List<MissionData> availableMissions = [];
 
-    @override
-    void dispose() {
-      _pageController.dispose();
-      super.dispose();
-    }
-
-    void onTabTapped(int index) {
-      setState(() {
-        _currentIndex = index;
-      });
-      _pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    for (int i = 0; i < 7; i++) {
+      availableMissions.add(MissionData.makeMission(widget.game.playerData));
     }
 
 
@@ -112,9 +93,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                           ],
                         ),
                       ),
-                      body: const TabBarView(
+                      body: TabBarView(
                         children: [
-                          MissionsPage(),
+                          MissionsPage(availableMissions: availableMissions),
                           Icon(Icons.directions_transit),
                         ],
                       ),
@@ -126,6 +107,26 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
               /* Add background blur to the container */
                   ),
             ))));
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    widget.game.overlays.remove(DashboardScreen.id);
+    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    widget.game.resumeEngine();
+    BackButtonInterceptor.remove(myInterceptor);
+    _tabController.dispose();
+    super.dispose();
   }
 }
 

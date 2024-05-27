@@ -19,7 +19,7 @@ import 'package:star_routes/states/swap_ship_button.dart';
 class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   /* Ship Data */
-  SpaceShipData spaceShipData;
+  // SpaceShipData spaceShipData;
 
   /* Ship Control State */
   Vector2 impulse = Vector2.zero();
@@ -40,16 +40,18 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   double _maxVelocity = 0;
   double _maxAngularVelocity = 0;
 
-  Ship({required this.spaceShipData});
+  // Ship({required this.spaceShipData});
+
+  Ship(){
+    size = Vector2(75, 75);
+  }
 
   @override
   Future<void> onLoad() async {
     // Load the ship image
     sprite = await Sprite.load(Assets.ship);
 
-    position = spaceShipData.location;
-
-    size = Vector2(75, 75);
+    position = game.playerData.shipLocation;
 
     anchor = Anchor.center;
 
@@ -179,13 +181,13 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
 
     /* If A ship exits on planet */
-    for (SpaceShipData shipData in gameRef.worldData.spaceShips){
-      if (shipData.dockedPlanet == closestPlanet.planetData.planetName){
-        gameRef.swapShipButton.planetData = closestPlanet.planetData;
-        gameRef.swapShipButton.setState(SwapShipButtonStates.idle);
-        break;
-      }
-    }
+    // for (SpaceShipData shipData in gameRef.worldData.spaceShips){
+    //   if (shipData.dockedPlanet == closestPlanet.planetData.planetName){
+    //     gameRef.swapShipButton.planetData = closestPlanet.planetData;
+    //     gameRef.swapShipButton.setState(SwapShipButtonStates.idle);
+    //     break;
+    //   }
+    // }
 
   }
 
@@ -211,20 +213,20 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   void switchShip(PlanetData planetData) async {
 
-    for (SpaceShipData spaceShipData in gameRef.worldData.spaceShips){
-      if (spaceShipData.dockedPlanet == planetData.planetName){
-        sprite = await Sprite.load("space_ships/"+spaceShipData.spriteName+".png");
-
-        this.spaceShipData.dockedPlanet = planetData.planetName;
-        this.spaceShipData.isEquipped = false;
-        this.spaceShipData = spaceShipData;
-        this.spaceShipData.dockedPlanet = "";
-        this.spaceShipData.isEquipped = true;
-
-
-        break;
-      }
-    }
+    // for (SpaceShipData spaceShipData in gameRef.worldData.spaceShips){
+    //   if (spaceShipData.dockedPlanet == planetData.planetName){
+    //     sprite = await Sprite.load("space_ships/"+spaceShipData.spriteName+".png");
+    //
+    //     this.spaceShipData.dockedPlanet = planetData.planetName;
+    //     this.spaceShipData.isEquipped = false;
+    //     this.spaceShipData = spaceShipData;
+    //     this.spaceShipData.dockedPlanet = "";
+    //     this.spaceShipData.isEquipped = true;
+    //
+    //
+    //     break;
+    //   }
+    // }
 
   }
 
