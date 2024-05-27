@@ -29,11 +29,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
 
-    List<MissionData> availableMissions = [];
+    List<MissionData> availableMissions = widget.game.playerData.availableMissions;
 
-    for (int i = 0; i < 7; i++) {
-      availableMissions.add(MissionData.makeMission(widget.game.playerData));
-    }
+
 
 
     return Container(
@@ -102,11 +100,11 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                     ),
                   ),
                 )
-
-              // color: Color(0xFFA4A4A4).withOpacity(0.5),
-              /* Add background blur to the container */
-                  ),
-            ))));
+              ),
+            )
+        )
+      )
+    );
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
@@ -123,7 +121,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
 
   @override
   void dispose() {
-    widget.game.resumeEngine();
+
+    widget.game.dashboardButton.setState(false);
+
     BackButtonInterceptor.remove(myInterceptor);
     _tabController.dispose();
     super.dispose();

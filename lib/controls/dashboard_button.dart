@@ -10,6 +10,17 @@ import 'package:star_routes/states/dashboard_button.dart';
 
 class DashboardButton extends SpriteGroupComponent<DashboardButtonStates> with HasGameRef<StarRoutes>{
 
+
+  void setState(bool isDashboardOpen){
+    if (isDashboardOpen){
+      current = DashboardButtonStates.dashBoardOpen;
+      game.overlays.add(DashboardScreen.id);
+    } else {
+      current = DashboardButtonStates.dashBoardClosed;
+      game.overlays.remove(DashboardScreen.id);
+    }
+  }
+
   @override
   Future<void> onLoad() async {
 
@@ -41,12 +52,12 @@ class DashboardButton extends SpriteGroupComponent<DashboardButtonStates> with H
           onTap: () {
             print("Dashboard button pressed");
             if (current == DashboardButtonStates.dashBoardClosed) {
-              current = DashboardButtonStates.dashBoardOpen;
-              game.overlays.add(DashboardScreen.id);
+              setState(true);
+
               // gameRef.pauseEngine();
             } else if (current == DashboardButtonStates.dashBoardOpen){
-              current = DashboardButtonStates.dashBoardClosed;
-              game.overlays.remove(DashboardScreen.id);
+              setState(false);
+
               // gameRef.resumeEngine();
             }
 

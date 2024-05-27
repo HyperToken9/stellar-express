@@ -2,19 +2,30 @@
 import 'package:flame/components.dart';
 
 import 'package:star_routes/data/space_ship_data.dart';
-import 'package:star_routes/data/world_data.dart';
+import 'package:star_routes/data/mission_data.dart';
 
 class PlayerData{
 
+  Vector2 shipLocation = Vector2(4206, -2783.0) + Vector2(30, 80);
+
   Map<String, SpaceShipState> spaceShipStates = {};
 
-  Vector2 shipLocation = Vector2(4206, -2783.0) + Vector2(10, 50);
-  // late Ship shipState;
+  List<MissionData> availableMissions = [];
+
 
   PlayerData(){
+
+    /* Initializes Ship States */
     for (SpaceShipData data in SpaceShipData.spaceShips){
       spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: true);
     }
+
+    /* Initializes Mission States*/
+    for (int i = 0; i < 7; i++) {
+      availableMissions.add(MissionData.makeMission(this));
+    }
+
+
   }
 
   bool isShipOwned(String shipClassName){
