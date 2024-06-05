@@ -14,25 +14,24 @@ import 'package:star_routes/data/planet_data.dart';
 class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
 
   PlanetData planetData;
+  late Future<void> imageLoader;
   // late final image;
   // late Future
 
 
-
-  Planet({required this.planetData}){
-
+  Planet({required this.planetData}) {
+    // Initiate the background loading of the image
+    imageLoader = _loadImage();
   }
 
-  @override
-  Future<void> onLoad() async {
+  Future<void> _loadImage() async {
 
-    print("Loading Planet: ${planetData.planetName}");
-    image = await Flame.images.load("planets/${planetData.spriteName}.png");
+    // Load the image asynchronously
+    final loadedImage = await Flame.images.load("planets/${planetData.spriteName}.png");
 
-    // Start timer
-    // DateTime startTime = DateTime.now();
+    // Create the sprite sheet and animation
     final spriteSheet = SpriteSheet(
-      image: image,
+      image: loadedImage,
       srcSize: planetData.spriteSize,
     );
 
@@ -43,16 +42,18 @@ class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
       to: planetData.numSprites * planetData.numSprites,
     );
 
-    // sprite = await Sprite.load(Assets.planet);
+    // Set other properties after the image is loaded
     size = Vector2(planetData.radius, planetData.radius) * 2;
-
     position = planetData.location;
     anchor = Anchor.center;
     priority = 1;
+    // print("Image loaded for ${planetData.spriteName}");
+  }
 
-    // End timer
-    DateTime endTime = DateTime.now();
-    // print("Planet Load Time: ${endTime.difference(startTime).inMilliseconds}ms");
+  @override
+  Future<void> onLoad() async {
+    // Wait for the image to be fully loaded before proceeding
+    await imageLoader;
   }
 
 

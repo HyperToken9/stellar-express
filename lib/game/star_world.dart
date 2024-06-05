@@ -21,18 +21,17 @@ class StarWorld extends World with HasGameRef<StarRoutes>, CollisionCallbacks{
 
   List<Planet> planetComponents = [];
 
-  StarWorld({ required this.userShip }){
-    print("StarWorld constructor");
+  StarWorld({ required this.userShip });
 
-    // Time this for loop
+  Future<void> loadPlanets() async{
 
-    // DateTime startTime = DateTime.now();
-    for (PlanetData data in WorldData.planets){
+    planetComponents = WorldData.planets.map((data) => Planet(planetData: data)).toList();
 
-      final planet = Planet(planetData: data);
-      planetComponents.add(planet);
+    // Collect all the imageLoader futures
+    List<Future<void>> loaders = planetComponents.map((planet) => planet.imageLoader).toList();
 
-    }
+    // Wait for all the images to be loaded in parallel
+    await Future.wait(loaders);
 
   }
 

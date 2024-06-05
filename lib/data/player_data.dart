@@ -6,7 +6,7 @@ import 'package:star_routes/data/mission_data.dart';
 
 class PlayerData{
 
-  Vector2 shipLocation = Vector2(4206, -2783.0) + Vector2(30, 80);
+  Vector2 shipLocation = Vector2(837.0, 2982.0) + Vector2(30, 80);
 
   Map<String, SpaceShipState> spaceShipStates = {};
 

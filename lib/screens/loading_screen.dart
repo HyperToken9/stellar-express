@@ -62,7 +62,7 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 25),
+      duration: Duration(seconds: 10),
     )..addListener(() {
       setState(() {});
     });

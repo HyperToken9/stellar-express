@@ -57,7 +57,16 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     /* Initialize User Ship */
     userShip = Ship();
 
-    world = StarWorld(userShip: userShip);
+    /* Initialize World */
+    final StarWorld starWorld = StarWorld(userShip: userShip);
+    await starWorld.loadPlanets();
+    world = starWorld;
+
+    // world.loadPlanets();
+
+
+    // await world.loadPlanets();
+
     camera = CameraComponent(world: world,
         hudComponents: [dpad, orbitButton, deliveryButton, miniMap,
                         dashboardButton, swapShipButton]);
