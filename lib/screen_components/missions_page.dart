@@ -1,15 +1,21 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:star_routes/data/mission_data.dart';
-import 'package:star_routes/screen_components/accepted_mission_card.dart';
+import 'package:star_routes/screen_components/mission_card.dart';
 
 class MissionsPage extends StatelessWidget {
 
-  List<MissionData> availableMissions;
+  final List<MissionData> availableMissions;
+  final List<MissionData> acceptedMissions;
 
-  MissionsPage({super.key, required this.availableMissions});
+  final void Function(MissionData) onAccept;
+
+  const MissionsPage({super.key,
+                      required this.availableMissions,
+                      required this.acceptedMissions,
+                      required this.onAccept
+                    });
 
   @override
   Widget build(BuildContext context) {
@@ -31,25 +37,6 @@ class MissionsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /* Active Missions */
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Active",
-                  style: headerTextStyle,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFeeeeee),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  height: 55.0,
-                )
-              ],
-            ),
-            const SizedBox(height: 12.0),
-            /* Accepted Missions */
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -57,13 +44,21 @@ class MissionsPage extends StatelessWidget {
                   "Accepted",
                   style: headerTextStyle,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFDDDDDD),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  height: 55.0,
-                ),
+                ...acceptedMissions.map((mission) {
+                  return MissionCard(
+                      missionData: mission,
+                      onAccept: onAccept,
+                      isAccepted: true,
+                    );
+                  }
+                )
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: const Color(0xFFDDDDDD),
+                //     borderRadius: BorderRadius.circular(4.0),
+                //   ),
+                //   height: 55.0,
+                // ),
               ],
             ),
             const SizedBox(height: 12.0),
@@ -76,7 +71,11 @@ class MissionsPage extends StatelessWidget {
                   style: headerTextStyle,
                 ),
                 ...availableMissions.map((mission) {
-                  return AcceptedMissionCard(missionData: mission);
+                  return MissionCard(
+                      missionData: mission,
+                      onAccept: onAccept,
+                      isAccepted: false,
+                    );
                   }
                 )
 

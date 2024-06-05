@@ -70,6 +70,8 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     camera.follow(userShip);
     adjustCameraZoom(objectSize: userShip.size, screenPercentage: 20);
 
+    print("Loaded Game");
+
   }
 
   void updateClosestPlanets(){

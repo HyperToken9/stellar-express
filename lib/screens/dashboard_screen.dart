@@ -26,13 +26,18 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   /*Tab controller */
   late TabController _tabController;
 
+  void acceptMissionCallback(MissionData missionData){
+    print("Accepting Mission");
+    widget.game.playerData.acceptedMissions.add(missionData);
+    widget.game.playerData.availableMissions.remove(missionData);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
 
     List<MissionData> availableMissions = widget.game.playerData.availableMissions;
-
-
-
+    List<MissionData> acceptedMissions = widget.game.playerData.acceptedMissions;
 
     return Container(
       /* Rounded borders */
@@ -52,7 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                 child: MaterialApp(
                   theme: ThemeData(
                     tabBarTheme: TabBarTheme(
-                      overlayColor: MaterialStateProperty.all(const Color(0xFFA4A4A4).withOpacity(0.1)),
+                      overlayColor: WidgetStateProperty.all(const Color(0xFFA4A4A4).withOpacity(0.1)),
                     ),
                   ),
                   debugShowCheckedModeBanner: false,
@@ -93,7 +98,11 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                       ),
                       body: TabBarView(
                         children: [
-                          MissionsPage(availableMissions: availableMissions),
+                          MissionsPage(
+                              acceptedMissions: acceptedMissions,
+                              availableMissions: availableMissions,
+                              onAccept: acceptMissionCallback,
+                          ),
                           Icon(Icons.directions_transit),
                         ],
                       ),

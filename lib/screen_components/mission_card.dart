@@ -6,11 +6,22 @@ import 'package:change_case/change_case.dart';
 
 import 'package:star_routes/data/mission_data.dart';
 
-class AcceptedMissionCard extends StatelessWidget {
+class MissionCard extends StatelessWidget {
 
   final MissionData missionData;
 
-  const AcceptedMissionCard({super.key, required this.missionData});
+  final isAccepted;
+
+  // Make this function accpet a parameter Mission Data
+  final void Function(MissionData) onAccept;
+
+
+  // final VoidCallback onAccept;
+  const MissionCard({super.key,
+                     required this.missionData,
+                     required this.onAccept,
+                     required this.isAccepted,
+                    });
 
 
   @override
@@ -178,7 +189,8 @@ class AcceptedMissionCard extends StatelessWidget {
             ),
           ),
           /* Interactions */
-          Row(
+          if (!isAccepted)
+            Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -186,7 +198,10 @@ class AcceptedMissionCard extends StatelessWidget {
               Expanded(
                 child: TextButton(
                   onPressed: () {
-                    print("Mission Accepted");
+                    onAccept(missionData);
+                    // print("Mission Accepted");
+                    /* Add this mission to  */
+
                   },
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.only(bottom: 8), // Remove padding
@@ -219,7 +234,7 @@ class AcceptedMissionCard extends StatelessWidget {
                 ),
               ),
             ],
-          ),
+          )
         ],
       ),
     );

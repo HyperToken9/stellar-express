@@ -14,13 +14,20 @@ import 'package:star_routes/data/planet_data.dart';
 class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
 
   PlanetData planetData;
+  // late final image;
+  // late Future
 
-  Planet({required this.planetData});
+
+
+  Planet({required this.planetData}){
+
+  }
 
   @override
   Future<void> onLoad() async {
 
-    final image = await Flame.images.load("planets/${planetData.spriteName}.png");
+    print("Loading Planet: ${planetData.planetName}");
+    image = await Flame.images.load("planets/${planetData.spriteName}.png");
 
     // Start timer
     // DateTime startTime = DateTime.now();

@@ -10,7 +10,10 @@ class PlayerData{
 
   Map<String, SpaceShipState> spaceShipStates = {};
 
+  List<MissionData> acceptedMissions = [];
+
   List<MissionData> availableMissions = [];
+  // List<MissionData> missions = [];
 
 
   PlayerData(){

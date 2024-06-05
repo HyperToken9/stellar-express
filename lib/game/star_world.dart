@@ -17,16 +17,12 @@ import 'package:star_routes/data/world_data.dart';
 class StarWorld extends World with HasGameRef<StarRoutes>, CollisionCallbacks{
 
   Ship userShip;
-  double cullingMargin = 2000;
+  double cullingMargin = 100;
 
   List<Planet> planetComponents = [];
 
-  StarWorld({ required this.userShip });
-
-  @override
-  Future<void> onLoad() async {
-
-    add(userShip);
+  StarWorld({ required this.userShip }){
+    print("StarWorld constructor");
 
     // Time this for loop
 
@@ -36,13 +32,14 @@ class StarWorld extends World with HasGameRef<StarRoutes>, CollisionCallbacks{
       final planet = Planet(planetData: data);
       planetComponents.add(planet);
 
-      // if (rShip.spawnLocation.distanceTo(data.location) < 3* cullingMargin){
-      //   add(planet)use;
-      // }
-
     }
 
+  }
 
+  @override
+  Future<void> onLoad() async {
+
+    add(userShip);
 
   }
 
