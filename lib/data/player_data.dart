@@ -1,33 +1,38 @@
 
 import 'package:flame/components.dart';
+import 'package:star_routes/data/planet_data.dart';
 
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/mission_data.dart';
 
 class PlayerData{
 
-  Vector2 shipLocation = Vector2(837.0, 2982.0) + Vector2(30, 80);
+  Vector2 shipLocation = Vector2(1291.0, 2261.0) + Vector2(0, 300);
 
   Map<String, SpaceShipState> spaceShipStates = {};
 
   List<MissionData> acceptedMissions = [];
 
   List<MissionData> availableMissions = [];
-  // List<MissionData> missions = [];
+
+  String equippedShip  = "Small Courier";
 
 
   PlayerData(){
 
     /* Initializes Ship States */
     for (SpaceShipData data in SpaceShipData.spaceShips){
-      spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: true);
+      if (data.shipClassName == "Small Courier"){
+        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: true);
+      }else{
+        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: false);
+      }
     }
 
     /* Initializes Mission States*/
     for (int i = 0; i < 7; i++) {
       availableMissions.add(MissionData.makeMission(this));
     }
-
 
   }
 
@@ -40,12 +45,23 @@ class PlayerData{
 
   }
 
+  SpaceShipData getEquippedShipData(){
+    return SpaceShipData.spaceShips.firstWhere((element) => element.shipClassName == equippedShip);
+  }
+
+  SpaceShipState getEquippedShipState(){
+    return spaceShipStates[equippedShip]!;
+  }
+
 }
 
 
 class SpaceShipState{
 
   bool isOwned;
+  bool isCarryingCargo = false;
+
+  MissionData? currentMission;
 
   SpaceShipState({
     required this.isOwned,

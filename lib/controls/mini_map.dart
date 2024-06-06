@@ -32,6 +32,7 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
     size = Vector2(175, 175);
     position = margin;
     anchor = Anchor.topLeft;
+    // priority = 5;
 
     miniMapMask = Path()..addOval(Rect.fromLTWH(0, 0, size.x, size.y));
 

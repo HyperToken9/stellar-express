@@ -10,7 +10,7 @@ class Assets{
 
   static const planet = "planet_sprite.png";
 
-  static const ship = "space_ships/small_courier.png";
+  static const shipBasePath = "space_ships/";
   static const cargoShip = "cargo_ships/spaceship.png";
 
   static const vortexImages = ["vortex_nexus/frame_0.png", "vortex_nexus/frame_1.png",
@@ -25,6 +25,7 @@ class Assets{
   static const exitOrbitButton = "control_interface/exit_orbit_button.png";
   static const swapShipButton = "control_interface/swap_ship_button.png";
   static const blankButton = "control_interface/blank_button.png";
+  static const navigationPointer = "control_interface/navigation_pointer.png";
 
   static const miniMap = "control_interface/mini_map.png";
   static const menuButton = "control_interface/menu_button.png";

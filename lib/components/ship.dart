@@ -5,7 +5,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/data/planet_data.dart';
-import 'package:star_routes/data/space_ship_data.dart';
+import 'package:star_routes/data/player_data.dart';
+import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/game/config.dart';
 
 import 'package:star_routes/game/star_routes.dart';
@@ -49,7 +50,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   @override
   Future<void> onLoad() async {
     // Load the ship image
-    sprite = await Sprite.load(Assets.ship);
+    sprite = await Sprite.load("${Assets.shipBasePath}${game.playerData.getEquippedShipData().spriteName}.png");
 
     position = game.playerData.shipLocation;
 
@@ -178,7 +179,26 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     gameRef.dpad.setState(DPadStates.inactive);
 
     /* Enable Delivery Button */
-    gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
+    /* Check if ship has cargo */
+    final SpaceShipState shipState = game.playerData.getEquippedShipState();
+
+    if (shipState.isCarryingCargo &&
+        shipState.currentMission!.destinationPlanet == closestPlanet.planetData.planetName){
+
+      gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
+
+    }else{
+      for (MissionData mission in game.playerData.acceptedMissions){
+
+        if (mission.sourcePlanet == closestPlanet.planetData.planetName){
+          gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
+          break;
+        }
+
+      }
+    }
+
+
 
     /* If A ship exits on planet */
     // for (SpaceShipData shipData in gameRef.worldData.spaceShips){

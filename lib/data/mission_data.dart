@@ -16,6 +16,8 @@ enum MissionStatus{
 
 class MissionData{
 
+  int missionId;
+
   String sourcePlanet;
   String destinationPlanet;
 
@@ -28,6 +30,7 @@ class MissionData{
   int reward;
 
   MissionData({
+    required this.missionId,
     required this.sourcePlanet,
     required this.destinationPlanet,
     required this.eligibleShips,
@@ -83,8 +86,12 @@ class MissionData{
     String sourcePlanet = selectedItem.exportingPlanets[randomIndex];
 
     /* Selecting Destination Planet */
-    randomIndex = random.nextInt(selectedItem.importingPlanets.length);
-    String destinationPlanet = selectedItem.importingPlanets[randomIndex];
+    final List<String> validDestinationPlanets =
+        selectedItem.importingPlanets.where(
+                (element) => element != sourcePlanet
+        ).toList();
+    randomIndex = random.nextInt(validDestinationPlanets.length);
+    String destinationPlanet = validDestinationPlanets[randomIndex];
 
 
     List<String> eligibleShips = [];
@@ -103,6 +110,7 @@ class MissionData{
 
 
     return MissionData(
+      missionId: random.nextInt(9999999), // TODO: Make sure there is no collision
       sourcePlanet: sourcePlanet,
       destinationPlanet: destinationPlanet,
       eligibleShips: eligibleShips,

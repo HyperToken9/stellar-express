@@ -1,6 +1,7 @@
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:star_routes/components/navigation_pointer.dart';
 import 'package:star_routes/controls/mini_map.dart';
 
 import 'package:star_routes/data/player_data.dart';
@@ -33,6 +34,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   late MiniMap miniMap;
   late DashboardButton dashboardButton;
   late SwapShipButton swapShipButton;
+  late NavigationPointer navigationPointer;
 
   double cameraZoomSetPoint = 1.0;
   List<Planet> closestPlanets = [];
@@ -53,6 +55,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     miniMap = MiniMap();
     dashboardButton = DashboardButton();
     swapShipButton = SwapShipButton();
+    navigationPointer = NavigationPointer();
 
     /* Initialize User Ship */
     userShip = Ship();
@@ -69,7 +72,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
     camera = CameraComponent(world: world,
         hudComponents: [dpad, orbitButton, deliveryButton, miniMap,
-                        dashboardButton, swapShipButton]);
+                        dashboardButton, swapShipButton, navigationPointer]);
 
     addAll([
       Background(),
@@ -82,6 +85,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     print("Loaded Game");
 
   }
+
 
   void updateClosestPlanets(){
     closestPlanets = [];

@@ -1,6 +1,7 @@
 
 import 'package:flame/components.dart';
 import 'package:star_routes/components/cargo_ship.dart';
+import 'package:star_routes/data/planet_data.dart';
 
 import 'package:star_routes/game/assets.dart';
 import 'package:star_routes/game/star_routes.dart';
@@ -10,8 +11,9 @@ import 'package:star_routes/game/tappable_region.dart';
 class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with HasGameRef<StarRoutes>{
 
   Vector2 margin = Vector2(120, 45);
-  DeliveryButton() : super(priority: 1);
+  // PlanetData planetData;
 
+  // DeliveryButton();
   @override
   Future<void> onLoad() async {
 
@@ -37,10 +39,7 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
       TappableRegion(
         position: Vector2(0, 0),
         size: size,
-        onTap: () {
-          CargoShip cargoShip = CargoShip();
-          gameRef.world.add(cargoShip);
-        },
+        onTap: () {},
         onRelease: () {},
         buttonEnabled: isEnabled,
       )
