@@ -85,3 +85,7 @@ lib/firebase_options.dart
 firebase.json
 # iOS specifi
 *.sln.iml
+
+
+# Assets
+assets/
