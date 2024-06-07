@@ -15,24 +15,29 @@ class DashboardButton extends SpriteGroupComponent<DashboardButtonStates> with H
     if (isDashboardOpen){
       current = DashboardButtonStates.dashBoardOpen;
       game.overlays.add(DashboardScreen.id);
+      game.miniMap.setState(false);
+      game.balance.shiftForDashboard(true);
+
     } else {
       current = DashboardButtonStates.dashBoardClosed;
       game.overlays.remove(DashboardScreen.id);
+      game.miniMap.setState(true);
+      game.balance.shiftForDashboard(false);
+
     }
   }
 
+  static Vector2 margin = Vector2(12, 40);
+  static double dim = 50;
   @override
   Future<void> onLoad() async {
 
     final dashboardButton = await Sprite.load(Assets.menuButton);
-    final closeDashboadButton = await Sprite.load(Assets.closeMenuButton);
+    final closeDashboardButton = await Sprite.load(Assets.closeMenuButton);
 
-
-    double dim = 50;
 
     size = Vector2(dim, dim);
 
-    Vector2 margin = Vector2(12, 40);
     position.x = gameRef.size.x - margin.x;
     position.y = margin.y;
 
@@ -42,7 +47,7 @@ class DashboardButton extends SpriteGroupComponent<DashboardButtonStates> with H
 
     sprites = {
       DashboardButtonStates.dashBoardClosed: dashboardButton,
-      DashboardButtonStates.dashBoardOpen: closeDashboadButton,
+      DashboardButtonStates.dashBoardOpen: closeDashboardButton,
     };
 
     add(

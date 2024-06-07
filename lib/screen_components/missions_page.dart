@@ -6,12 +6,14 @@ import 'package:star_routes/screen_components/mission_card.dart';
 
 class MissionsPage extends StatelessWidget {
 
+  final List<MissionData> initiatedMissions;
   final List<MissionData> availableMissions;
   final List<MissionData> acceptedMissions;
 
   final void Function(MissionData) onAccept;
 
   const MissionsPage({super.key,
+                      required this.initiatedMissions,
                       required this.availableMissions,
                       required this.acceptedMissions,
                       required this.onAccept
@@ -37,6 +39,31 @@ class MissionsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Initiated",
+                  style: headerTextStyle,
+                ),
+                ...initiatedMissions.map((mission) {
+                  return MissionCard(
+                    missionData: mission,
+                    onAccept: onAccept,
+                    isAccepted: true,
+                  );
+                }
+                )
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: const Color(0xFFDDDDDD),
+                //     borderRadius: BorderRadius.circular(4.0),
+                //   ),
+                //   height: 55.0,
+                // ),
+              ],
+            ),
+            const SizedBox(height: 12.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

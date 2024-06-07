@@ -186,12 +186,17 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
         shipState.currentMission!.destinationPlanet == closestPlanet.planetData.planetName){
 
       gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
+      gameRef.deliveryButton.planetData = closestPlanet.planetData;
+      gameRef.deliveryButton.isDelivering = true;
 
     }else{
       for (MissionData mission in game.playerData.acceptedMissions){
 
         if (mission.sourcePlanet == closestPlanet.planetData.planetName){
           gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
+          gameRef.deliveryButton.planetData = closestPlanet.planetData;
+          gameRef.deliveryButton.missionData = mission;
+          gameRef.deliveryButton.isDelivering = false;
           break;
         }
 

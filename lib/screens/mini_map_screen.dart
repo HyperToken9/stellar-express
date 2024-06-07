@@ -20,6 +20,10 @@ class MiniMapScreen extends StatefulWidget {
   State<MiniMapScreen> createState() => _MiniMapScreenState();
 }
 
+/*
+  TODO: Planet Searching
+
+*   */
 class _MiniMapScreenState extends State<MiniMapScreen> {
 
 

@@ -1,6 +1,11 @@
 
+
+import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/screens/dashboard_screen.dart';
@@ -10,7 +15,17 @@ import 'package:star_routes/screens/loading_screen.dart';
 import 'package:star_routes/screens/main_menu_screen.dart';
 import 'package:star_routes/screens/mini_map_screen.dart';
 
-void main() {
+
+
+void main() async {
+
+  // TODO: This is very forced, but no time right now
+  WidgetsFlutterBinding.ensureInitialized();
+  Flame.device.setPortraitUpOnly();
+
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   final StarRoutes game = StarRoutes();
 

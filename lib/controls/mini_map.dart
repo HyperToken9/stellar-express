@@ -21,6 +21,8 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
   Paint objectBrush = Paint()..color = const Color(0xC0FFFFFF);
   late Path miniMapMask;
 
+  bool isEnabled = true;
+
   @override
   Future<void> onLoad() async {
 
@@ -29,7 +31,7 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
     // Load the mini map image
     miniMap = await gameRef.images.load(Assets.miniMap);
     // miniMap.size = Vector2(175, 175);
-    size = Vector2(175, 175);
+    size = Vector2(150, 150);
     position = margin;
     anchor = Anchor.topLeft;
     // priority = 5;
@@ -47,7 +49,7 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
 
       },
       onRelease: () {},
-      buttonEnabled: () => true,
+      buttonEnabled: () => isEnabled,
     );
 
     add(tappable);
@@ -83,16 +85,22 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
     return result;
   }
 
-
-
-
+  void setState(bool isMiniMapOpen){
+    if (isMiniMapOpen){
+      isEnabled = true;
+    } else {
+      isEnabled = false;
+    }
+  }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
     // Translucent yellow on the mini map
     // canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), Paint()..color = const Color(0x88FFFF00));
-
+    if (!isEnabled){
+      return;
+    }
     /* Resize Image Base Image */
     final srcRect = Rect.fromLTWH(0, 0, miniMap.width.toDouble(), miniMap.height.toDouble());
     final dstRect = Rect.fromLTWH(0, 0, size.x, size.y);
@@ -117,6 +125,8 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
 
     canvas.translate(-size.x / 2, -size.y / 2);
 
+    /* Make it green */
+    // canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), Paint()..color = const Color(0x88FF00FF));
 
   }
 

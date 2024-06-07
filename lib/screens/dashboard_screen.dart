@@ -38,6 +38,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
 
     List<MissionData> availableMissions = widget.game.playerData.availableMissions;
     List<MissionData> acceptedMissions = widget.game.playerData.acceptedMissions;
+    List<MissionData> initiatedMissions = widget.game.playerData.initiatedMissions;
 
     return Container(
       /* Rounded borders */
@@ -99,6 +100,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                       body: TabBarView(
                         children: [
                           MissionsPage(
+                              initiatedMissions: initiatedMissions,
                               acceptedMissions: acceptedMissions,
                               availableMissions: availableMissions,
                               onAccept: acceptMissionCallback,
@@ -117,7 +119,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    widget.game.overlays.remove(DashboardScreen.id);
+    widget.game.dashboardButton.setState(false);
     return true;
   }
 
