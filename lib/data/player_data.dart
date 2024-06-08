@@ -1,18 +1,21 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/components.dart';
 import 'package:star_routes/data/planet_data.dart';
 
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/mission_data.dart';
+import 'package:star_routes/services/datastore.dart';
 
 class PlayerData{
 
+  String playerId = "";
 
   int coin = 324002;
 
   int totalExperience = 165;
 
-  static const List<int> experiencePolynomialParameter = [];
+  String equippedShip  = "Small Courier";
 
   Vector2 shipLocation = Vector2(1291.0, 2261.0) + Vector2(0, 300);
 
@@ -28,7 +31,6 @@ class PlayerData{
 
   List<MissionData> availableMissions = [];
 
-  String equippedShip  = "Small Courier";
 
   PlayerData(){
 
@@ -45,6 +47,18 @@ class PlayerData{
     for (int i = 0; i < 7; i++) {
       availableMissions.add(MissionData.makeMission(this));
     }
+
+  }
+
+  void loadPlayerData(String playerId){
+    /* Assign Player ID */
+    this.playerId = playerId;
+
+    /* Load Player Data from Firebase */
+    Datastore dataStore = Datastore();
+    dataStore.loadPlayerData(playerId);
+    print("Loading Player Data");
+
 
   }
 

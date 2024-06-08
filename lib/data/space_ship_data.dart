@@ -79,8 +79,8 @@ class SpaceShipData{
       spriteName: "express_shuttle",
     ),
     SpaceShipData(
-      shipClassName: "Heavy Duty Carrier",
-      shipClassNameShorthand: "HDC",
+      shipClassName: "Heavy Hauler",
+      shipClassNameShorthand: "HH",
       displayCapacity: 4,
       displaySpeed: 2,
       displayManeuverability: 1,

@@ -23,9 +23,13 @@ import 'package:star_routes/controls/swap_ship_button.dart';
 import 'package:star_routes/screens/loading_screen.dart';
 import 'package:star_routes/screens/main_menu_screen.dart';
 
+import 'package:star_routes/services/authentication.dart';
+
 
 
 class StarRoutes extends FlameGame with HasCollisionDetection{
+
+  late Authentication auth;
 
   late PlayerData playerData;
   late Ship userShip;
@@ -44,11 +48,14 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   double cameraZoomSetPoint = 1.0;
   List<Planet> closestPlanets = [];
 
+  StarRoutes({required this.playerData});
+
   @override
   Future<void> onLoad() async {
 
+
     /* Initialize Player Data */
-    playerData = PlayerData();
+    // playerData = PlayerData();
 
     // print(MissionData.makeMission(playerData));
 
