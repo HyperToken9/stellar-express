@@ -141,6 +141,34 @@ class MissionData{
     return "A ${cargoTypeSizeData.cargoSize} Shipment of $cargoItemName";
   }
 
+  // Convert a MissionData object to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'missionId': missionId,
+      'sourcePlanet': sourcePlanet,
+      'destinationPlanet': destinationPlanet,
+      'eligibleShips': eligibleShips,
+      'cargoTypeSizeData': cargoTypeSizeData.toJson(), // Assuming CargoTypeSizeData has a toJson() method
+      'cargoCategoryName': cargoCategoryName,
+      'cargoItemName': cargoItemName,
+      'reward': reward,
+    };
+  }
+
+  // Create a MissionData object from JSON
+  factory MissionData.fromJson(Map<String, dynamic> json) {
+    return MissionData(
+      missionId: json['missionId'],
+      sourcePlanet: json['sourcePlanet'],
+      destinationPlanet: json['destinationPlanet'],
+      eligibleShips: List<String>.from(json['eligibleShips']),
+      cargoTypeSizeData: CargoTypeSizeData.fromJson(json['cargoTypeSizeData']),
+      cargoCategoryName: json['cargoCategoryName'],
+      cargoItemName: json['cargoItemName'],
+      reward: json['reward'],
+    );
+  }
+
 
   @override
   String toString() {

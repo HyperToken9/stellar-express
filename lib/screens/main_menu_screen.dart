@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 
+import 'package:star_routes/screens/blank_screen.dart';
+import 'package:star_routes/screens/hangar_screen.dart';
+
+
 class MainMenuScreen extends StatefulWidget {
 
   final StarRoutes game;
@@ -33,13 +37,15 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 TextButton(
                   onPressed: () {
                     print("Play Game");
-                    widget.game.overlays.remove('mainMenu');
+                    widget.game.resumeEngine();
+                    widget.game.overlays.remove(MainMenuScreen.id);
+                    widget.game.overlays.add(BlankScreen.id);
                   },
                   child: Image.asset('assets/images/user_interface/play_button.png'),
                 ),
                 TextButton(
                   onPressed: () {
-                    widget.game.overlays.add('hangar');
+                    widget.game.overlays.add(HangarScreen.id);
                   },
                   child: Image.asset('assets/images/user_interface/hangar_button.png'),
                 ),

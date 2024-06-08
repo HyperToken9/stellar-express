@@ -1,4 +1,5 @@
 
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ import 'package:star_routes/game/config.dart';
 
 import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/world_data.dart';
+import 'package:star_routes/screens/blank_screen.dart';
 
 class MiniMapScreen extends StatefulWidget {
 
@@ -32,11 +34,6 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
   PlanetData? _focusedPlanet;
 
   final TransformationController _transformationController = TransformationController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
@@ -65,6 +62,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
 
   void _closeMiniMap() {
     widget.game.overlays.remove(MiniMapScreen.id);
+    widget.game.overlays.add(BlankScreen.id);
     widget.game.resumeEngine();
   }
 
@@ -253,6 +251,25 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
       ),
     );
   }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    _closeMiniMap();
+    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
 }
 
 

@@ -66,6 +66,8 @@ class MissionCard extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
+
+
         children: <Widget>[
           /* Mission Details */
           Padding(

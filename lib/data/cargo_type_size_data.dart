@@ -9,6 +9,22 @@ class CargoTypeSizeData implements Comparable<CargoTypeSizeData> {
     required this.cargoType,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'cargoSize': cargoSize,
+      'cargoType': cargoTypeToString(cargoType),
+    };
+  }
+
+  // Create a CargoTypeSizeData object from JSON
+  factory CargoTypeSizeData.fromJson(Map<String, dynamic> json) {
+    return CargoTypeSizeData(
+      cargoSize: json['cargoSize'],
+      cargoType: stringToCargoType(json['cargoType']),
+    );
+  }
+
+
   @override
   String toString() {
     return "CargoTypeSizeData($cargoType, $cargoSize)";

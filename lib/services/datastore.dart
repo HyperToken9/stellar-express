@@ -22,7 +22,7 @@ class Datastore {
         // Document exists, retrieve the data
         Map<String, dynamic>? playerData = docSnapshot.data() as Map<String, dynamic>?;
         // Process the data as needed
-        // print('Player data: $playerData');
+        print('Player data: $playerData');
         playerDocument = playerData!;
       } else {
         // Document does not exist, initialize some data
@@ -49,6 +49,11 @@ class Datastore {
           'shipLocation': [0, 0],
           'equippedShip': 'Small Courier',
           'spaceShipStates': defaultShipStates,
+          'archivedMissions': [],
+          'completedMissions': [],
+          'initiatedMissions': [],
+          'acceptedMissions': [],
+          'availableMissions': [],
 
         };
 

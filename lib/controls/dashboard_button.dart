@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/assets.dart';
 import 'package:star_routes/game/tappable_region.dart';
+import 'package:star_routes/screens/blank_screen.dart';
 import 'package:star_routes/screens/dashboard_screen.dart';
 
 import 'package:star_routes/states/dashboard_button.dart';
@@ -15,12 +16,14 @@ class DashboardButton extends SpriteGroupComponent<DashboardButtonStates> with H
     if (isDashboardOpen){
       current = DashboardButtonStates.dashBoardOpen;
       game.overlays.add(DashboardScreen.id);
+      game.overlays.remove(BlankScreen.id);
       game.miniMap.setState(false);
       game.balance.shiftForDashboard(true);
 
     } else {
       current = DashboardButtonStates.dashBoardClosed;
       game.overlays.remove(DashboardScreen.id);
+      game.overlays.add(BlankScreen.id);
       game.miniMap.setState(true);
       game.balance.shiftForDashboard(false);
 

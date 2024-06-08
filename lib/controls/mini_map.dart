@@ -12,6 +12,8 @@ import 'package:star_routes/game/assets.dart';
 import 'package:star_routes/game/tappable_region.dart';
 
 import 'package:star_routes/data/planet_data.dart';
+import 'package:star_routes/screens/mini_map_screen.dart';
+import 'package:star_routes/screens/blank_screen.dart';
 
 
 class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
@@ -44,7 +46,8 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
       size: size,
       onTap: () {
         print("Tapped MiniMap");
-        gameRef.overlays.add('miniMap');
+        gameRef.overlays.add(MiniMapScreen.id);
+        gameRef.overlays.remove(BlankScreen.id);
         gameRef.pauseEngine();
 
       },
