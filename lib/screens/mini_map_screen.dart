@@ -65,6 +65,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
   }
 
   void _closeMiniMap() {
+    _searchFocusNode.unfocus();
     widget.game.overlays.remove(MiniMapScreen.id);
     widget.game.overlays.add(BlankScreen.id);
     widget.game.resumeEngine();
@@ -426,7 +427,6 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     print("MiniMap Back button intercepted");
-    _searchFocusNode.unfocus();
     _closeMiniMap();
     return true;
   }

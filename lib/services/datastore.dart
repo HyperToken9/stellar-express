@@ -2,10 +2,12 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame/components.dart';
+import 'package:star_routes/data/cargo_types.dart';
 import 'package:star_routes/data/mission_data.dart';
 
 import 'package:star_routes/data/player_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
+import 'package:star_routes/data/cargo_type_size_data.dart';
 import 'package:star_routes/game/star_routes.dart';
 
 
@@ -20,15 +22,15 @@ class Datastore {
     'totalExperience': 0,
     'shipSpawnLocation': [0, 0],
     'equippedShip': 'Small Courier',
-    // 'spaceShipStates': {
-    //   'Small Courier': {'isOwned': true, 'isCarryingCargo': false},
-    //   'Express Shuttle': {'isOwned': false, 'isCarryingCargo': false},
-    //   'Heavy Hauler': {'isOwned': false, 'isCarryingCargo': false},
-    //   'Large Freighter': {'isOwned': false, 'isCarryingCargo': false},
-    //   'Long Range Transport': {'isOwned': false, 'isCarryingCargo': false},
-    //   'Specialized Vessel': {'isOwned': false, 'isCarryingCargo': false},
-    //   'Stealth Courier': {'isOwned': false, 'isCarryingCargo': false}
-    // },
+    'spaceShipStates': {
+      'Small Courier': {'isOwned': true, 'isCarryingCargo': false},
+      'Express Shuttle': {'isOwned': false, 'isCarryingCargo': false},
+      'Heavy Hauler': {'isOwned': false, 'isCarryingCargo': false},
+      'Large Freighter': {'isOwned': false, 'isCarryingCargo': false},
+      'Long Range Transport': {'isOwned': false, 'isCarryingCargo': false},
+      'Specialized Vessel': {'isOwned': false, 'isCarryingCargo': false},
+      'Stealth Courier': {'isOwned': false, 'isCarryingCargo': false}
+    },
     'archivedMissions': <MissionData>[],
     'completedMissions': <MissionData>[],
     'initiatedMissions': <MissionData>[],
@@ -52,30 +54,14 @@ class Datastore {
         // Document exists, retrieve the data
         Map<String, dynamic>? playerData = docSnapshot.data() as Map<String, dynamic>?;
         // Process the data as needed
-        print('Player data: $playerData');
+        // print('Player data: $playerData');
         playerDocument = playerData!;
       } else {
         // Document does not exist, initialize some data
-
-        Map<String, dynamic> defaultShipStates = {};
-
-        for (SpaceShipData shipData in SpaceShipData.spaceShips) {
-          if (shipData.shipClassName == "Small Courier") {
-            defaultShipStates[shipData.shipClassName] = {
-              'isOwned': true,
-              'isCarryingCargo': false,
-            };
-          } else {
-            defaultShipStates[shipData.shipClassName] = {
-              'isOwned': false,
-              'isCarryingCargo': false,
-            };
-          }
-        }
         playerDocument = defaultPlayerData;
 
         // Add other fields as needed
-        await playerDoc.set(playerDocument);
+        await playerDoc.set(defaultPlayerData);
 
         // print('Initialized player data: $playerDocument');
       }
@@ -92,7 +78,12 @@ class Datastore {
     playerData.shipSpawnLocation = Vector2(playerDocument['shipSpawnLocation'][0].toDouble(),
                                       playerDocument['shipSpawnLocation'][1].toDouble());
     playerData.equippedShip = playerDocument['equippedShip'];
-    // playerData.spaceShipStates = playerDocument['spaceShipStates'];
+    print(playerDocument['spaceShipStates']);
+    playerData.spaceShipStates = (playerDocument['spaceShipStates'] ??
+                                  defaultPlayerData['spaceShipStates'])
+                                  .map<String, SpaceShipState>((String key, dynamic value) {
+                                    return MapEntry(key, SpaceShipState.fromJson(value));
+                                  });
     playerData.archivedMissions = (playerDocument['archivedMissions'] ??
                                       defaultPlayerData['archivedMissions'])
                                     .map<MissionData>((data) => MissionData.fromJson(data)).toList();
@@ -106,7 +97,17 @@ class Datastore {
                                       defaultPlayerData['acceptedMissions'])
                                   .map<MissionData>((data) => MissionData.fromJson(data)).toList();
 
-    // playerData.availableMissions = playerDocument['availableMissions'];
+    // MissionData sampleToRemove = MissionData(missionId: 6139686,
+    //     sourcePlanet: "Pyros",
+    //     destinationPlanet: "Cryon",
+    //     eligibleShips: ["Small Courier", "Specialized Vessel"],
+    //     cargoTypeSizeData: CargoTypeSizeData(cargoType: CargoTypes.specialCargo, cargoSize: "Small"),
+    //     cargoCategoryName: "Research",
+    //     cargoItemName: "Military Data",
+    //     reward: 1000);
+    // print("Initiated Missions: ${playerData.initiatedMissions}");
+    // playerData.initiatedMissions.remove(sampleToRemove);
+    // print("Initiated Missions: ${playerData.initiatedMissions}");
   }
 
 
@@ -119,7 +120,8 @@ class Datastore {
     playerDocument['shipSpawnLocation'] = [game.userShip.position.x,
                                            game.userShip.position.y];
     playerDocument['equippedShip'] = playerData.equippedShip;
-    // playerDocument['spaceShipStates'] = playerData.spaceShipStates;
+    playerDocument['spaceShipStates'] = playerData.spaceShipStates.map(
+                                          (key, value) => MapEntry(key, value.toJson()));
     playerDocument['archivedMissions'] = playerData.archivedMissions.map(
                                           (mission) => mission.toJson()).toList();
     playerDocument['completedMissions'] = playerData.completedMissions.map(
@@ -136,7 +138,7 @@ class Datastore {
     DocumentReference playerDoc = playerCollection.doc(playerData.playerId);
     playerDataToPlayerDocument(game);
 
-    print("Saving Player Data $playerDocument");
+    // print("Saving Player Data $playerDocument");
     await playerDoc.set(playerDocument);
   }
 

@@ -11,7 +11,7 @@ class PlayerData{
 
   String playerId = "";
 
-  int coin = 324002;
+  int coin = 0;
 
   int totalExperience = 165;
 
@@ -41,6 +41,7 @@ class PlayerData{
       }else{
         spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: false);
       }
+      // print(spaceShipStates[data.shipClassName]?.toJson());
     }
 
     /* Initializes Mission States*/
@@ -160,6 +161,29 @@ class SpaceShipState{
 
   SpaceShipState({
     required this.isOwned,
+    this.isCarryingCargo = false,
+    this.currentMission,
   });
+
+  /*Ship State to JSON*/
+  Map<String, dynamic> toJson(){
+    return {
+      'isOwned': isOwned,
+      'isCarryingCargo': isCarryingCargo,
+      'currentMission': currentMission?.toJson(),
+    };
+  }
+
+  /*JSON to Ship State*/
+  factory SpaceShipState.fromJson(Map<String, dynamic> json){
+    return SpaceShipState(
+      isOwned: json['isOwned'],
+      isCarryingCargo: json['isCarryingCargo'],
+      currentMission: (json['currentMission'] != null) ?
+                        MissionData.fromJson(json['currentMission']) : null,
+    );
+  }
+
+
 
 }

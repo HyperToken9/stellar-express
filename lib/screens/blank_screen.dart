@@ -40,7 +40,7 @@ class _BlankScreenState extends State<BlankScreen> {
     /* Write the changes back to fire base */
     Datastore dataStore = Datastore();
     dataStore.savePlayerData(widget.game);
-    // print("Saving Player Data");
+    print("Saving Player Data");
 
     return true;
   }

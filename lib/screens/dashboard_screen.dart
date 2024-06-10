@@ -33,6 +33,12 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
     setState(() {});
   }
 
+  void rejectMissionCallback(MissionData missionData){
+    print("Rejecting Mission");
+    widget.game.playerData.availableMissions.remove(missionData);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -104,6 +110,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                               acceptedMissions: acceptedMissions,
                               availableMissions: availableMissions,
                               onAccept: acceptMissionCallback,
+                              onReject: rejectMissionCallback,
                           ),
                           Icon(Icons.directions_transit),
                         ],

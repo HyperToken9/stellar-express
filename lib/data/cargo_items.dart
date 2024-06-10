@@ -49,16 +49,16 @@ class CargoItems{
   static const List<Item> rawMaterialsItems = [
     Item(name: "Rare Elements", importingPlanets: ["Cryon", "Elysara", "Marid"], exportingPlanets: ["Zeloris", "Targalon", "Noridia", "Pyros", "Ratha"]),
     Item(name: "Minerals", importingPlanets: ["Cryon", "Elysara", "Ratha"], exportingPlanets: ["Zeloris", "Targalon", "Noridia", "Pyros"]),
-    Item(name: "Crops & Produce", importingPlanets: ["Cryon", "Pyros", "Dracona", "Marid", "Zephyros"], exportingPlanets: ["Zeloris", "Elysara", "Ratha"]),
+    Item(name: "Crops", importingPlanets: ["Cryon", "Pyros", "Dracona", "Marid", "Zephyros"], exportingPlanets: ["Zeloris", "Elysara", "Ratha"]),
     Item(name: "Ores", importingPlanets: ["Cryon", "Elysara", "Pyros"], exportingPlanets: ["Zeloris", "Targalon", "Noridia", "Dracona", "Marid"]),
-    Item(name: "Gases (Breathing kind)", importingPlanets: ["Noridia", "Pyros", "Dracona", "Marid"], exportingPlanets: ["Elysara", "Zephyros", "Chronus"])
+    Item(name: "Gases", importingPlanets: ["Noridia", "Pyros", "Dracona", "Marid"], exportingPlanets: ["Elysara", "Zephyros", "Chronus"])
   ];
 
   static const List<Item> refinedGoodsItems = [
     Item(name: "Metals", importingPlanets: ["Zeloris", "Cryon", "Ratha", "Dracona", "Marid", "Zephyros"], exportingPlanets: ["Cryon", "Elysara", "Pyros"]),
     Item(name: "Clothes", importingPlanets: ["Zeloris", "Icarion", "Cryon", "Pyros", "Dracona"], exportingPlanets: ["Targalon", "Cryon", "Elysara", "Ratha", "Dracona", "Marid"]),
     Item(name: "Food", importingPlanets: ["Zeloris", "Icarion", "Targalon", "Pyros", "Dracona", "Marid", "Zephyros", "Chronus"], exportingPlanets: ["Icarion", "Targalon", "Elysara", "Ratha"]),
-    Item(name: "Pharmaceuticals", importingPlanets: ["Zeloris", "Icarion", "Pyros", "Dracona", "Zephyros", "Chronus"], exportingPlanets: ["Icarion", "Targalon", "Cryon", "Elysara", "Ratha", "Marid"]),
+    Item(name: "Medicine", importingPlanets: ["Zeloris", "Icarion", "Pyros", "Dracona", "Zephyros", "Chronus"], exportingPlanets: ["Icarion", "Targalon", "Cryon", "Elysara", "Ratha", "Marid"]),
     Item(name: "Luxury Goods", importingPlanets: ["Cryon", "Elysara"], exportingPlanets: ["Icarion", "Targalon", "Elysara", "Ratha", "Marid"])
   ];
 
@@ -93,9 +93,9 @@ class CargoItems{
     ItemCategory("Equipment", {CargoTypes.bulkGoods, CargoTypes.highValue}, equipmentItems),
     ItemCategory("War", {CargoTypes.specialCargo, CargoTypes.highValue, CargoTypes.timeSensitive}, warItems),
     ItemCategory("Research", {CargoTypes.parcels, CargoTypes.specialCargo}, researchItems),
-    ItemCategory("Package", {CargoTypes.parcels, CargoTypes.specialCargo, CargoTypes.timeSensitive},
+    ItemCategory("Packages", {CargoTypes.parcels, CargoTypes.specialCargo, CargoTypes.timeSensitive},
         [ Item(
-            name: "Packages",
+            name: "Package",
             importingPlanets: ['Zeloris', 'Icarion', 'Targalon', 'Noridia', 'Cryon', 'Elysara', 'Pyros', 'Ratha', 'Dracona', 'Marid', 'Zephyros', 'Chronus'],
             exportingPlanets: ['Zeloris', 'Icarion', 'Targalon', 'Noridia', 'Cryon', 'Elysara', 'Pyros', 'Ratha', 'Dracona', 'Marid', 'Zephyros', 'Chronus'])
         ])

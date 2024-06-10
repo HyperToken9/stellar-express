@@ -45,7 +45,11 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
         onTap: () {
           if (isDelivering){
 
+            print("We do delivery");
+            print("Initiated Missions: ${game.playerData.initiatedMissions}");
+            print("remove mission: $missionData");
             game.playerData.initiatedMissions.remove(missionData!);
+            print("Initiated Missions: ${game.playerData.initiatedMissions}");
             game.playerData.completedMissions.add(missionData!);
 
             print("Mission Completed");

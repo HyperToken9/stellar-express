@@ -81,6 +81,7 @@ flutter:
      - assets/images/planets/
      - assets/images/cargo_ships/
      - assets/images/user_interface/
+     - assets/images/user_interface/mission_cards/
      - assets/images/control_interface/
      - assets/images/space_ships/
 

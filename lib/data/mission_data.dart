@@ -1,6 +1,6 @@
 
 import 'dart:math';
-
+import 'package:collection/collection.dart';
 import 'package:star_routes/data/world_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/player_data.dart';
@@ -122,16 +122,6 @@ class MissionData{
 
   }
 
-  String formattedEligibleShips(){
-
-    String result = "";
-    for (SpaceShipData spaceShipData in SpaceShipData.spaceShips){
-      if (eligibleShips.contains(spaceShipData.shipClassName)){
-        result += "${spaceShipData.shipClassNameShorthand} ";
-      }
-    }
-    return result;
-  }
 
   String formattedCargoDetails()
   {
@@ -169,18 +159,62 @@ class MissionData{
     );
   }
 
+  String getDisplayItemName(){
+    if (cargoCategoryName == "Research")
+    {
+      return "Research Data".toUpperCase();
+    }
+    return cargoItemName.toUpperCase();
+  }
+  String getDisplayCargoSize(){
+    return cargoTypeSizeData.cargoSize.toUpperCase();
+  }
+
+  String getDisplayEligibleShips(){
+    String result = "";
+    for (SpaceShipData spaceShipData in SpaceShipData.spaceShips){
+      if (eligibleShips.contains(spaceShipData.shipClassName)){
+        result += "${spaceShipData.shipClassNameShorthand} ";
+      }
+    }
+    return result;
+  }
+  String getDisplayBackgroundImagePath(){
+    return "assets/images/user_interface/mission_cards/${cargoCategoryName.toLowerCase().replaceAll(' ', '_')}.png";
+  }
 
   @override
   String toString() {
-    return
-"""MissionData
-($sourcePlanet -> $destinationPlanet)
-Eligible Ships: $eligibleShips
-Cargo Category: $cargoCategoryName
-Cargo Item: $cargoItemName
-Cargo Type: $cargoTypeSizeData
-Reward: $reward
-""";
+    return "MissionData(missionID: $missionId)";
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    if (other is MissionData) {
+      return missionId == other.missionId &&
+          sourcePlanet == other.sourcePlanet &&
+          destinationPlanet == other.destinationPlanet &&
+          eligibleShips.length == other.eligibleShips.length &&
+          ListEquality().equals(eligibleShips, other.eligibleShips) &&
+          cargoTypeSizeData == other.cargoTypeSizeData &&
+          cargoCategoryName == other.cargoCategoryName &&
+          cargoItemName == other.cargoItemName &&
+          reward == other.reward;
+    }
+    return false;
+  }
+  @override
+  int get hashCode {
+    return missionId.hashCode ^
+    sourcePlanet.hashCode ^
+    destinationPlanet.hashCode ^
+    eligibleShips.hashCode ^
+    cargoTypeSizeData.hashCode ^
+    cargoCategoryName.hashCode ^
+    cargoItemName.hashCode ^
+    reward.hashCode;
   }
 
 }

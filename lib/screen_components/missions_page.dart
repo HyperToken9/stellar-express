@@ -11,12 +11,14 @@ class MissionsPage extends StatelessWidget {
   final List<MissionData> acceptedMissions;
 
   final void Function(MissionData) onAccept;
+  final void Function(MissionData) onReject;
 
   const MissionsPage({super.key,
                       required this.initiatedMissions,
                       required this.availableMissions,
                       required this.acceptedMissions,
-                      required this.onAccept
+                      required this.onAccept,
+                      required this.onReject,
                     });
 
   @override
@@ -50,6 +52,7 @@ class MissionsPage extends StatelessWidget {
                   return MissionCard(
                     missionData: mission,
                     onAccept: onAccept,
+                    onReject: onReject,
                     isAccepted: true,
                   );
                 }
@@ -75,6 +78,7 @@ class MissionsPage extends StatelessWidget {
                   return MissionCard(
                       missionData: mission,
                       onAccept: onAccept,
+                      onReject: onReject,
                       isAccepted: true,
                     );
                   }
@@ -101,6 +105,7 @@ class MissionsPage extends StatelessWidget {
                   return MissionCard(
                       missionData: mission,
                       onAccept: onAccept,
+                      onReject: onReject,
                       isAccepted: false,
                     );
                   }
