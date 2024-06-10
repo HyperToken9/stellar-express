@@ -27,7 +27,7 @@ class Datastore {
       'Express Shuttle': {'isOwned': false, 'isCarryingCargo': false},
       'Heavy Hauler': {'isOwned': false, 'isCarryingCargo': false},
       'Large Freighter': {'isOwned': false, 'isCarryingCargo': false},
-      'Long Range Transport': {'isOwned': false, 'isCarryingCargo': false},
+      'Endurance Cruiser': {'isOwned': false, 'isCarryingCargo': false},
       'Specialized Vessel': {'isOwned': false, 'isCarryingCargo': false},
       'Stealth Courier': {'isOwned': false, 'isCarryingCargo': false}
     },

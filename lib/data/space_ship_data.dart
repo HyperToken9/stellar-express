@@ -103,8 +103,8 @@ class SpaceShipData{
       spriteName: "large_freighter",
     ),
     SpaceShipData(
-      shipClassName: "Long Range Transport",
-      shipClassNameShorthand: "LRT",
+      shipClassName: "Endurance Cruiser",
+      shipClassNameShorthand: "EC",
       displayCapacity: 4,
       displaySpeed: 2,
       displayManeuverability: 1,

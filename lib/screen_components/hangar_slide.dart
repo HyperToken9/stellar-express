@@ -16,101 +16,128 @@ class HangarSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(0.0),
-      child: Column(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Transform.rotate(
-              angle: pi/3,
-              child: Container(
-                width: 350,
-                padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                child: Image.asset("assets/images/space_ships/$spriteName.png",
-                // width: 300,
-                // height: 200,
-                fit: BoxFit.contain,
-                            ),
-              ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-            child: Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0x3dCCCCCC),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15.0),
-                  bottomRight: Radius.circular(15.0),
-                  topRight: Radius.circular(5.0),
-                  bottomLeft: Radius.circular(5.0),
-                ),
-              ),
 
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        // const SizedBox(height: 280),
+        Stack(
+          // fit: StackFit.expand,
+          // clipBehavior: Clip.none,
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            Image.asset(
+              'assets/images/user_interface/hanger_cards/${shipName.toLowerCase().replaceAll(' ', '_')}.png',
+              fit: BoxFit.contain,
+            ),
+            Container(
+              // margin: const EdgeInsets.only(top: 10, bottom: 300),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  /*Ship Class*/
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child: Text(
-                      shipName.toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 27.0,
-                        fontFamily: 'Audiowide',
-                        color: Colors.white,
-
-                      ),
-                    ),
-                  ),
-
-                  /* Ship Specifications */
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 25.0),
-                    child: Column(
-                      children: [
-                        ShipSpecification(spec: "Capacity", rating: 1),
-                        ShipSpecification(spec: "Speed", rating: 2),
-                        ShipSpecification(spec: "Maneuverability", rating: 3),
-                      ],
-                    ),
-                  ),
-                  /* Buy Sell */
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  // Border text
+                  const SizedBox(height: 10.0),
                   Stack(
-                    // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                        onPressed: () {},
-                        child: const Image(
-                            fit: BoxFit.contain,
-                            image: AssetImage('assets/images/user_interface/buy_button.png'),
-                          ),
-                      ),
-                      const Positioned(
-                        top: 24,
-                        left: 200,
-                        child: Text(
-                        '3000',
-                        style: TextStyle(
-                          color: Color(0xFF1C1C1C),
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Audiowide',
+                      // Fill text
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            shipName.toUpperCase(),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontFamily: 'SpaceMono',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40.0,
 
-                        )
-                       )
+                              color: Colors.black,
+                              letterSpacing: -2,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            shipName.toUpperCase(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'SpaceMono',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40.0,
+                              letterSpacing: -2,
+                              foreground: Paint()
+                                ..style = PaintingStyle.stroke
+                                ..strokeWidth = 1
+                                ..color = const Color(0xFFA9A9A9),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 22.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 45.0),
+                    child: Column(
+                      children: [
+                        ShipSpecification(spec: "SPEED", rating: 1),
+                        ShipSpecification(spec: "AGILITY", rating: 2),
+                        ShipSpecification(spec: "CARGO", rating: 3),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 22.0),
+                  Stack(
+                    children: [
+                      TextButton(
+                        onPressed: (){
+                          print("Buy");
+                        },
+                        child: const Image(
+                          image: AssetImage('assets/images/user_interface/buy_button.png'),
+                          width: 300,
+                        ),
+                      ),
+                      Positioned(
+                        right: 52,
+                        top: 20,
+                        child: Row(
+                          children: [
 
-                ],
+                            const Text(
+                              "500",
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontFamily: 'Audiowide',
+                                color: Color(0xFF2A2A2A),
+                                letterSpacing: -0.54,
+                              )
+                            ),
+                            const SizedBox(width: 5),
+                            /*Image */
+                            Image.asset(
+                              "assets/images/user_interface/black_coin.png",
+                              width: 25,
 
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                ]
               ),
             ),
-          )
-        ],
-      ),
+
+          ],
+        ),
+        const SizedBox(height: 40),
+      ],
     );
   }
 }
@@ -129,18 +156,22 @@ class ShipSpecification extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // const SizedBox(width: 1),
         Text(
-          "$spec:".toUpperCase(),
+          "$spec".toUpperCase(),
           style: const TextStyle(
             fontFamily: 'MonoSpace',
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFCACACA),
-            fontSize: 15.0,
+            fontWeight: FontWeight.normal,
+            color: Color(0xFFD0D0D0),
+            fontSize: 24.0,
+            letterSpacing: -2,
           ),
         ),
+        // const SizedBox(width: 50),
         Image(
           image: AssetImage('assets/images/user_interface/rating$rating.png'),
-        )
+        ),
+        // const SizedBox(width: 1),
       ],
     );
   }
