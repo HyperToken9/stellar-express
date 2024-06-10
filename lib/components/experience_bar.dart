@@ -2,6 +2,7 @@
 
 import 'dart:ui' as ui;
 
+import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
 import 'package:star_routes/controls/dashboard_button.dart';
@@ -18,6 +19,7 @@ class ExperienceBar extends PositionComponent with HasGameRef<StarRoutes> {
   Paint fillBrush = Paint()..color = const Color(0xFFFFFFFF);
   Paint translucentBrush = Paint()..color = const Color(0xC0FFFFFF);
 
+  int totalExperience = 0;
   double fractionComplete = 0.1;
   int playerLevel = 5;
 
@@ -43,17 +45,26 @@ class ExperienceBar extends PositionComponent with HasGameRef<StarRoutes> {
         bottomRight: Radius.circular(radius),
       ));
 
+    updateExperienceBar();
+
+
+  }
+
+  void updateExperienceBar(){
+
+    if (game.playerData.totalExperience == totalExperience){
+      return;
+    }
+    totalExperience = game.playerData.totalExperience;
     playerLevel = game.playerData.getPlayerLevel();
     fractionComplete = game.playerData.getExperienceLevelProgress();
-
-
   }
 
   @override
   void render(Canvas canvas) {
 
     super.render(canvas);
-
+    updateExperienceBar();
     canvas.clipPath(barMask);
 
     /* Draw Bar Background */

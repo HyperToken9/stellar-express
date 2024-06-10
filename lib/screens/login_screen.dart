@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
     */
     // widget.game.playerData.playerId = id;
     widget.game.playerData.loadPlayerData(id);
-
+    // widget.game.experienceBar.up
     widget.game.overlays.add(MainMenuScreen.id);
     widget.game.overlays.remove(LoginScreen.id);
 
@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 TextButton(
                   onPressed: () async {
-                    String id = await widget.game.auth.signInWithGoogle();
+                    String id = await _authentication.signInWithGoogle();
 
                     processLogin(id);
 

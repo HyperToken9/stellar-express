@@ -52,7 +52,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     // Load the ship image
     sprite = await Sprite.load("${Assets.shipBasePath}${game.playerData.getEquippedShipData().spriteName}.png");
 
-    position = game.playerData.shipLocation;
+    position = game.playerData.shipSpawnLocation;
 
     anchor = Anchor.center;
 

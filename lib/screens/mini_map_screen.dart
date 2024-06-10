@@ -32,8 +32,12 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
   bool _isPlanetFocused = false;
 
   PlanetData? _focusedPlanet;
+  final FocusNode _searchFocusNode = FocusNode();
+
+  List<PlanetData> _filteredPlanets = [];
 
   final TransformationController _transformationController = TransformationController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void didChangeDependencies() {
@@ -50,8 +54,8 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
     double centerX = widget.game.userShip.position.x - Config.worldBoundaryLeft;
     double centerY = widget.game.userShip.position.y - Config.worldBoundaryTop;
 
-    print("User Ship Position: ${widget.game.userShip.position}");
-    print("CenterX: $centerX, CenterY: $centerY");
+    // print("User Ship Position: ${widget.game.userShip.position}");
+    // print("CenterX: $centerX, CenterY: $centerY");
 
     // Calculate the initial translation to center the view on (centerX, centerY)
     double initialX = visibleWidth / 2 - centerX;
@@ -65,6 +69,26 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
     widget.game.overlays.add(BlankScreen.id);
     widget.game.resumeEngine();
   }
+
+  void _moveToPlanet(PlanetData planet) {
+    final size = MediaQuery.of(context).size;
+    double visibleWidth = size.width;
+    double visibleHeight = size.height;
+
+    double centerX = planet.location.x - Config.worldBoundaryLeft;
+    double centerY = planet.location.y - Config.worldBoundaryTop;
+
+    double initialX = visibleWidth / 2 - centerX;
+    double initialY = visibleHeight / 2 - centerY;
+
+    _transformationController.value = Matrix4.identity()..translate(initialX, initialY);
+
+    setState(() {
+      _isPlanetFocused = true;
+      _focusedPlanet = planet;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +114,8 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
     final List<PlanetData> planets = WorldData.planets;
     // planets.add(fakePlanetData);
 
+
+
     return Scaffold(
       backgroundColor: Colors.black54,
       body: Center(
@@ -100,9 +126,14 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
               boundaryMargin: const EdgeInsets.all(100),
               minScale: 0.1,
               onInteractionStart: (details) {
+
+                _searchFocusNode.unfocus();
+                _searchController.clear();
+                _filteredPlanets = [];
                 setState(() {
                   _isPlanetFocused = false;
                 });
+
               },
               transformationController: _transformationController,
               child: SizedBox(
@@ -171,6 +202,147 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                   ],
                 ),
               ),
+            ),
+            Positioned(
+              top: 40,
+              left: 20,
+              child: Container(
+                padding: const EdgeInsets.only(top:5 , left: 5, right: 5, bottom: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: Colors.grey,
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 200,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Color(0xEEEFEFEF),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: TextFormField(
+                        focusNode: _searchFocusNode,
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.only(top: 10, left: 10),
+                          hintText: "Search Planets",
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1.5,
+                            ),
+                          ),
+                          // shape
+
+                        ),
+                        onChanged: (String value) {
+                          if (value.isEmpty) {
+                            setState(() {
+                              _filteredPlanets = [];
+                            });
+                          }else{
+                            // print("Looing for: $value");
+                            setState(() {
+                              _filteredPlanets = planets.where((planet) => planet.planetName.toLowerCase().contains(value.toLowerCase())).toList();
+                            });
+                          }
+                        },
+                        // onTapOutside: (event) => {
+
+                        /* Unfocused */
+                        // _searchFocusNode.unfocus(),
+
+                        /* Clear the text in the field */
+                        // setState(() {
+                        //   _filteredPlanets = [];
+                        // }),
+
+
+
+                        // },
+                      ),
+                    ),
+
+
+                    Column(
+                        children: [..._filteredPlanets.map((planet){
+                          return InkWell(
+                            onTap: (){
+                              print("Tapped on ${planet.planetName}");
+                              _moveToPlanet(planet);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 4),
+                              width: 200,
+                              height: 45,
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(left: 15),
+                              decoration: BoxDecoration(
+                                color: const Color(0x81FFFFFF),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              /* child with text */
+                              child: Text(
+                                planet.planetName,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 15,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                          );
+
+                        })
+                        ]
+                    ),
+
+                    // ...planets.map((planet) {
+                    //   return Card(
+                    //     child: ListTile(
+                    //       title: Text(planet.planetName),
+                    //       onTap: () {
+                    //         _moveToPlanet(planet);
+                    //       },
+                    //     ),
+                    //   );
+                    // }).toList(),
+
+                    // Expanded(
+                    //   child: ListView.builder(
+                    //     itemCount: planets.length,
+                    //     itemBuilder: (context, index) {
+                    //       return Card(
+                    //         child: ListTile(
+                    //           title: Text(planets[index].planetName),
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+
             ),
             AnimatedPositioned(
               curve: Curves.easeInOut,
@@ -253,6 +425,8 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    print("MiniMap Back button intercepted");
+    _searchFocusNode.unfocus();
     _closeMiniMap();
     return true;
   }
@@ -265,7 +439,11 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
 
   @override
   void dispose() {
+    /* Dispose everything that can interfere with the game */
 
+    _searchController.dispose();
+
+    _searchFocusNode.dispose();
     BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
   }

@@ -7,6 +7,8 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:star_routes/screens/blank_screen.dart';
 import 'package:star_routes/services/authentication.dart';
 import 'firebase_options.dart';
@@ -46,7 +48,10 @@ void main() async {
   final StarRoutes game = StarRoutes(playerData: playerData);
 
   runApp(
-      GameApp(game: game),
+      MaterialApp(
+        home: GameApp(game: game),
+      )
+      // )GameApp(game: game),
   );
 }
 
@@ -81,32 +86,5 @@ class _GameAppState extends State<GameApp> {
     );
   }
 
-  // bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-  //
-  //   if (widget.game.overlays.count) {
-  //     widget.game.overlays.clear();
-  //     return true;
-  //   }
-  //
-  //   return true;
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   BackButtonInterceptor.add(myInterceptor);
-  // }
-  //
-  // @override
-  // void dispose() {
-  //
-  //
-  //   BackButtonInterceptor.remove(myInterceptor);
-  //
-  //   super.dispose();
-  // }
-
 }
-
-
 

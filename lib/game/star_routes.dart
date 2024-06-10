@@ -162,16 +162,16 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
 
   void adjustCameraZoom({required Vector2 objectSize, required double screenPercentage}) {
-    print("Object Size: $objectSize");
+    // print("Object Size: $objectSize");
     Vector2 screenSize = size;
 
     Vector2 targetSize = screenSize * screenPercentage / 100;
 
     Vector2 targetZoom = Vector2(targetSize.x  / objectSize.x, targetSize.y / objectSize.y);
-    print("Target Zoom: $targetZoom");
+    // print("Target Zoom: $targetZoom");
     cameraZoomSetPoint = targetZoom.x;
 
-    print("Camera Zoom Set Point: $cameraZoomSetPoint");
+    // print("Camera Zoom Set Point: $cameraZoomSetPoint");
   }
 
 

@@ -17,7 +17,7 @@ class PlayerData{
 
   String equippedShip  = "Small Courier";
 
-  Vector2 shipLocation = Vector2(1291.0, 2261.0) + Vector2(0, 300);
+  Vector2 shipSpawnLocation = Vector2(1291.0, 2261.0) + Vector2(0, 300);
 
   Map<String, SpaceShipState> spaceShipStates = {};
 
@@ -56,8 +56,8 @@ class PlayerData{
 
     /* Load Player Data from Firebase */
     Datastore dataStore = Datastore();
-    dataStore.loadPlayerData(playerId);
-    print("Loading Player Data");
+    dataStore.loadPlayerData(this);
+    // print("Loading Player Data");
 
 
   }
@@ -143,7 +143,7 @@ class PlayerData{
       xp -= expRequired(i);
     }
 
-    print("XP: $xp, XP Required: $xpRequired");
+    // print("XP: $xp, XP Required: $xpRequired");
     return xp/ xpRequired;
   }
 
