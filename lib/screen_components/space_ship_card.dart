@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 
 
-class ShapeShipCard extends StatelessWidget {
+class SpaceShipCard extends StatelessWidget {
 
   final SpaceShipState shipState;
 
   // final VoidCallback onAccept;
-  const ShapeShipCard({super.key,
+  const SpaceShipCard({super.key,
     required this.shipState,
   });
 
@@ -26,13 +26,13 @@ class ShapeShipCard extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image(
+          const Image(
               fit: BoxFit.contain,
               image: AssetImage(
-                  missionData.getDisplayBackgroundImagePath()
+                  "assets/images/user_interface/ship_cards/temp_card.png"
               )
           ),
-          Positioned(
+          const Positioned(
               top: 7,
               left: 10,
               child: Text.rich(
@@ -40,8 +40,8 @@ class ShapeShipCard extends StatelessWidget {
                   TextSpan(
                       children: [
                         TextSpan(
-                          text: "${missionData.getDisplayItemName()} ",
-                          style: const TextStyle(
+                          text: "",
+                          style: TextStyle(
                             fontSize: 22.0,
                             fontFamily: 'Audiowide',
                             color: Color(0xFF191919),
@@ -51,8 +51,8 @@ class ShapeShipCard extends StatelessWidget {
                         /*space */
 
                         TextSpan(
-                          text: missionData.getDisplayCargoSize(),
-                          style: const TextStyle(
+                          text: "",
+                          style: TextStyle(
                             fontSize: 15.0,
                             fontFamily: 'Audiowide',
                             color: Color(0xFF7B7B7B),
@@ -67,7 +67,7 @@ class ShapeShipCard extends StatelessWidget {
               top: 32,
               left: 10,
               child: Text(
-                missionData.getDisplayEligibleShips(),
+                "missionData.getDisplayEligibleShips()",
                 style: const TextStyle(
                   fontSize: 13.0,
                   fontFamily: 'SpaceMono',
@@ -83,7 +83,7 @@ class ShapeShipCard extends StatelessWidget {
                   TextSpan(
                       children: [
                         TextSpan(
-                            text: missionData.sourcePlanet.toUpperCase(),
+                            text: "missionData.sourcePlanet.toUpperCase()",
                             style: const TextStyle(
                               fontSize: 20.0,
                               fontFamily: 'SpaceMono',
@@ -102,7 +102,7 @@ class ShapeShipCard extends StatelessWidget {
                             )
                         ),
                         TextSpan(
-                            text: missionData.destinationPlanet.toUpperCase(),
+                            text:" missionData.destinationPlanet.toUpperCase()",
                             style: const TextStyle(
                               fontSize: 20.0,
                               fontFamily: 'SpaceMono',
@@ -134,7 +134,7 @@ class ShapeShipCard extends StatelessWidget {
                                 )
                             ),
                             TextSpan(
-                                text: missionData.reward.toString(),
+                                text: "missionData.reward.toString()",
                                 style: const TextStyle(
                                   fontSize: 16.0,
                                   fontFamily: 'Audiowide',
@@ -155,52 +155,6 @@ class ShapeShipCard extends StatelessWidget {
               )
           ),
 
-          if (!isAccepted)
-            Positioned(
-                right: 10,
-                bottom: 6,
-                child: Row(
-                    children:[
-                      TextButton(
-                          style: ButtonStyle(
-                            padding: WidgetStateProperty.all(const EdgeInsets.all(0.0)),
-                            minimumSize: WidgetStateProperty.all<Size>(Size.zero),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          onPressed: (){
-                            print("Declining A mission");
-                            onReject(missionData);
-                          },
-                          child: Image.asset(
-                            "assets/images/user_interface/reject_button.png",
-                            scale: 1,
-                            fit: BoxFit.contain,
-                          )
-
-                      ),
-                      SizedBox(width: 10,),
-                      TextButton(
-                          style: ButtonStyle(
-                            padding: WidgetStateProperty.all(const EdgeInsets.all(0.0)),
-                            minimumSize: WidgetStateProperty.all<Size>(Size.zero),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          onPressed: (){
-                            print("Accepting A mission");
-                            onAccept(missionData);
-                          },
-                          child: Image.asset(
-                            "assets/images/user_interface/accept_button.png",
-                            scale: 0.9,
-                            fit: BoxFit.contain,
-                          )
-
-                      )
-                    ]
-
-                )
-
-            )
         ],
       ),
     );

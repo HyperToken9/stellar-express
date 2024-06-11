@@ -8,6 +8,7 @@ import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/data/mission_data.dart';
 
 import 'package:star_routes/screen_components/missions_page.dart';
+import 'package:star_routes/screen_components/space_ships_page.dart';
 
 
 class DashboardScreen extends StatefulWidget {
@@ -112,7 +113,9 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                               onAccept: acceptMissionCallback,
                               onReject: rejectMissionCallback,
                           ),
-                          Icon(Icons.directions_transit),
+                          SpaceShipsPage(
+                            spaceShipStates: widget.game.playerData.spaceShipStates,
+                          ),
                         ],
                       ),
                     ),

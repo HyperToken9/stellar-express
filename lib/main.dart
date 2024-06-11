@@ -57,10 +57,11 @@ class _GameAppState extends State<GameApp> {
   @override
   Widget build(BuildContext context) {
     final StarRoutes game = widget.game;
+
     return GameWidget(
       game: game,
       loadingBuilder: (context) => LoadingScreen(game: game),
-      initialActiveOverlays: const [MainMenuScreen.id],
+      initialActiveOverlays: const [DashboardScreen.id],
       overlayBuilderMap: {
         LoginScreen.id: (context, _) => LoginScreen(game: game),
         LoadingScreen.id: (context, _) => LoadingScreen(game: game),

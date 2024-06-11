@@ -83,6 +83,7 @@ flutter:
      - assets/images/user_interface/
      - assets/images/user_interface/mission_cards/
      - assets/images/user_interface/hanger_cards/
+     - assets/images/user_interface/ship_cards/
      - assets/images/control_interface/
      - assets/images/space_ships/
 
