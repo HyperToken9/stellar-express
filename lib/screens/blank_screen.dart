@@ -33,7 +33,6 @@ class _BlankScreenState extends State<BlankScreen> {
     // print("Back button intercepted");
     widget.game.overlays.add(MainMenuScreen.id);
     widget.game.overlays.remove(BlankScreen.id);
-    widget.game.pauseEngine();
 
 
     // print("Trying to remove blank screen");
@@ -48,14 +47,16 @@ class _BlankScreenState extends State<BlankScreen> {
   @override
   void initState() {
     super.initState();
-    // print("INITIALIZING BLANK SCREEN");
+    widget.game.resumeEngine();
+    widget.game.setupGame();
     BackButtonInterceptor.add(myInterceptor);
   }
 
   @override
   void dispose() {
-    // print("DISPOSING BLANK SCREEN");
-
+    print("DISPOSING BLANK SCREEN");
+    // print("PAUSING ENGINE");/
+    widget.game.pauseEngine();
     BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
   }

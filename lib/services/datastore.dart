@@ -2,12 +2,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame/components.dart';
-import 'package:star_routes/data/cargo_types.dart';
-import 'package:star_routes/data/mission_data.dart';
 
+import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/player_data.dart';
-import 'package:star_routes/data/space_ship_data.dart';
-import 'package:star_routes/data/cargo_type_size_data.dart';
+import 'package:star_routes/data/space_ship_state.dart';
+
 import 'package:star_routes/game/star_routes.dart';
 
 

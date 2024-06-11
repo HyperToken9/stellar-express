@@ -48,7 +48,7 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
         print("Tapped MiniMap");
         gameRef.overlays.add(MiniMapScreen.id);
         gameRef.overlays.remove(BlankScreen.id);
-        gameRef.pauseEngine();
+        // gameRef.pauseEngine();
 
       },
       onRelease: () {},
@@ -104,6 +104,7 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
     if (!isEnabled){
       return;
     }
+    // print()
     /* Resize Image Base Image */
     final srcRect = Rect.fromLTWH(0, 0, miniMap.width.toDouble(), miniMap.height.toDouble());
     final dstRect = Rect.fromLTWH(0, 0, size.x, size.y);

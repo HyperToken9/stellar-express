@@ -5,8 +5,10 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/data/planet_data.dart';
-import 'package:star_routes/data/player_data.dart';
+import 'package:star_routes/data/space_ship_state.dart';
 import 'package:star_routes/data/mission_data.dart';
+import 'package:star_routes/data/space_ship_data.dart';
+
 import 'package:star_routes/game/config.dart';
 
 import 'package:star_routes/game/star_routes.dart';
@@ -20,9 +22,11 @@ import 'package:star_routes/states/swap_ship_button.dart';
 class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   /* Ship Data */
-  // SpaceShipData spaceShipData;
+  // String shipName;
+  SpaceShipData spaceShipData;
 
   /* Ship Control State */
+  bool applyPhysics = true;
   Vector2 impulse = Vector2.zero();
   Vector2 linearVelocity = Vector2.zero();
   double angularVelocity = 0;
@@ -43,17 +47,44 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   // Ship({required this.spaceShipData});
 
-  Ship(){
-    size = Vector2(75, 75);
+  Ship({required this.spaceShipData}) {
+    size = Vector2(spaceShipData.spriteSize[0].toDouble(),
+                   spaceShipData.spriteSize[1].toDouble());
+    // switch (shipName) {
+    //   case "Small Courier":
+    //     // print("Small Courier");
+    //     break;
+    //   case "Express Shuttle":
+    //     // print("Express Shuttle");
+    //     break;
+    //   case "Heavy Hauler":
+    //     // print("Heavy Hauler");
+    //     break;
+    //   case "Large Freighter":
+    //     // print("Large Freighter");
+    //     break;
+    //   case "Endurance Cruiser":
+    //     // print("Endurance Cruiser");
+    //     break;
+    //   case "Specialized Vessel":
+    //     // print("Specialized Vessel");
+    //     break;
+    //   case "Stealth Courier":
+    //     // print("Stealth Courier");
+    //     break;
+    //   default:
+    //     // print("Default");
+    //     break;
+    // }
   }
 
   @override
   Future<void> onLoad() async {
     // Load the ship image
-    sprite = await Sprite.load("${Assets.shipBasePath}${game.playerData.getEquippedShipData().spriteName}.png");
-
-    position = game.playerData.shipSpawnLocation;
-
+    sprite = await Sprite.load("${Assets.shipBasePath}${spaceShipData.spriteName}.png");
+    print("Loaded Ship: ${spaceShipData.shipClassName}");
+    priority = 7;
+    // position = game.playerData.shipSpawnLocation;
     anchor = Anchor.center;
 
     /* Game Attributes */
@@ -101,9 +132,11 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   @override
   void update(double dt){
     super.update(dt);
-
+    if (!applyPhysics){
+      return;
+    }
     // print("${gameRef.camera.}");
-
+    // print("Ship name: $shipName");
     /* Update Position */
     setVelocity();
     position += linearVelocity * dt;
@@ -156,6 +189,17 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     linearVelocity += boundaryPushback;
 
   }
+
+  // @override
+  // void render(Canvas canvas){
+  //   super.render(canvas);
+  // //   /*A green BOX*/
+  //   /* does sprite exist */
+  //   if (sprite != null) {
+  //     sprite!.render(canvas, size: size);
+  //   }
+  //   // canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), Paint()..color = const Color(0x8800FF00));
+  // }
 
   void insertIntoOrbit() {
 

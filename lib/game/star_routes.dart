@@ -1,5 +1,7 @@
 
 
+import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
@@ -26,6 +28,8 @@ import 'package:star_routes/controls/swap_ship_button.dart';
 import 'package:star_routes/screens/loading_screen.dart';
 import 'package:star_routes/screens/main_menu_screen.dart';
 
+import "package:star_routes/states/dpad.dart";
+
 import 'package:star_routes/services/authentication.dart';
 
 
@@ -51,17 +55,12 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   double cameraZoomSetPoint = 1.0;
   List<Planet> closestPlanets = [];
 
+  List<Ship> showRoomShips = [];
+
   StarRoutes({required this.playerData});
 
   @override
   Future<void> onLoad() async {
-
-
-    /* Initialize Player Data */
-    // playerData = PlayerData();
-
-    // print(MissionData.makeMission(playerData));
-
 
     /* Initialize Controls */
     dpad = DPad();
@@ -77,35 +76,89 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     balance = Balance();
 
     /* Initialize User Ship */
-    userShip = Ship();
+    for (SpaceShipData shipData in SpaceShipData.spaceShips){
+      if (shipData.shipClassName == "Small Courier"){
+        userShip = Ship(spaceShipData: shipData);
+      }
+    }
+
+    /* Initialize Hanger Ships */
+    for (SpaceShipData shipData in SpaceShipData.spaceShips){
+      Ship newShip = Ship(spaceShipData: shipData);
+      newShip.applyPhysics = false;
+      showRoomShips.add(newShip);
+    }
+    // showRoomShips.add(Ship(shipName: "Small Courier"));
 
     /* Initialize World */
     final StarWorld starWorld = StarWorld(userShip: userShip);
     await starWorld.loadPlanets();
     world = starWorld;
 
-    // world.loadPlanets();
-
-
-    // await world.loadPlanets();
 
     camera = CameraComponent(world: world,
         hudComponents: [dpad, orbitButton, deliveryButton, miniMap,
                         dashboardButton, swapShipButton, navigationPointer,
                         experienceBar, balance]);
 
+    // print("Children of the camera ${camera.hud}");
     addAll([
       Background(),
       world,
     ]);
     // await Future.wait(worldData.planets.map((planet) => planet.loadSprite()));
     camera.follow(userShip);
+
     adjustCameraZoom(objectSize: userShip.size, screenPercentage: 20);
 
     print("Loaded Game");
 
   }
 
+  void setupHanger() {
+    print("Setting up Hangar");
+    dpad.setState(DPadStates.inactive);
+    miniMap.setState(false);
+
+    int index = 0;
+    Vector2 startPosition = Vector2(0, 0);
+    Vector2 padding = Vector2(400, 0);
+    for (Ship ship in showRoomShips){
+
+      ship.opacity = 1;
+      if (world.children.contains(ship)){
+        continue;
+      }
+      world.add(ship);
+      ship.anchor = Anchor.bottomCenter;
+
+      startPosition += padding;
+      startPosition += Vector2(ship.size.x / 2, 0);
+      showRoomShips[index].position = startPosition.clone();
+      startPosition += Vector2(ship.size.x / 2, 0);
+      // startPosition += Vector2(2.1 * showRoomShips[index].size.x, 0);
+
+      index++;
+    }
+    userShip.opacity = 0;
+    camera.moveTo(showRoomShips[0].position);
+    adjustCameraZoom(objectSize: showRoomShips[0].size, screenPercentage: 50);
+    // camera.moveTo(showRoomShips[0].position);
+  }
+
+
+  void setupGame(){
+    dpad.setState(DPadStates.idle);
+    miniMap.setState(true);
+
+    for (Ship ship in showRoomShips){
+      if (children.contains(ship)){
+        remove(ship);
+      }
+    }
+    userShip.opacity = 1;
+    camera.follow(userShip);
+  }
 
   void updateClosestPlanets(){
     closestPlanets = [];
@@ -156,7 +209,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     // }
 
     camera.viewfinder.zoom += (cameraZoomSetPoint
-                             - camera.viewfinder.zoom) * 0.01;
+                             - camera.viewfinder.zoom) * 0.02;
 
   }
 
@@ -180,8 +233,6 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     super.update(dt);
 
     updateClosestPlanets();
-
-    // detectCameraZoom();
 
     setCameraZoom();
 

@@ -1,6 +1,7 @@
 
 import 'dart:math';
 
+import 'package:flame/components.dart';
 import 'package:star_routes/data/cargo_types.dart';
 import 'package:star_routes/data/cargo_type_size_data.dart';
 
@@ -20,7 +21,7 @@ class SpaceShipData{
   final Set<CargoTypes> cargoTypes;
 
   final String spriteName;
-
+  final List<int> spriteSize;
 
   const SpaceShipData({
     required this.shipClassName,
@@ -33,6 +34,7 @@ class SpaceShipData{
     required this.spriteName,
     required this.cargoCapacities,
     required this.cargoTypes,
+    required this.spriteSize,
   });
 
 
@@ -65,6 +67,7 @@ class SpaceShipData{
       cargoCapacities: {"Small"},
       cargoTypes: {CargoTypes.parcels, CargoTypes.specialCargo, CargoTypes.timeSensitive},
       spriteName: "small_courier",
+      spriteSize: [249, 429],
     ),
     SpaceShipData(
       shipClassName: "Express Shuttle",
@@ -77,6 +80,7 @@ class SpaceShipData{
       cargoCapacities: {"Small", "Medium"},
       cargoTypes: {CargoTypes.parcels, CargoTypes.highValue, CargoTypes.timeSensitive},
       spriteName: "express_shuttle",
+      spriteSize: [459, 543],
     ),
     SpaceShipData(
       shipClassName: "Heavy Hauler",
@@ -88,7 +92,8 @@ class SpaceShipData{
       baseSalvageValue: 10000,
       cargoCapacities: {"Large", "Very Large"},
       cargoTypes: {CargoTypes.bulkGoods, CargoTypes.parcels},
-      spriteName: "heavy_duty_carrier",
+      spriteName: "heavy_hauler",
+      spriteSize: [1606, 1898],
     ),
     SpaceShipData(
       shipClassName: "Large Freighter",
@@ -101,6 +106,7 @@ class SpaceShipData{
       cargoCapacities: {"Large"},
       cargoTypes: {CargoTypes.bulkGoods, CargoTypes.parcels},
       spriteName: "large_freighter",
+      spriteSize: [639, 1000],
     ),
     SpaceShipData(
       shipClassName: "Endurance Cruiser",
@@ -112,7 +118,8 @@ class SpaceShipData{
       baseSalvageValue: 10000,
       cargoCapacities: {"Medium", "Large"},
       cargoTypes: {CargoTypes.bulkGoods, CargoTypes.parcels, CargoTypes.specialCargo},
-      spriteName: "long_range_transport",
+      spriteName: "endurance_cruiser",
+      spriteSize: [515, 473],
     ),
     SpaceShipData(
       shipClassName: "Specialized Vessel",
@@ -125,6 +132,7 @@ class SpaceShipData{
       cargoCapacities: {"Small", "Medium"},
       cargoTypes: {CargoTypes.specialCargo},
       spriteName: "specialized_vessel",
+      spriteSize: [359, 700],
     ),
     SpaceShipData(
       shipClassName: "Stealth Courier",
@@ -137,6 +145,7 @@ class SpaceShipData{
       cargoCapacities: {"Small", "Medium"},
       cargoTypes: {CargoTypes.parcels, CargoTypes.timeSensitive},
       spriteName: "stealth_courier",
+      spriteSize: [694, 359],
     ),
 
 

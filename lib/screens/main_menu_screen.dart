@@ -45,6 +45,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 ),
                 TextButton(
                   onPressed: () {
+                    widget.game.overlays.remove(MainMenuScreen.id);
                     widget.game.overlays.add(HangarScreen.id);
                   },
                   child: Image.asset('assets/images/user_interface/hangar_button.png'),

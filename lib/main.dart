@@ -1,16 +1,11 @@
 
-import 'dart:async';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:provider/provider.dart';
 
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:star_routes/screens/blank_screen.dart';
-import 'package:star_routes/services/authentication.dart';
 import 'firebase_options.dart';
 
 import 'package:star_routes/game/star_routes.dart';
@@ -23,22 +18,14 @@ import 'package:star_routes/screens/mini_map_screen.dart';
 
 import 'package:star_routes/data/player_data.dart';
 
-final StreamController<PlayerData> _playerDataController = StreamController<PlayerData>();
 
 final PlayerData playerData = PlayerData();
-
-Stream<PlayerData> getPlayerDataStream() {
-  // Add the initial PlayerData to the stream
-  print("Streaming");
-  _playerDataController.add(playerData);
-  return _playerDataController.stream;
-}
 
 
 void main() async {
 
-  // TODO: This is very forced, but no time right now
   WidgetsFlutterBinding.ensureInitialized();
+  // TODO: This is very forced, but no time right now
   Flame.device.setPortraitUpOnly();
 
   await Firebase.initializeApp(
@@ -73,7 +60,7 @@ class _GameAppState extends State<GameApp> {
     return GameWidget(
       game: game,
       loadingBuilder: (context) => LoadingScreen(game: game),
-      initialActiveOverlays: const [HangarScreen.id],
+      initialActiveOverlays: const [MainMenuScreen.id],
       overlayBuilderMap: {
         LoginScreen.id: (context, _) => LoginScreen(game: game),
         LoadingScreen.id: (context, _) => LoadingScreen(game: game),
