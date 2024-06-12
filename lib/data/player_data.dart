@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/components.dart';
 import 'package:star_routes/data/planet_data.dart';
@@ -6,6 +8,7 @@ import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 import 'package:star_routes/data/mission_data.dart';
+import 'package:star_routes/data/world_data.dart';
 import 'package:star_routes/services/datastore.dart';
 
 class PlayerData{
@@ -18,7 +21,7 @@ class PlayerData{
 
   String equippedShip  = "Small Courier";
 
-  Vector2 shipSpawnLocation = Vector2(1291.0, 2261.0) + Vector2(0, 300);
+  Vector2 shipSpawnLocation = Vector2(3766.0, -2102.0) + Vector2(0, 300);
 
   Map<String, SpaceShipState> spaceShipStates = {};
 
@@ -165,6 +168,61 @@ class PlayerData{
     return xp/ xpRequired;
   }
 
+  bool sellShip(SpaceShipData shipData)
+  {
+    SpaceShipState shipState = spaceShipStates[shipData.shipClassName]!;
+
+    if (shipState.isCarryingCargo){
+      return false;
+    }
+
+    /* Update ship state */
+    shipState.isOwned = false;
+    shipState.isEquipped = false;
+    shipState.dockedAt = "";
+    shipState.currentMission = null;
+
+    /* Add amount to wallet */
+    coin += shipData.baseSalvageValue;
+
+    return true;
+
+  }
+
+  bool buyShip(SpaceShipData shipData)
+  {
+    SpaceShipState shipState = spaceShipStates[shipData.shipClassName]!;
+    if (coin < shipData.baseCostValue){
+      return false;
+    }
+
+    /* Update ship state */
+    shipState.isOwned = true;
+    shipState.isCarryingCargo = false;
+    shipState.isEquipped = false;
+    List<String> possibleDockedPlanets = WorldData.portablePlanets;
+
+    /* Iterate through each owned ship */
+    for (SpaceShipState state in spaceShipStates.values){
+
+      if (!state.isOwned || state.dockedAt == ""){
+        continue;
+      }
+      // print("Removing ${state.dockedAt} from possible docked planets");
+      possibleDockedPlanets.remove(state.dockedAt);
+    }
+    // print("Possible Docked Planets: $possibleDockedPlanets");
+    /*Pick a random planet from possibleDockedPlanets */
+    Random random = Random();
+    shipState.dockedAt = possibleDockedPlanets[random.nextInt(possibleDockedPlanets.length)];
+
+    shipState.currentMission = null;
+
+    /* Deduct amount from wallet */
+    coin -= shipData.baseCostValue;
+
+    return true;
+  }
 
 }
 

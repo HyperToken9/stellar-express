@@ -24,6 +24,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   /* Ship Data */
   // String shipName;
   SpaceShipData spaceShipData;
+  Vector2 spawnLocation;
 
   /* Ship Control State */
   bool applyPhysics = true;
@@ -47,35 +48,10 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   // Ship({required this.spaceShipData});
 
-  Ship({required this.spaceShipData}) {
+  Ship({required this.spaceShipData, required this.spawnLocation}){
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
                    spaceShipData.spriteSize[1].toDouble());
-    // switch (shipName) {
-    //   case "Small Courier":
-    //     // print("Small Courier");
-    //     break;
-    //   case "Express Shuttle":
-    //     // print("Express Shuttle");
-    //     break;
-    //   case "Heavy Hauler":
-    //     // print("Heavy Hauler");
-    //     break;
-    //   case "Large Freighter":
-    //     // print("Large Freighter");
-    //     break;
-    //   case "Endurance Cruiser":
-    //     // print("Endurance Cruiser");
-    //     break;
-    //   case "Specialized Vessel":
-    //     // print("Specialized Vessel");
-    //     break;
-    //   case "Stealth Courier":
-    //     // print("Stealth Courier");
-    //     break;
-    //   default:
-    //     // print("Default");
-    //     break;
-    // }
+    position = spawnLocation;
   }
 
   @override
@@ -83,7 +59,6 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     // Load the ship image
     sprite = await Sprite.load("${Assets.shipBasePath}${spaceShipData.spriteName}.png");
     print("Loaded Ship: ${spaceShipData.shipClassName}");
-    priority = 7;
     // position = game.playerData.shipSpawnLocation;
     anchor = Anchor.center;
 
@@ -190,16 +165,6 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   }
 
-  // @override
-  // void render(Canvas canvas){
-  //   super.render(canvas);
-  // //   /*A green BOX*/
-  //   /* does sprite exist */
-  //   if (sprite != null) {
-  //     sprite!.render(canvas, size: size);
-  //   }
-  //   // canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), Paint()..color = const Color(0x8800FF00));
-  // }
 
   void insertIntoOrbit() {
 
@@ -241,7 +206,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
           print("Cargo Pickup");
           gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
           gameRef.deliveryButton.planetData = closestPlanet.planetData;
-
+          gameRef.deliveryButton.missionData = mission;
           gameRef.deliveryButton.isDelivering = false;
           break;
         }
@@ -250,7 +215,14 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     }
 
 
-
+    for (SpaceShipData shipData in SpaceShipData.spaceShips){
+      if (game.playerData.spaceShipStates[shipData.shipClassName]!.dockedAt
+          == closestPlanet.planetData.planetName){
+        gameRef.swapShipButton.planetData = closestPlanet.planetData;
+        gameRef.swapShipButton.setState(SwapShipButtonStates.idle);
+        break;
+      }
+    }
     /* If A ship exits on planet */
     // for (SpaceShipData shipData in gameRef.worldData.spaceShips){
     //   if (shipData.dockedPlanet == closestPlanet.planetData.planetName){
@@ -282,23 +254,11 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   }
 
-  void switchShip(PlanetData planetData) async {
-
-    // for (SpaceShipData spaceShipData in gameRef.worldData.spaceShips){
-    //   if (spaceShipData.dockedPlanet == planetData.planetName){
-    //     sprite = await Sprite.load("space_ships/"+spaceShipData.spriteName+".png");
-    //
-    //     this.spaceShipData.dockedPlanet = planetData.planetName;
-    //     this.spaceShipData.isEquipped = false;
-    //     this.spaceShipData = spaceShipData;
-    //     this.spaceShipData.dockedPlanet = "";
-    //     this.spaceShipData.isEquipped = true;
-    //
-    //
-    //     break;
-    //   }
-    // }
-
+  void loadNewShip() async {
+    sprite = await Sprite.load("${Assets.shipBasePath}${spaceShipData.spriteName}.png");
+    size = Vector2(spaceShipData.spriteSize[0].toDouble(),
+                   spaceShipData.spriteSize[1].toDouble());
+    game.adjustCameraZoom(objectSize: size, screenPercentage: spaceShipData.zoomPercentage);
   }
 
   @override

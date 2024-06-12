@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:star_routes/data/planet_data.dart';
+import 'package:star_routes/data/space_ship_data.dart';
+import 'package:star_routes/data/space_ship_state.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/tappable_region.dart';
@@ -45,7 +47,34 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
           position: Vector2(0, 0),
           size: size,
           onTap: () {
-            swapShips();
+            print("Swapping Ship");
+            for (SpaceShipData shipData in SpaceShipData.spaceShips){
+              SpaceShipState shipState = game.playerData.spaceShipStates[shipData.shipClassName]!;
+              if (!shipState.isOwned){
+                continue;
+              }
+              if (shipState.isEquipped){
+                continue;
+              }
+              if (shipState.dockedAt != planetData.planetName){
+                continue;
+              }
+              print("Swapping Ship from ${game.playerData.equippedShip} to ${shipData.shipClassName}");
+              /* Unequipped Old ship */
+              SpaceShipState oldShipState = game.playerData.spaceShipStates[game.playerData.equippedShip]!;
+              oldShipState.dockedAt = planetData.planetName;
+              oldShipState.isEquipped = false;
+              /* Equipping New Ship */
+              shipState.dockedAt = "";
+              shipState.isEquipped = true;
+              game.playerData.equippedShip = shipData.shipClassName;
+              game.userShip.spaceShipData = shipData;
+              game.userShip.loadNewShip();
+
+              gameRef.swapShipButton.setState(SwapShipButtonStates.inactive);
+
+              break;
+            }
           },
           onRelease: () {},
           buttonEnabled: isEnabled,
@@ -70,12 +99,6 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
       return false;
     }
     return true;
-  }
-
-  void swapShips(){
-
-    gameRef.userShip.switchShip(planetData);
-
   }
 
   /* Render Translucent Green */

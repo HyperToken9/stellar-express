@@ -61,7 +61,7 @@ class _GameAppState extends State<GameApp> {
     return GameWidget(
       game: game,
       loadingBuilder: (context) => LoadingScreen(game: game),
-      initialActiveOverlays: const [DashboardScreen.id],
+      initialActiveOverlays: const [LoginScreen.id],
       overlayBuilderMap: {
         LoginScreen.id: (context, _) => LoginScreen(game: game),
         LoadingScreen.id: (context, _) => LoadingScreen(game: game),

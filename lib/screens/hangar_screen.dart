@@ -22,6 +22,21 @@ class HangarScreen extends StatefulWidget {
 
 class _MainMenuScreenState extends State<HangarScreen> {
 
+  void onSell(SpaceShipData shipData) {
+    print("Selling Ship");
+    setState(() {
+      widget.game.playerData.sellShip(shipData);
+    });
+  }
+
+  void onBuy(SpaceShipData shipData) {
+    print("Buying Ship");
+    // widget.game.buyShip(shipData);
+    setState(() {
+      widget.game.playerData.buyShip(shipData);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,12 +62,7 @@ class _MainMenuScreenState extends State<HangarScreen> {
           Expanded(
             child: PageView(
               onPageChanged: (int index) {
-                print("Position: ${widget.game.showRoomShips[index].position}");
 
-                for (Ship data in widget.game.showRoomShips) {
-                  // print("Ship: ${data.spaceShipData.shipClassName} Position: ${data.position}");
-                  print("V: ${data.linearVelocity}");
-                }
                 widget.game.adjustCameraZoom(
                     objectSize: widget.game.showRoomShips[index].size,
                     screenPercentage: 70);
@@ -65,9 +75,10 @@ class _MainMenuScreenState extends State<HangarScreen> {
               children: <Widget>[
                 ...SpaceShipData.spaceShips.map((shipData) {
                   return HangarSlide(
-                    spriteName: shipData.spriteName,
-                    shipName: shipData.shipClassName,
-                    description: "shipData.description",
+                    shipData: shipData,
+                    shipState: widget.game.playerData.spaceShipStates[shipData.shipClassName]!,
+                    onSell: onSell,
+                    onBuy: onBuy,
                   );
                 }).toList(),
                 // Add more slides as needed
@@ -91,6 +102,7 @@ class _MainMenuScreenState extends State<HangarScreen> {
     super.initState();
     widget.game.resumeEngine();
     BackButtonInterceptor.add(myInterceptor);
+    // widget.game.l
     widget.game.setupHanger();
   }
 

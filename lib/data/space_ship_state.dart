@@ -11,9 +11,9 @@ class SpaceShipState{
 
   SpaceShipState({
     required this.isOwned,
-    this.isCarryingCargo = false,
     required this.isEquipped,
-    required this.dockedAt,
+    this.isCarryingCargo = false,
+    this.dockedAt = "",
     this.currentMission,
   });
 
@@ -23,18 +23,21 @@ class SpaceShipState{
       'isOwned': isOwned,
       'isCarryingCargo': isCarryingCargo,
       'currentMission': currentMission?.toJson(),
+      'isEquipped': isEquipped,
+      'dockedAt': dockedAt,
     };
   }
 
   /*JSON to Ship State*/
   factory SpaceShipState.fromJson(Map<String, dynamic> json){
+    print(json);
     return SpaceShipState(
       isOwned: json['isOwned'],
-      isCarryingCargo: json['isCarryingCargo'],
+      isEquipped: json['isEquipped'],
+      isCarryingCargo: json['isCarryingCargo'] ?? false,
       currentMission: (json['currentMission'] != null) ?
           MissionData.fromJson(json['currentMission']) : null,
-      isEquipped: json['isEquipped'],
-      dockedAt: json['dockedAt'],
+      dockedAt: json['dockedAt'] ?? "",
     );
   }
 

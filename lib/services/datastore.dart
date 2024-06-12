@@ -22,13 +22,13 @@ class Datastore {
     'shipSpawnLocation': [0, 0],
     'equippedShip': 'Small Courier',
     'spaceShipStates': {
-      'Small Courier': {'isOwned': true, 'isCarryingCargo': false},
-      'Express Shuttle': {'isOwned': false, 'isCarryingCargo': false},
-      'Heavy Hauler': {'isOwned': false, 'isCarryingCargo': false},
-      'Large Freighter': {'isOwned': false, 'isCarryingCargo': false},
-      'Endurance Cruiser': {'isOwned': false, 'isCarryingCargo': false},
-      'Specialized Vessel': {'isOwned': false, 'isCarryingCargo': false},
-      'Stealth Courier': {'isOwned': false, 'isCarryingCargo': false}
+      'Small Courier': SpaceShipState(isOwned: true, isEquipped: true).toJson(),
+      'Express Shuttle': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Heavy Hauler': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Large Freighter': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Endurance Cruiser': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Specialized Vessel': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Stealth Courier': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
     },
     'archivedMissions': <MissionData>[],
     'completedMissions': <MissionData>[],
@@ -77,7 +77,7 @@ class Datastore {
     playerData.shipSpawnLocation = Vector2(playerDocument['shipSpawnLocation'][0].toDouble(),
                                       playerDocument['shipSpawnLocation'][1].toDouble());
     playerData.equippedShip = playerDocument['equippedShip'];
-    print(playerDocument['spaceShipStates']);
+    // print(playerDocument['spaceShipStates']);
     playerData.spaceShipStates = (playerDocument['spaceShipStates'] ??
                                   defaultPlayerData['spaceShipStates'])
                                   .map<String, SpaceShipState>((String key, dynamic value) {

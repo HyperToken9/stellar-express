@@ -70,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                   ),
                   debugShowCheckedModeBanner: false,
                   home: DefaultTabController(
-                    initialIndex: 1,
+                    initialIndex: 0,
                     length: 2,
                     child: Scaffold(
                       /*Make corners round */
@@ -89,16 +89,20 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                             Tab(
                               child: Text(
                               "Missions".toUpperCase(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Audiowide',
                                 ),
                               )
                             ),
                             Tab(
                                 child: Text(
                                   "Ships".toUpperCase(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Audiowide',
                                   ),
                                 )
                             ),

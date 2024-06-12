@@ -40,6 +40,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
   late PlayerData playerData;
   late Ship userShip;
+  late StarWorld starWorld;
 
   late DPad dpad;
   late OrbitButton orbitButton;
@@ -77,21 +78,29 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
     /* Initialize User Ship */
     for (SpaceShipData shipData in SpaceShipData.spaceShips){
+
       if (shipData.shipClassName == "Small Courier"){
-        userShip = Ship(spaceShipData: shipData);
+        userShip = Ship(spaceShipData: shipData, spawnLocation: playerData.shipSpawnLocation);
       }
     }
 
     /* Initialize Hanger Ships */
+    Vector2 startPosition = Vector2(0, 0);
+    Vector2 padding = Vector2(400, 0);
+
     for (SpaceShipData shipData in SpaceShipData.spaceShips){
-      Ship newShip = Ship(spaceShipData: shipData);
+      startPosition += padding;
+      startPosition += Vector2(shipData.spriteSize[0] / 2, 0);
+      Ship newShip = Ship(spaceShipData: shipData, spawnLocation: startPosition.clone());
+      startPosition += Vector2(shipData.spriteSize[0] / 2, 0);
+
       newShip.applyPhysics = false;
       showRoomShips.add(newShip);
     }
     // showRoomShips.add(Ship(shipName: "Small Courier"));
 
     /* Initialize World */
-    final StarWorld starWorld = StarWorld(userShip: userShip);
+    starWorld = StarWorld(userShip: userShip);
     await starWorld.loadPlanets();
     world = starWorld;
 
@@ -109,8 +118,6 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     // await Future.wait(worldData.planets.map((planet) => planet.loadSprite()));
     camera.follow(userShip);
 
-    adjustCameraZoom(objectSize: userShip.size, screenPercentage: 20);
-
     print("Loaded Game");
 
   }
@@ -121,8 +128,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     miniMap.setState(false);
 
     int index = 0;
-    Vector2 startPosition = Vector2(0, 0);
-    Vector2 padding = Vector2(400, 0);
+
     for (Ship ship in showRoomShips){
 
       ship.opacity = 1;
@@ -132,20 +138,22 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
       world.add(ship);
       // ship.anchor = Anchor.bottomCenter;
 
-      startPosition += padding;
-      startPosition += Vector2(ship.size.x / 2, 0);
-      showRoomShips[index].position = startPosition.clone();
-      startPosition += Vector2(ship.size.x / 2, 0);
+
       // startPosition += Vector2(2.1 * showRoomShips[index].size.x, 0);
 
       index++;
     }
+
     userShip.opacity = 0;
+
+    for (Planet planetComponent in starWorld.planetComponents){
+      planetComponent.opacity = 0;
+    }
+
     camera.moveTo(showRoomShips[0].position);
     adjustCameraZoom(objectSize: showRoomShips[0].size, screenPercentage: 50);
     // camera.moveTo(showRoomShips[0].position);
   }
-
 
   void setupGame(){
     dpad.setState(DPadStates.idle);
@@ -156,9 +164,16 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
         world.remove(ship);
       }
     }
+
+    for (Planet planetComponent in starWorld.planetComponents){
+      planetComponent.opacity = 1;
+    }
     userShip.opacity = 1;
+    userShip.loadNewShip();
     camera.follow(userShip);
   }
+
+
 
   void updateClosestPlanets(){
     closestPlanets = [];

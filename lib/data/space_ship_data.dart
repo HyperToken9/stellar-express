@@ -12,9 +12,10 @@ class SpaceShipData{
   final int displayCapacity;
   final int displaySpeed;
   final int displayManeuverability;
+  final int unlockLevel;
 
-  final double baseCostValue;
-  final double baseSalvageValue;
+  final int baseCostValue;
+  final int baseSalvageValue;
 
   /* Cargo Stats*/
   final Set<String> cargoCapacities;
@@ -22,6 +23,7 @@ class SpaceShipData{
 
   final String spriteName;
   final List<int> spriteSize;
+  final double zoomPercentage;
 
   const SpaceShipData({
     required this.shipClassName,
@@ -35,6 +37,9 @@ class SpaceShipData{
     required this.cargoCapacities,
     required this.cargoTypes,
     required this.spriteSize,
+    required this.unlockLevel,
+    this.zoomPercentage = 20.0,
+
   });
 
 
@@ -61,13 +66,14 @@ class SpaceShipData{
       shipClassNameShorthand: "SC",
       displayCapacity: 1,
       displaySpeed: 3,
-      displayManeuverability: 2,
+      displayManeuverability: 3,
       baseCostValue: 3000,
-      baseSalvageValue: 1500,
+      baseSalvageValue: 999500,
       cargoCapacities: {"Small"},
       cargoTypes: {CargoTypes.parcels, CargoTypes.specialCargo, CargoTypes.timeSensitive},
       spriteName: "small_courier",
       spriteSize: [249, 429],
+      unlockLevel: 1, // Suggest level 1
     ),
     SpaceShipData(
       shipClassName: "Express Shuttle",
@@ -75,79 +81,84 @@ class SpaceShipData{
       displayCapacity: 2,
       displaySpeed: 4,
       displayManeuverability: 4,
-      baseCostValue: 10000,
-      baseSalvageValue: 4500,
+      baseCostValue: 7000,
+      baseSalvageValue: 3500,
       cargoCapacities: {"Small", "Medium"},
       cargoTypes: {CargoTypes.parcels, CargoTypes.highValue, CargoTypes.timeSensitive},
       spriteName: "express_shuttle",
       spriteSize: [459, 543],
+      unlockLevel: 5, // Suggest level 5
     ),
     SpaceShipData(
-      shipClassName: "Heavy Hauler",
-      shipClassNameShorthand: "HH",
-      displayCapacity: 4,
+      shipClassName: "Endurance Cruiser",
+      shipClassNameShorthand: "EC",
+      displayCapacity: 3,
       displaySpeed: 2,
-      displayManeuverability: 1,
-      baseCostValue: 20000,
-      baseSalvageValue: 10000,
-      cargoCapacities: {"Large", "Very Large"},
-      cargoTypes: {CargoTypes.bulkGoods, CargoTypes.parcels},
-      spriteName: "heavy_hauler",
-      spriteSize: [1606, 1898],
+      displayManeuverability: 3,
+      baseCostValue: 15000,
+      baseSalvageValue: 7500,
+      cargoCapacities: {"Medium", "Large"},
+      cargoTypes: {CargoTypes.bulkGoods, CargoTypes.parcels, CargoTypes.specialCargo},
+      spriteName: "endurance_cruiser",
+      spriteSize: [695, 681],
+      unlockLevel: 10, // Suggest level 10
     ),
     SpaceShipData(
       shipClassName: "Large Freighter",
       shipClassNameShorthand: "LF",
       displayCapacity: 4,
       displaySpeed: 2,
-      displayManeuverability: 1,
+      displayManeuverability: 2,
       baseCostValue: 20000,
       baseSalvageValue: 10000,
       cargoCapacities: {"Large"},
       cargoTypes: {CargoTypes.bulkGoods, CargoTypes.parcels},
       spriteName: "large_freighter",
       spriteSize: [639, 1000],
-    ),
-    SpaceShipData(
-      shipClassName: "Endurance Cruiser",
-      shipClassNameShorthand: "EC",
-      displayCapacity: 4,
-      displaySpeed: 2,
-      displayManeuverability: 1,
-      baseCostValue: 20000,
-      baseSalvageValue: 10000,
-      cargoCapacities: {"Medium", "Large"},
-      cargoTypes: {CargoTypes.bulkGoods, CargoTypes.parcels, CargoTypes.specialCargo},
-      spriteName: "endurance_cruiser",
-      spriteSize: [515, 473],
-    ),
-    SpaceShipData(
-      shipClassName: "Specialized Vessel",
-      shipClassNameShorthand: "SV",
-      displayCapacity: 4,
-      displaySpeed: 2,
-      displayManeuverability: 1,
-      baseCostValue: 20000,
-      baseSalvageValue: 10000,
-      cargoCapacities: {"Small", "Medium"},
-      cargoTypes: {CargoTypes.specialCargo},
-      spriteName: "specialized_vessel",
-      spriteSize: [359, 700],
+      unlockLevel: 15, // Suggest level 15
     ),
     SpaceShipData(
       shipClassName: "Stealth Courier",
       shipClassNameShorthand: "STC",
-      displayCapacity: 4,
-      displaySpeed: 2,
-      displayManeuverability: 1,
-      baseCostValue: 20000,
-      baseSalvageValue: 10000,
+      displayCapacity: 2,
+      displaySpeed: 5,
+      displayManeuverability: 4,
+      baseCostValue: 25000,
+      baseSalvageValue: 12500,
       cargoCapacities: {"Small", "Medium"},
       cargoTypes: {CargoTypes.parcels, CargoTypes.timeSensitive},
       spriteName: "stealth_courier",
       spriteSize: [694, 359],
+      unlockLevel: 20, // Suggest level 20
     ),
-
+    SpaceShipData(
+      shipClassName: "Specialized Vessel",
+      shipClassNameShorthand: "SV",
+      displayCapacity: 3,
+      displaySpeed: 3,
+      displayManeuverability: 3,
+      baseCostValue: 35000,
+      baseSalvageValue: 15000,
+      cargoCapacities: {"Small", "Medium"},
+      cargoTypes: {CargoTypes.specialCargo},
+      spriteName: "specialized_vessel",
+      spriteSize: [359, 700],
+      unlockLevel: 25, // Suggest level 25
+    ),
+    SpaceShipData(
+      shipClassName: "Heavy Hauler",
+      shipClassNameShorthand: "HH",
+      displayCapacity: 5,
+      displaySpeed: 1,
+      displayManeuverability: 1,
+      baseCostValue: 50000,
+      baseSalvageValue: 20000,
+      cargoCapacities: {"Large", "Very Large"},
+      cargoTypes: {CargoTypes.bulkGoods, CargoTypes.parcels},
+      spriteName: "heavy_hauler",
+      spriteSize: [1606, 1898],
+      unlockLevel: 30, // Suggest level 30
+    ),
 
   ];
 

@@ -63,6 +63,7 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
           }else{
             /* Ship Goods to the ship */
             /* Move the mission to initiaed */
+            print("PickUp TIMe");
             game.playerData.initiatedMissions.add(missionData!);
             game.playerData.acceptedMissions.remove(missionData!);
             print("Mission Moved to Initiated");

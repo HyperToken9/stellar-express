@@ -22,7 +22,7 @@ class PlanetData{
 
   /* Sprite Data */
   final String spriteName;
-  final spriteSize;
+  final Vector2 spriteSize;
   final int numSprites;
   final Color miniMapColor;
 
