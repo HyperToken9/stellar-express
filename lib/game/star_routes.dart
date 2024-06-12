@@ -130,7 +130,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
         continue;
       }
       world.add(ship);
-      ship.anchor = Anchor.bottomCenter;
+      // ship.anchor = Anchor.bottomCenter;
 
       startPosition += padding;
       startPosition += Vector2(ship.size.x / 2, 0);
@@ -152,8 +152,8 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     miniMap.setState(true);
 
     for (Ship ship in showRoomShips){
-      if (children.contains(ship)){
-        remove(ship);
+      if (world.children.contains(ship)){
+        world.remove(ship);
       }
     }
     userShip.opacity = 1;

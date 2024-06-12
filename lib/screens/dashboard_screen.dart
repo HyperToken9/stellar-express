@@ -70,6 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                   ),
                   debugShowCheckedModeBanner: false,
                   home: DefaultTabController(
+                    initialIndex: 1,
                     length: 2,
                     child: Scaffold(
                       /*Make corners round */

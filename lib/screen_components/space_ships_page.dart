@@ -30,12 +30,9 @@ class SpaceShipsPage extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Initiated",
-                  style: headerTextStyle,
-                ),
                 ...spaceShipStates.keys.map((String shipName) {
                   return SpaceShipCard(
+                    shipName: shipName,
                     shipState: spaceShipStates[shipName]!,
                   );
                 }

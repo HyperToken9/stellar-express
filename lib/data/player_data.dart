@@ -38,9 +38,15 @@ class PlayerData{
     /* Initializes Ship States */
     for (SpaceShipData data in SpaceShipData.spaceShips){
       if (data.shipClassName == "Small Courier"){
-        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: true);
+        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: true,
+                                                            isEquipped: true,
+                                                            dockedAt: "");
+      }else if(data.shipClassName == "Express Shuttle"){
+        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: true,
+                                                              isEquipped: false,
+                                                              dockedAt: "Ratha");
       }else{
-        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: false);
+        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: false, isEquipped: false, dockedAt: "");
       }
       // print(spaceShipStates[data.shipClassName]?.toJson());
     }
@@ -49,6 +55,8 @@ class PlayerData{
     for (int i = 0; i < 7; i++) {
       availableMissions.add(MissionData.makeMission(this));
     }
+
+    setEquippedShip();
 
   }
 
@@ -62,6 +70,14 @@ class PlayerData{
     // print("Loading Player Data");
 
 
+  }
+
+  void setEquippedShip(){
+    for (SpaceShipData data in SpaceShipData.spaceShips){
+      if (spaceShipStates[data.shipClassName]!.isEquipped){
+        equippedShip = data.shipClassName;
+      }
+    }
   }
 
   bool isShipOwned(String shipClassName){

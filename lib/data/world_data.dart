@@ -126,22 +126,22 @@ class WorldData{
       numSprites: 50,
       miniMapColor: const Color(0xFF552727),
     ),
-    //
-    // PlanetData(
-    //   planetName: "Ratha",
-    //   location: Vector2(3766.0, -2102.0),
-    //   radius: 65.0,
-    //   mass: 1.3,
-    //   population: 2000000000,
-    //   occupations: ["Trade", "Fishing", "Tourism"],
-    //   exports: ["Fish", "Tourism services"],
-    //   imports: ["Luxury goods", "Seafood"],
-    //   spriteName: "ratha",
-    //   spriteSize: Vector2(100, 100),
-    //   numSprites: 50,
-    //   miniMapColor: const Color(0xFF6067a5),
-    // ),
-    //
+
+    PlanetData(
+      planetName: "Ratha",
+      location: Vector2(3766.0, -2102.0),
+      radius: 65.0,
+      mass: 1.3,
+      population: 2000000000,
+      occupations: ["Trade", "Fishing", "Tourism"],
+      exports: ["Fish", "Tourism services"],
+      imports: ["Luxury goods", "Seafood"],
+      spriteName: "ratha",
+      spriteSize: Vector2(100, 100),
+      numSprites: 50,
+      miniMapColor: const Color(0xFF6067a5),
+    ),
+
     PlanetData(
       planetName: "Dracona",
       location: Vector2(1939.0, 1625.0),

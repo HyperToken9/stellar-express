@@ -47,13 +47,19 @@ class HangarSlide extends StatelessWidget {
                           child: Text(
                             shipName.toUpperCase(),
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: 'SpaceMono',
                               fontWeight: FontWeight.bold,
                               fontSize: 40.0,
-
                               color: Colors.black,
                               letterSpacing: -2,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.25),
+                                  offset: const Offset(1, 5),
+                                  blurRadius: 5,
+                                ),
+                              ],
                             ),
                           ),
                         ),
