@@ -17,7 +17,7 @@ import 'package:star_routes/data/world_data.dart';
 class StarWorld extends World with HasGameRef<StarRoutes>, CollisionCallbacks{
 
   Ship userShip;
-  double cullingMargin = 1000000;
+  double cullingMargin = 10000;
 
   List<Planet> planetComponents = [];
 

@@ -52,6 +52,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
                    spaceShipData.spriteSize[1].toDouble());
     position = spawnLocation;
+    priority = 2;
   }
 
   @override
@@ -149,16 +150,16 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     /* Clip By Boundary */
     Vector2 boundaryPushback = Vector2.zero();
     double boundaryPushbackConstant = 0.05;
-    if (position.x < Config.worldBoundaryLeft) {
-      boundaryPushback.x = (Config.worldBoundaryLeft - position.x) * boundaryPushbackConstant;
-    } else if (position.x > Config.worldBoundaryRight) {
-      boundaryPushback.x = (Config.worldBoundaryRight - position.x) * boundaryPushbackConstant;
+    if (position.x < Config.worldBoundaryLeft * Config.spaceScaleFactor) {
+      boundaryPushback.x = (Config.worldBoundaryLeft * Config.spaceScaleFactor - position.x) * boundaryPushbackConstant;
+    } else if (position.x > Config.worldBoundaryRight * Config.spaceScaleFactor) {
+      boundaryPushback.x = (Config.worldBoundaryRight * Config.spaceScaleFactor - position.x) * boundaryPushbackConstant;
     }
 
-    if (position.y < Config.worldBoundaryTop) {
-      boundaryPushback.y = (Config.worldBoundaryTop - position.y) * boundaryPushbackConstant;
-    } else if (position.y > Config.worldBoundaryBottom) {
-      boundaryPushback.y = (Config.worldBoundaryBottom - position.y) * boundaryPushbackConstant;
+    if (position.y < Config.worldBoundaryTop * Config.spaceScaleFactor) {
+      boundaryPushback.y = (Config.worldBoundaryTop * Config.spaceScaleFactor - position.y) * boundaryPushbackConstant;
+    } else if (position.y > Config.worldBoundaryBottom * Config.spaceScaleFactor) {
+      boundaryPushback.y = (Config.worldBoundaryBottom * Config.spaceScaleFactor - position.y) * boundaryPushbackConstant;
     }
 
     linearVelocity += boundaryPushback;
@@ -174,18 +175,24 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     Planet closestPlanet = gameRef.closestPlanets[0];
 
     /* Set Focus the planet */
-    gameRef.camera.follow(closestPlanet, maxSpeed: _maxVelocity * 0.3);
+    gameRef.camera.follow(closestPlanet, maxSpeed: 500);
+    gameRef.adjustCameraZoom(objectSize: closestPlanet.size,
+                             screenPercentage: Config.cameraZoomPercentageInOrbit);
 
     /* Set Orbital Dynamics */
-    targetOrbitRadius = closestPlanet.size.x;
+    targetOrbitRadius = closestPlanet.size.x/2 + 500;
     orbitRadius = closestPlanet.position.distanceTo(position);
     orbitCenter = closestPlanet.position;
     Vector2 delta = closestPlanet.position - position;
     angleInOrbit = atan2(delta.y, delta.x) + pi;
     inOrbit = true;
+    linearVelocity = Vector2.zero();
 
     /* Disable D-Pad */
     gameRef.dpad.setState(DPadStates.inactive);
+
+    /* Disable MiniMap */
+    gameRef.miniMap.setState(false);
 
     /* Enable Delivery Button */
     /* Check if ship has cargo */
@@ -214,10 +221,18 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
       }
     }
 
-
+    /* Swapping Ships */
     for (SpaceShipData shipData in SpaceShipData.spaceShips){
-      if (game.playerData.spaceShipStates[shipData.shipClassName]!.dockedAt
+      SpaceShipState? shipState = game.playerData.spaceShipStates[shipData.shipClassName];
+      if (shipState == null){
+        continue;
+      }
+      if (!shipState.isOwned){
+        continue;
+      }
+      if (shipState.dockedAt
           == closestPlanet.planetData.planetName){
+        print("Found: ${shipData.shipClassName}");
         gameRef.swapShipButton.planetData = closestPlanet.planetData;
         gameRef.swapShipButton.setState(SwapShipButtonStates.idle);
         break;
@@ -236,10 +251,16 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   void removeFromOrbit(){
     inOrbit = false;
+
+    /* Enable DPad */
     gameRef.dpad.setState(DPadStates.idle);
+    /* Enable MiniMap */
+    gameRef.miniMap.setState(true);
 
     /* Set Focus on Ship */
-    gameRef.camera.follow(this, maxSpeed: _maxVelocity);
+    // gameRef.camera.moveTo(position, speed: 500);
+    gameRef.camera.follow(this, maxSpeed: _maxVelocity * 10);
+    gameRef.adjustCameraZoom(objectSize: size, screenPercentage: spaceShipData.zoomPercentage);
 
     /* Setting Residual Impulse & Angular Velocity to Zero */
     impulse = Vector2.zero();
@@ -258,7 +279,16 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     sprite = await Sprite.load("${Assets.shipBasePath}${spaceShipData.spriteName}.png");
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
                    spaceShipData.spriteSize[1].toDouble());
-    game.adjustCameraZoom(objectSize: size, screenPercentage: spaceShipData.zoomPercentage);
+    position = game.playerData.shipSpawnLocation;
+
+    if (!inOrbit){
+      game.adjustCameraZoom(objectSize: size, screenPercentage: spaceShipData.zoomPercentage);
+      game.camera.follow(this);
+    }else{
+      game.dpad.setState(DPadStates.inactive);
+      game.miniMap.setState(false);
+    }
+
   }
 
   @override

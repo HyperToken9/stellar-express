@@ -11,6 +11,8 @@ import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/screens/blank_screen.dart';
 
+import 'package:star_routes/services/datastore.dart';
+
 class MiniMapScreen extends StatefulWidget {
 
   final StarRoutes game;
@@ -52,8 +54,8 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
     final visibleHeight = size.height;
 
     // Point to center on within the child widget
-    double centerX = widget.game.userShip.position.x - Config.worldBoundaryLeft;
-    double centerY = widget.game.userShip.position.y - Config.worldBoundaryTop;
+    double centerX = widget.game.userShip.position.x / Config.spaceScaleFactor - Config.worldBoundaryLeft;
+    double centerY = widget.game.userShip.position.y / Config.spaceScaleFactor - Config.worldBoundaryTop;
 
     // print("User Ship Position: ${widget.game.userShip.position}");
     // print("CenterX: $centerX, CenterY: $centerY");
@@ -96,25 +98,12 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
   Widget build(BuildContext context) {
 
     bool isNavigating = widget.game.navigationPointer.isNavigating();
-    // PlanetData fakePlanetData = PlanetData(
-    //   planetName: 'Fake Temp Planet',
-    //   location: Vector2(300, 300) + Vector2(Config.worldBoundaryLeft, Config.worldBoundaryTop),
-    //   radius: 150,
-    //   mass: 5,
-    //   population: 0,
-    //   occupations: [],
-    //   exports: [],
-    //   imports: [],
-    //   spriteName: 'does not exist',
-    //   spriteSize: Vector2.zero(),
-    //   numSprites: 0,
-    // );
 
     Vector2 shipPosition = widget.game.userShip.position;
     Vector2 shipSize = widget.game.userShip.size;
 
-    // final List<PlanetData> planets = WorldData.planets;
-    // planets.add(fakePlanetData);
+
+    const playerScaleFactor = 0.1;
 
     final List<Planet> planets = widget.game.starWorld.planetComponents;
 
@@ -125,8 +114,8 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
           children: [
             InteractiveViewer(
               constrained: false,
-              boundaryMargin: const EdgeInsets.all(100),
-              minScale: 0.1,
+              boundaryMargin: const EdgeInsets.all(1600),
+              minScale: 0.001,
               onInteractionStart: (details) {
 
                 _searchFocusNode.unfocus();
@@ -160,20 +149,20 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                       ),
                     ),
                     Positioned(
-                        left: shipPosition.x - Config.worldBoundaryLeft - shipSize.x / 2,
-                        top: shipPosition.y - Config.worldBoundaryTop - shipSize.y / 2,
+                        left: shipPosition.x / Config.spaceScaleFactor - Config.worldBoundaryLeft - shipSize.x * playerScaleFactor / 2,
+                        top: shipPosition.y / Config.spaceScaleFactor - Config.worldBoundaryTop - shipSize.y * playerScaleFactor / 2,
                         child: Transform.rotate(
                           angle: widget.game.userShip.angle,
                           child: Icon(
                               Icons.navigation,
                               color: const Color(0xEEFFFFFF),
-                              size: shipSize.x),
+                              size: shipSize.x * playerScaleFactor),
                         )
                     ),
                     ...planets.map((planet) {
                       return Positioned(
-                        left: planet.position.x - Config.worldBoundaryLeft  - planet.size.x / 2,
-                        top: planet.position.y - Config.worldBoundaryTop - planet.size.y / 2,
+                        left: planet.planetData.location.x - Config.worldBoundaryLeft  - planet.planetData.radius,
+                        top: planet.planetData.location.y - Config.worldBoundaryTop - planet.planetData.radius,
                         child: Column(
                           children: [
                             GestureDetector(
@@ -187,7 +176,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                               child: Icon(
                                 Icons.circle,
                                 color: planet.planetData.miniMapColor,
-                                size: planet.size.x,
+                                size: planet.planetData.radius * 2,
                               ),
                             ),
                             Text(
@@ -436,6 +425,12 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
   void initState() {
     super.initState();
     BackButtonInterceptor.add(myInterceptor);
+
+    Datastore dataStore = Datastore();
+
+    /* Write data locally */
+    dataStore.saveDataLocally(widget.game);
+
   }
 
   @override

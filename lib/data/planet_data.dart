@@ -25,7 +25,7 @@ class PlanetData{
   final Vector2 spriteSize;
   final int numSprites;
   final Color miniMapColor;
-
+  final double spriteSpeed;
 
   /* Constructor */
   const PlanetData({
@@ -41,6 +41,7 @@ class PlanetData{
     required this.spriteSize,
     required this.numSprites,
     this.miniMapColor = const Color(0xEEFFFFFF),
+    this.spriteSpeed = 0.0085,
   });
 
 }

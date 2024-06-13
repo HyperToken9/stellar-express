@@ -12,8 +12,11 @@ import 'package:star_routes/game/assets.dart';
 import 'package:star_routes/game/tappable_region.dart';
 
 import 'package:star_routes/data/planet_data.dart';
+import 'package:star_routes/components/planet.dart';
+
 import 'package:star_routes/screens/mini_map_screen.dart';
 import 'package:star_routes/screens/blank_screen.dart';
+
 
 
 class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
@@ -64,24 +67,24 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
     List<Vector3> result = [];
 
     /* Pixel to Distance Ratio */
-    double miniMapDistanceScale = 0.1;
-    double miniMapSizeScale = 0.08;
+    double miniMapDistanceScale = 0.01;
+    double miniMapSizeScale = 0.01;
 
-    for (PlanetData data in WorldData.planets){
+    for (Planet data in game.starWorld.planetComponents){
 
-      double distanceToShip = gameRef.userShip.position.distanceTo(data.location);
+      double distanceToShip = gameRef.userShip.position.distanceTo(data.position);
 
-      double minimumDistance = distanceToShip - data.radius;
+      double minimumDistance = distanceToShip - data.size.x / 2;
 
       if (minimumDistance * miniMapDistanceScale > size.x / 2){
         continue;
       }
 
-      Vector2 relativePosition = (data.location
+      Vector2 relativePosition = (data.position
                                 - gameRef.userShip.position) * miniMapDistanceScale;
 
       result.add(Vector3(relativePosition.x, relativePosition.y,
-                         data.radius * miniMapSizeScale));
+                         data.size.x * miniMapSizeScale));
 
     }
 

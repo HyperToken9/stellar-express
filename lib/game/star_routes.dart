@@ -1,5 +1,6 @@
 
 
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -17,6 +18,8 @@ import 'package:star_routes/data/world_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
 
 import 'package:star_routes/game/star_world.dart';
+import 'package:star_routes/game/config.dart';
+
 import 'package:star_routes/components/background.dart';
 import 'package:star_routes/components/ship.dart';
 import 'package:star_routes/controls/dpad.dart';
@@ -118,6 +121,11 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     // await Future.wait(worldData.planets.map((planet) => planet.loadSprite()));
     camera.follow(userShip);
 
+    for (var planet in starWorld.planetComponents) {
+      closestPlanets.add(planet);
+    }
+
+
     print("Loaded Game");
 
   }
@@ -168,21 +176,17 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     for (Planet planetComponent in starWorld.planetComponents){
       planetComponent.opacity = 1;
     }
+    print("Player Data location: ${playerData.shipSpawnLocation}");
+    print("Ship Spawn Location: ${userShip.position}");
     userShip.opacity = 1;
     userShip.loadNewShip();
-    camera.follow(userShip);
+
   }
 
 
 
   void updateClosestPlanets(){
-    closestPlanets = [];
-    for (var planet in world.children) {
-      if (planet is! Planet){
-        continue;
-      }
-      closestPlanets.add(planet);
-    }
+
     closestPlanets.sort((a, b) => a.position.distanceTo(userShip.position)
         .compareTo(b.position.distanceTo(userShip.position)));
 
@@ -191,21 +195,37 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   bool detectCameraZoom() {
 
     if (closestPlanets.isEmpty){
-      cameraZoomSetPoint = 1.0;
       return false;
     }
 
-    double planetRadius = closestPlanets[0].size.x / 2;
-    double planetDistance = closestPlanets[0].position.distanceTo(userShip.position);
-    double zoomOutConstant = 0.75;
-    double planetInRangeConstant = 3;
-
-    if (planetDistance > planetInRangeConstant * planetRadius){
-      cameraZoomSetPoint = 1.0;
+    if (userShip.inOrbit){
       return false;
     }
 
-    cameraZoomSetPoint =  zoomOutConstant * planetRadius / planetDistance;
+    double zoomDistanceThreshold = 6000 + closestPlanets[0].size.x / 1.52;
+    Planet closestPlanet = closestPlanets[0];
+    // print("Closest Planet: ${closestPlanet.planetData.planetName}");
+
+    double distanceToPlanet = closestPlanet.position.distanceTo(userShip.position);
+
+    if (distanceToPlanet > zoomDistanceThreshold){
+      return false;
+    }
+    // print("Zoommmyy");
+    print("Closest Planet: ${closestPlanet.planetData.planetName} Size:: ${closestPlanet.size}");
+    double zoomInfinity = calculateCameraZoom(objectSize: userShip.size,
+                                              screenPercentage: userShip.spaceShipData.zoomPercentage);
+
+    double zoomOrbit = calculateCameraZoom(objectSize: closestPlanet.size,
+                                            screenPercentage: Config.cameraZoomPercentageInOrbit);
+
+    cameraZoomSetPoint = zoomOrbit + (distanceToPlanet - closestPlanet.size.x / 2)
+                                   * (zoomInfinity - zoomOrbit)
+                                   / (zoomDistanceThreshold - closestPlanet.size.x / 2);
+
+    cameraZoomSetPoint = max(zoomOrbit, cameraZoomSetPoint);
+    cameraZoomSetPoint = min(zoomInfinity, cameraZoomSetPoint);
+
 
     return true;
 
@@ -229,17 +249,22 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   }
 
 
-  void adjustCameraZoom({required Vector2 objectSize, required double screenPercentage}) {
-    // print("Object Size: $objectSize");
+  double calculateCameraZoom({required Vector2 objectSize, required double screenPercentage}) {
     Vector2 screenSize = size;
 
+    print("Object Size: $objectSize");
     Vector2 targetSize = screenSize * screenPercentage / 100;
 
     Vector2 targetZoom = Vector2(targetSize.x  / objectSize.x, targetSize.y / objectSize.y);
-    // print("Target Zoom: $targetZoom");
-    cameraZoomSetPoint = targetZoom.x;
 
-    // print("Camera Zoom Set Point: $cameraZoomSetPoint");
+    return targetZoom.x;
+  }
+
+  void adjustCameraZoom({required Vector2 objectSize, required double screenPercentage}) {
+
+    cameraZoomSetPoint = calculateCameraZoom(objectSize: objectSize,
+                                              screenPercentage: screenPercentage);
+
   }
 
 
@@ -248,6 +273,8 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     super.update(dt);
 
     updateClosestPlanets();
+
+    detectCameraZoom();
 
     setCameraZoom();
 

@@ -8,6 +8,15 @@ class Config{
 
   // static const cameraMaxSpeed = 600.0;
 
+  static const double cameraZoomPercentageInOrbit = 80.0;
+
+
+  /* The planets need to be spaced out more than their representation in the data */
+  static const double spaceScaleFactor = 10;
+  /* Similarly for their size */
+  static const double radiusScaleFactor = 30;
+
+
   static const double worldBoundarySize = 1000;
   static const double worldBoundaryTop = -5000.0;
   static const double worldBoundaryBottom = 5000.0;

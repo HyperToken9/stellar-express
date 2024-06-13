@@ -155,6 +155,7 @@ class WorldData{
       spriteSize: Vector2(100, 100),
       numSprites: 50,
       miniMapColor: const Color(0xFF6067a5),
+      spriteSpeed: 0.05,
     ),
 
     PlanetData(
@@ -200,6 +201,7 @@ class WorldData{
       spriteSize: Vector2(130, 130),
       numSprites: 50,
       miniMapColor: const Color(0xFF290837),
+      spriteSpeed: 0.05,
     ),
 
     PlanetData(
@@ -212,9 +214,10 @@ class WorldData{
       exports: ["Mined gases", "Harvested energy"],
       imports: ["Mining supplies", "Energy cells"],
       spriteName: "chronus",
-      spriteSize: Vector2(267, 267),
+      spriteSize: Vector2(111, 111),
       numSprites: 50,
       miniMapColor: const Color(0xFFffba2b),
+      spriteSpeed: 0.05,
     ),
 
     // PlanetData(

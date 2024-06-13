@@ -10,6 +10,7 @@ import 'package:star_routes/data/player_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 
 import 'package:star_routes/game/star_routes.dart';
+import 'package:star_routes/game/config.dart';
 import 'package:star_routes/main.dart';
 
 
@@ -44,7 +45,7 @@ class Datastore {
   final Map<String, dynamic> overrideCustomData = {
     'coin': 696969,
     // 'totalExperience': 0,
-    // 'shipSpawnLocation': [0, 0],
+    'shipSpawnLocation': [3361.0* Config.spaceScaleFactor,  923.0* Config.spaceScaleFactor],
     // 'equippedShip': 'Small Courier',
     'spaceShipStates': {
       'Small Courier': SpaceShipState(isOwned: true, isEquipped: true).toJson(),
@@ -164,12 +165,13 @@ class Datastore {
     final Box<dynamic> playerDataBox = Hive.box("playerData");
 
     playerDataBox.put('data', playerDocument);
+    print("Player Data Saved Locally");
 
   }
 
   void loadDataLocally(PlayerData playerData){
     final Box<dynamic> playerDataBox = Hive.box("playerData");
-    // playerDataBox.deleteFromDisk();
+    print("Loading Data Locally");
     playerDocument = Map<String, dynamic>.from(playerDataBox.get('data')
                                             ?? defaultPlayerData);
 
@@ -177,7 +179,7 @@ class Datastore {
     for (String key in overrideCustomData.keys){
       playerDocument[key] = overrideCustomData[key];
     }
-
+    print("Loding SdAAQ");
     _playerDocumentToPlayerData(playerData);
   }
 
