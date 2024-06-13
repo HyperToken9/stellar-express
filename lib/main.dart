@@ -4,6 +4,7 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import 'package:star_routes/screens/blank_screen.dart';
 import 'firebase_options.dart';
@@ -28,6 +29,8 @@ void main() async {
   // TODO: This is very forced, but no time right now
   Flame.device.setPortraitUpOnly();
 
+  await Hive.initFlutter();
+  await Hive.openBox('playerData');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

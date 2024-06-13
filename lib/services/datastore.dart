@@ -2,12 +2,15 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame/components.dart';
+import 'package:hive/hive.dart';
+
 
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/player_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 
 import 'package:star_routes/game/star_routes.dart';
+import 'package:star_routes/main.dart';
 
 
 class Datastore {
@@ -38,9 +41,28 @@ class Datastore {
 
   };
 
+  final Map<String, dynamic> overrideCustomData = {
+    'coin': 696969,
+    // 'totalExperience': 0,
+    // 'shipSpawnLocation': [0, 0],
+    // 'equippedShip': 'Small Courier',
+    'spaceShipStates': {
+      'Small Courier': SpaceShipState(isOwned: true, isEquipped: true).toJson(),
+      'Express Shuttle': SpaceShipState(isOwned: false, isEquipped: false, dockedAt: "Ratha").toJson(),
+      'Heavy Hauler': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Large Freighter': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Endurance Cruiser': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Specialized Vessel': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Stealth Courier': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+    },
+    // 'availableMissions': [],
+
+  };
+
+
   Map<String, dynamic> playerDocument = {};
 
-  Future<void> loadPlayerData(PlayerData playerDataObj) async {
+  Future<void> _loadDataFromFireBase(PlayerData playerDataObj) async {
     // await FirebaseFirestore.instance.disableNetwork();
 
     DocumentReference playerDoc = playerCollection.doc(playerDataObj.playerId);
@@ -64,53 +86,44 @@ class Datastore {
 
         // print('Initialized player data: $playerDocument');
       }
-      playerDocumentToPlayerData(playerDataObj);
+      _playerDocumentToPlayerData(playerDataObj);
     } catch (e) {
       print('Error loading player data: $e');
     }
   }
 
   /* Proceess Player Document into the player data object */
-  void playerDocumentToPlayerData(PlayerData playerData){
+  void _playerDocumentToPlayerData(PlayerData playerData){
+
     playerData.coin = playerDocument['coin'].toInt();
     playerData.totalExperience = playerDocument['totalExperience'].toInt();
     playerData.shipSpawnLocation = Vector2(playerDocument['shipSpawnLocation'][0].toDouble(),
                                       playerDocument['shipSpawnLocation'][1].toDouble());
     playerData.equippedShip = playerDocument['equippedShip'];
-    // print(playerDocument['spaceShipStates']);
-    playerData.spaceShipStates = (playerDocument['spaceShipStates'] ??
-                                  defaultPlayerData['spaceShipStates'])
-                                  .map<String, SpaceShipState>((String key, dynamic value) {
-                                    return MapEntry(key, SpaceShipState.fromJson(value));
+
+
+    playerData.spaceShipStates = (playerDocument['spaceShipStates'] ?? defaultPlayerData['spaceShipStates'])
+                                      .cast<String, dynamic>()
+                                      .map<String, SpaceShipState>((String key, dynamic value) {
+                                    return MapEntry(key, SpaceShipState.fromJson(Map<String, dynamic>.from(value)));
                                   });
     playerData.archivedMissions = (playerDocument['archivedMissions'] ??
                                       defaultPlayerData['archivedMissions'])
-                                    .map<MissionData>((data) => MissionData.fromJson(data)).toList();
+                                    .map<MissionData>((data) => MissionData.fromJson(Map<String, dynamic>.from(data))).toList();
     playerData.completedMissions = (playerDocument['completedMissions'] ??
                                       defaultPlayerData['completedMissions'])
-                                    .map<MissionData>((data) => MissionData.fromJson(data)).toList();
+                                    .map<MissionData>((data) => MissionData.fromJson(Map<String, dynamic>.from(data))).toList();
     playerData.initiatedMissions = (playerDocument['initiatedMissions'] ??
                                       defaultPlayerData['initiatedMissions'])
-                                    .map<MissionData>((data) => MissionData.fromJson(data)).toList();
+                                    .map<MissionData>((data) => MissionData.fromJson(Map<String, dynamic>.from(data))).toList();
     playerData.acceptedMissions = (playerDocument['acceptedMissions'] ??
                                       defaultPlayerData['acceptedMissions'])
-                                  .map<MissionData>((data) => MissionData.fromJson(data)).toList();
+                                  .map<MissionData>((data) => MissionData.fromJson(Map<String, dynamic>.from(data))).toList();
 
-    // MissionData sampleToRemove = MissionData(missionId: 6139686,
-    //     sourcePlanet: "Pyros",
-    //     destinationPlanet: "Cryon",
-    //     eligibleShips: ["Small Courier", "Specialized Vessel"],
-    //     cargoTypeSizeData: CargoTypeSizeData(cargoType: CargoTypes.specialCargo, cargoSize: "Small"),
-    //     cargoCategoryName: "Research",
-    //     cargoItemName: "Military Data",
-    //     reward: 1000);
-    // print("Initiated Missions: ${playerData.initiatedMissions}");
-    // playerData.initiatedMissions.remove(sampleToRemove);
-    // print("Initiated Missions: ${playerData.initiatedMissions}");
   }
 
 
-  void playerDataToPlayerDocument(StarRoutes game){
+  void _playerDataToPlayerDocument(StarRoutes game){
 
     PlayerData playerData = game.playerData;
 
@@ -132,13 +145,40 @@ class Datastore {
     // playerDocument['availableMissions'] = playerData.availableMissions;
   }
 
-  Future<void> savePlayerData(StarRoutes game) async {
+  Future<void> _saveDataToFireBase(StarRoutes game) async {
+
+    _playerDataToPlayerDocument(game);
+
     PlayerData playerData = game.playerData;
     DocumentReference playerDoc = playerCollection.doc(playerData.playerId);
-    playerDataToPlayerDocument(game);
 
     // print("Saving Player Data $playerDocument");
     await playerDoc.set(playerDocument);
+  }
+
+  void saveDataLocally(StarRoutes game){
+
+    /* Save To Document */
+    _playerDataToPlayerDocument(game);
+
+    final Box<dynamic> playerDataBox = Hive.box("playerData");
+
+    playerDataBox.put('data', playerDocument);
+
+  }
+
+  void loadDataLocally(PlayerData playerData){
+    final Box<dynamic> playerDataBox = Hive.box("playerData");
+    // playerDataBox.deleteFromDisk();
+    playerDocument = Map<String, dynamic>.from(playerDataBox.get('data')
+                                            ?? defaultPlayerData);
+
+
+    for (String key in overrideCustomData.keys){
+      playerDocument[key] = overrideCustomData[key];
+    }
+
+    _playerDocumentToPlayerData(playerData);
   }
 
 }

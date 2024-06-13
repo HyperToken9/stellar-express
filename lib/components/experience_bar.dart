@@ -19,7 +19,7 @@ class ExperienceBar extends PositionComponent with HasGameRef<StarRoutes> {
   Paint fillBrush = Paint()..color = const Color(0xFFFFFFFF);
   Paint translucentBrush = Paint()..color = const Color(0xC0FFFFFF);
 
-  int totalExperience = 0;
+  int totalExperience = -1;
   double fractionComplete = 0.1;
   int playerLevel = 5;
 
@@ -45,6 +45,7 @@ class ExperienceBar extends PositionComponent with HasGameRef<StarRoutes> {
         bottomRight: Radius.circular(radius),
       ));
 
+    print("Ex: $totalExperience");
     updateExperienceBar();
 
 
@@ -56,6 +57,7 @@ class ExperienceBar extends PositionComponent with HasGameRef<StarRoutes> {
       return;
     }
     totalExperience = game.playerData.totalExperience;
+
     playerLevel = game.playerData.getPlayerLevel();
     fractionComplete = game.playerData.getExperienceLevelProgress();
   }

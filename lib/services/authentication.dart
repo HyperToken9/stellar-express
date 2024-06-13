@@ -47,7 +47,7 @@ class Authentication {
 
   Future<String> getCurrentUser() async {
     final User? user = _auth.currentUser;
-    print("User Name: ${user!.displayName}");
+    // print("User Name: ${user!.displayName}");
     return user!.uid;
   }
 

@@ -2,12 +2,13 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:star_routes/data/world_data.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/config.dart';
 
 import 'package:star_routes/data/planet_data.dart';
-import 'package:star_routes/data/world_data.dart';
+import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/screens/blank_screen.dart';
 
 class MiniMapScreen extends StatefulWidget {
@@ -31,12 +32,12 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
 
   bool _isPlanetFocused = false;
 
-  PlanetData? _focusedPlanet;
+  Planet? _focusedPlanet;
   final FocusNode _searchFocusNode = FocusNode();
 
-  List<PlanetData> _filteredPlanets = [];
+  List<Planet> _filteredPlanets = [];
 
-  final TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController = TransformationController(Matrix4.identity()..scale(0.01));
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -71,13 +72,13 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
     widget.game.resumeEngine();
   }
 
-  void _moveToPlanet(PlanetData planet) {
+  void _moveToPlanet(Planet planet) {
     final size = MediaQuery.of(context).size;
     double visibleWidth = size.width;
     double visibleHeight = size.height;
 
-    double centerX = planet.location.x - Config.worldBoundaryLeft;
-    double centerY = planet.location.y - Config.worldBoundaryTop;
+    double centerX = planet.position.x - Config.worldBoundaryLeft;
+    double centerY = planet.position.y - Config.worldBoundaryTop;
 
     double initialX = visibleWidth / 2 - centerX;
     double initialY = visibleHeight / 2 - centerY;
@@ -112,10 +113,10 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
     Vector2 shipPosition = widget.game.userShip.position;
     Vector2 shipSize = widget.game.userShip.size;
 
-    final List<PlanetData> planets = WorldData.planets;
+    // final List<PlanetData> planets = WorldData.planets;
     // planets.add(fakePlanetData);
 
-
+    final List<Planet> planets = widget.game.starWorld.planetComponents;
 
     return Scaffold(
       backgroundColor: Colors.black54,
@@ -165,14 +166,14 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                           angle: widget.game.userShip.angle,
                           child: Icon(
                               Icons.navigation,
-                              color: Color(0xEEFFFFFF),
+                              color: const Color(0xEEFFFFFF),
                               size: shipSize.x),
                         )
                     ),
                     ...planets.map((planet) {
                       return Positioned(
-                        left: planet.location.x - Config.worldBoundaryLeft - planet.radius,
-                        top: planet.location.y - Config.worldBoundaryTop - planet.radius,
+                        left: planet.position.x - Config.worldBoundaryLeft  - planet.size.x / 2,
+                        top: planet.position.y - Config.worldBoundaryTop - planet.size.y / 2,
                         child: Column(
                           children: [
                             GestureDetector(
@@ -185,12 +186,12 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                               },
                               child: Icon(
                                 Icons.circle,
-                                color: planet.miniMapColor,
-                                size: planet.radius * 2,
+                                color: planet.planetData.miniMapColor,
+                                size: planet.size.x,
                               ),
                             ),
                             Text(
-                              planet.planetName,
+                              planet.planetData.planetName,
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 30,
@@ -259,7 +260,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                           }else{
                             // print("Looing for: $value");
                             setState(() {
-                              _filteredPlanets = planets.where((planet) => planet.planetName.toLowerCase().contains(value.toLowerCase())).toList();
+                              _filteredPlanets = planets.where((planet) => planet.planetData.planetName.toLowerCase().contains(value.toLowerCase())).toList();
                             });
                           }
                         },
@@ -284,7 +285,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                         children: [..._filteredPlanets.map((planet){
                           return InkWell(
                             onTap: (){
-                              print("Tapped on ${planet.planetName}");
+                              print("Tapped on ${planet.planetData.planetName}");
                               _moveToPlanet(planet);
                             },
                             child: Container(
@@ -303,7 +304,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                               ),
                               /* child with text */
                               child: Text(
-                                planet.planetName,
+                                planet.planetData.planetName,
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontSize: 15,
@@ -364,7 +365,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                       onPressed: () {
 
                         if (_isPlanetFocused){
-                          widget.game.navigationPointer.setNavigationTarget(_focusedPlanet!.location);
+                          widget.game.navigationPointer.setNavigationTarget(_focusedPlanet!.position);
                           setState(() {
                           });
                           _closeMiniMap();

@@ -1,6 +1,7 @@
 
 import 'dart:math';
 import 'package:collection/collection.dart';
+import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/world_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/player_data.dart';
@@ -27,6 +28,7 @@ class MissionData{
   String cargoCategoryName;
   String cargoItemName;
 
+  double difficulty;
   int reward;
 
   MissionData({
@@ -40,85 +42,170 @@ class MissionData{
     required this.cargoCategoryName,
     required this.cargoItemName,
 
+    required this.difficulty,
     required this.reward,
   });
 
-  static MissionData makeMission(PlayerData playerData){
+  static MissionData? makeMission(PlayerData playerData){
 
     Set<CargoTypeSizeData> validCargoTypes = {};
-    for (SpaceShipData spaceShipData in SpaceShipData.spaceShips){
+    try {
+      for (SpaceShipData spaceShipData in SpaceShipData.spaceShips) {
+        if (!playerData.isShipOwned(spaceShipData.shipClassName)) {
+          continue;
+        }
 
-      if (!playerData.isShipOwned(spaceShipData.shipClassName)){
-        continue;
+        for (CargoTypeSizeData validCargo in spaceShipData.eligibleCargo()) {
+          validCargoTypes.add(validCargo);
+        }
+      }
+      if (validCargoTypes.isEmpty) {
+        return null;
       }
 
-      for (CargoTypeSizeData validCargo in spaceShipData.eligibleCargo()){
-        validCargoTypes.add(validCargo);
+      // print("Valid Cargo Types: $validCargoTypes");
+      Random random = Random();
+      int randomIndex = random.nextInt(validCargoTypes.length);
+
+      CargoTypeSizeData cargoTypeAndSize = validCargoTypes
+          .toList()[randomIndex];
+      // print("Cargo Type and Size: $cargoTypeAndSize");
+
+      List validCategoryPool = [];
+      for (ItemCategory itemCategory in CargoItems.itemCategories) {
+        if (itemCategory.types.contains(cargoTypeAndSize.cargoType)) {
+          validCategoryPool.add(itemCategory);
+        }
       }
+
+      /* Selecting Item Category */
+      randomIndex = random.nextInt(validCategoryPool.length);
+      ItemCategory selectedItemCategory = validCategoryPool[randomIndex];
+
+      /* Selecting Item */
+      randomIndex = random.nextInt(selectedItemCategory.items.length);
+      Item selectedItem = selectedItemCategory.items[randomIndex];
+
+
+      /* Selecting Source Planet */
+      randomIndex = random.nextInt(selectedItem.exportingPlanets.length);
+      String sourcePlanet = selectedItem.exportingPlanets[randomIndex];
+
+      /* Selecting Destination Planet */
+      final List<String> validDestinationPlanets =
+      selectedItem.importingPlanets.where(
+              (element) => element != sourcePlanet
+      ).toList();
+      randomIndex = random.nextInt(validDestinationPlanets.length);
+      String destinationPlanet = validDestinationPlanets[randomIndex];
+
+
+      List<String> eligibleShips = [];
+      for (SpaceShipData spaceShipData in SpaceShipData.spaceShips) {
+        if (!spaceShipData.cargoTypes.contains(cargoTypeAndSize.cargoType)) {
+          continue;
+        }
+
+        if (!spaceShipData.cargoCapacities.contains(
+            cargoTypeAndSize.cargoSize)) {
+          continue;
+        }
+        eligibleShips.add(spaceShipData.shipClassName);
+      }
+
+      double hDifficulty = 0;
+      /* Get Planet Data */
+      PlanetData sourcePlanetData = WorldData.planets.singleWhere((element) => element.planetName == sourcePlanet);
+      PlanetData destinationPlanetData = WorldData.planets.singleWhere((element) => element.planetName == destinationPlanet);
+
+      /* Distance between the two planets */
+      double distance = sourcePlanetData.location.distanceTo(destinationPlanetData.location);
+      hDifficulty = distance / 100;
+
+
+      return MissionData(
+        missionId: random.nextInt(9999999), // TODO: Make sure there is no collision
+        sourcePlanet: sourcePlanet,
+        destinationPlanet: destinationPlanet,
+        eligibleShips: eligibleShips,
+        cargoTypeSizeData: cargoTypeAndSize,
+        cargoCategoryName: selectedItemCategory.name,
+        cargoItemName: selectedItem.name,
+        difficulty: hDifficulty,
+        reward: 1000,
+
+      );
+
+
+    }catch (e) {
+      print("Mission Making Error: $e");
+      return null;
     }
 
-    // print("Valid Cargo Types: $validCargoTypes");
-    Random random = Random();
-    int randomIndex = random.nextInt(validCargoTypes.length);
 
-    CargoTypeSizeData cargoTypeAndSize = validCargoTypes.toList()[randomIndex];
-    // print("Cargo Type and Size: $cargoTypeAndSize");
+  }
 
-    List validCategoryPool = [];
-    for (ItemCategory itemCategory in CargoItems.itemCategories)
+  static MissionData? sampleMissionByDifficulty(PlayerData playerData, double difficulty)
+  {
+
+    /* Difficulty must be between 0 and 1 */
+    assert(difficulty >= 0 && difficulty <= 1);
+
+    int samples = 5000;
+    List<MissionData> sampleMissions = [];
+
+    for (int i = 0; i < samples; i++)
     {
-      if (itemCategory.types.contains(cargoTypeAndSize.cargoType)){
-        validCategoryPool.add(itemCategory);
-      }
-    }
-
-    /* Selecting Item Category */
-    randomIndex = random.nextInt(validCategoryPool.length);
-    ItemCategory selectedItemCategory = validCategoryPool[randomIndex];
-
-    /* Selecting Item */
-    randomIndex = random.nextInt(selectedItemCategory.items.length);
-    Item selectedItem = selectedItemCategory.items[randomIndex];
-
-
-    /* Selecting Source Planet */
-    randomIndex = random.nextInt(selectedItem.exportingPlanets.length);
-    String sourcePlanet = selectedItem.exportingPlanets[randomIndex];
-
-    /* Selecting Destination Planet */
-    final List<String> validDestinationPlanets =
-        selectedItem.importingPlanets.where(
-                (element) => element != sourcePlanet
-        ).toList();
-    randomIndex = random.nextInt(validDestinationPlanets.length);
-    String destinationPlanet = validDestinationPlanets[randomIndex];
-
-
-    List<String> eligibleShips = [];
-    for (SpaceShipData spaceShipData in SpaceShipData.spaceShips){
-
-      if (!spaceShipData.cargoTypes.contains(cargoTypeAndSize.cargoType)){
+      MissionData? missionData = makeMission(playerData);
+      if (missionData == null){
         continue;
       }
+      sampleMissions.add(missionData);
+    }
+    sampleMissions.sort((a, b) => a.difficulty.compareTo(b.difficulty));
 
-      if (!spaceShipData.cargoCapacities.contains(cargoTypeAndSize.cargoSize)){
-        continue;
-      }
-      eligibleShips.add(spaceShipData.shipClassName);
-
+    if (sampleMissions.isEmpty){
+      return null;
     }
 
+    int missionIndex = (difficulty * sampleMissions.length - 1).toInt();
+    MissionData selectedMission = sampleMissions[missionIndex];
 
-    return MissionData(
-      missionId: random.nextInt(9999999), // TODO: Make sure there is no collision
-      sourcePlanet: sourcePlanet,
-      destinationPlanet: destinationPlanet,
-      eligibleShips: eligibleShips,
-      cargoTypeSizeData: cargoTypeAndSize,
-      cargoCategoryName: selectedItemCategory.name,
-      cargoItemName: selectedItem.name,
-      reward: 1000,
-    );
+    /* Assign Reward */
+    int maxReward = 100 + ((2000 - 100) * difficulty).toInt();
+
+    /* Penalties */
+    double penaltyPercentage = 0;
+    /* 1. No. of Ships Owned */
+    int shipOwned = playerData.spaceShipStates.values.where((element) => element.isOwned).length;
+    int totalShips = SpaceShipData.spaceShips.length;
+    penaltyPercentage += (totalShips - shipOwned) * 14;
+
+    /* 2. Eligible Ships */
+
+    /* 3. Cargo Type */
+
+    /* 4. Cargo Size */
+
+    /* 5. Cargo Category */
+    penaltyPercentage += (CargoItems.itemCategories.where((category)
+                          => category.name == selectedMission.cargoCategoryName)
+                            .toList()[0].categoryPenalty)* 2;
+    /* 6. Salt */
+    /*Between 0 and 2 percent */
+    penaltyPercentage += Random().nextDouble() * 2;
+
+    maxReward = (maxReward * (1 - penaltyPercentage / 100)).toInt();
+
+    /* Clamp between 100 and 2000 */
+    maxReward = max(maxReward, 100);
+    maxReward = min(maxReward, 2000);
+
+    /* Last digit must be 0 */
+    maxReward = maxReward ~/ 10 * 10;
+
+    sampleMissions[missionIndex].reward = maxReward;
+    return selectedMission;
 
   }
 
@@ -141,21 +228,24 @@ class MissionData{
       'cargoTypeSizeData': cargoTypeSizeData.toJson(), // Assuming CargoTypeSizeData has a toJson() method
       'cargoCategoryName': cargoCategoryName,
       'cargoItemName': cargoItemName,
+      'difficulty': difficulty,
       'reward': reward,
     };
   }
 
   // Create a MissionData object from JSON
   factory MissionData.fromJson(Map<String, dynamic> json) {
+
     return MissionData(
       missionId: json['missionId'],
       sourcePlanet: json['sourcePlanet'],
       destinationPlanet: json['destinationPlanet'],
       eligibleShips: List<String>.from(json['eligibleShips']),
-      cargoTypeSizeData: CargoTypeSizeData.fromJson(json['cargoTypeSizeData']),
+      cargoTypeSizeData: CargoTypeSizeData.fromJson(Map<String, dynamic>.from(json['cargoTypeSizeData'])),
       cargoCategoryName: json['cargoCategoryName'],
       cargoItemName: json['cargoItemName'],
       reward: json['reward'],
+      difficulty: json['difficulty'],
     );
   }
 

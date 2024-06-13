@@ -43,9 +43,10 @@ class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
     );
 
     // Set other properties after the image is loaded
-    const double scaleFactor = 10;
-    size = Vector2(planetData.radius, planetData.radius) * scaleFactor;
-    position = planetData.location;
+    const double radiusScaleFactor = 6;
+    const double spaceScaleFactor = 1.1;
+    size = Vector2(planetData.radius, planetData.radius) * radiusScaleFactor;
+    position = planetData.location * spaceScaleFactor;
     anchor = Anchor.center;
     priority = 1;
     // print("Image loaded for ${planetData.spriteName}");

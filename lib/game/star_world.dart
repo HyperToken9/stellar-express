@@ -17,7 +17,7 @@ import 'package:star_routes/data/world_data.dart';
 class StarWorld extends World with HasGameRef<StarRoutes>, CollisionCallbacks{
 
   Ship userShip;
-  double cullingMargin = 100;
+  double cullingMargin = 1000000;
 
   List<Planet> planetComponents = [];
 
@@ -62,12 +62,15 @@ class StarWorld extends World with HasGameRef<StarRoutes>, CollisionCallbacks{
 
     for (var planet in planetComponents) {
 
-      final componentRect = Rect.fromLTWH(planet.planetData.location.x - planet.planetData.radius,
-                                          planet.planetData.location.y - planet.planetData.radius,
-                                          planet.planetData.radius*2 , planet.planetData.radius *2 );
+      final componentRect = Rect.fromLTWH(planet.position.x - planet.size.x / 2,
+                                          planet.position.y - planet.size.y / 2,
+                                          planet.size.x , planet.size.y );
 
+      // if (planet.planetData.planetName == "Ratha")
+      // {
+      //   print("Ratha: ${componentRect.overlaps(expandedCameraRect)}");
+      // }
       if (componentRect.overlaps(expandedCameraRect) && !gameRef.world.children.contains(planet)){
-
         add(planet);
       }
 

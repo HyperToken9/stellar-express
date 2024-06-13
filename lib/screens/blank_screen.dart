@@ -34,11 +34,13 @@ class _BlankScreenState extends State<BlankScreen> {
     widget.game.overlays.add(MainMenuScreen.id);
     widget.game.overlays.remove(BlankScreen.id);
 
-
-    // print("Trying to remove blank screen");
-    /* Write the changes back to fire base */
     Datastore dataStore = Datastore();
-    dataStore.savePlayerData(widget.game);
+
+    /* Write data locally */
+    dataStore.saveDataLocally(widget.game);
+
+    /* Write the changes back to fire base */
+    // dataStore.saveDataToFireBase(widget.game);
     print("Saving Player Data");
 
     return true;

@@ -23,7 +23,8 @@ class ItemCategory {
   final Set<CargoTypes> types;
   final List<Item> items;
 
-  const ItemCategory(this.name, this.types, this.items);
+  final double categoryPenalty;
+  const ItemCategory(this.name, this.types, this.items, this.categoryPenalty);
 
   @override
   String toString() {
@@ -86,19 +87,19 @@ class CargoItems{
 
 // Define the categories
   static const List<ItemCategory> itemCategories = [
-    ItemCategory("Energy", {CargoTypes.bulkGoods, CargoTypes.specialCargo}, energyItems),
-    ItemCategory("Wastes", {CargoTypes.bulkGoods}, wastesItems),
-    ItemCategory("Raw Materials", {CargoTypes.bulkGoods, CargoTypes.parcels}, rawMaterialsItems),
-    ItemCategory("Refined Goods", {CargoTypes.parcels, CargoTypes.bulkGoods}, refinedGoodsItems),
-    ItemCategory("Equipment", {CargoTypes.bulkGoods, CargoTypes.highValue}, equipmentItems),
-    ItemCategory("War", {CargoTypes.specialCargo, CargoTypes.highValue, CargoTypes.timeSensitive}, warItems),
-    ItemCategory("Research", {CargoTypes.parcels, CargoTypes.specialCargo}, researchItems),
+    ItemCategory("Energy", {CargoTypes.bulkGoods, CargoTypes.specialCargo}, energyItems, 2),
+    ItemCategory("Wastes", {CargoTypes.bulkGoods}, wastesItems, 1),
+    ItemCategory("Raw Materials", {CargoTypes.bulkGoods, CargoTypes.parcels}, rawMaterialsItems, 3),
+    ItemCategory("Refined Goods", {CargoTypes.parcels, CargoTypes.bulkGoods}, refinedGoodsItems, 3),
+    ItemCategory("Equipment", {CargoTypes.bulkGoods, CargoTypes.highValue}, equipmentItems, 1),
+    ItemCategory("War", {CargoTypes.specialCargo, CargoTypes.highValue, CargoTypes.timeSensitive}, warItems, 0),
+    ItemCategory("Research", {CargoTypes.parcels, CargoTypes.specialCargo}, researchItems, 2),
     ItemCategory("Packages", {CargoTypes.parcels, CargoTypes.specialCargo, CargoTypes.timeSensitive},
         [ Item(
             name: "Package",
             importingPlanets: ['Zeloris', 'Icarion', 'Targalon', 'Noridia', 'Cryon', 'Elysara', 'Pyros', 'Ratha', 'Dracona', 'Marid', 'Zephyros', 'Chronus'],
             exportingPlanets: ['Zeloris', 'Icarion', 'Targalon', 'Noridia', 'Cryon', 'Elysara', 'Pyros', 'Ratha', 'Dracona', 'Marid', 'Zephyros', 'Chronus'])
-        ])
+        ], 4)
   ];
 
 }

@@ -35,43 +35,31 @@ class PlayerData{
 
   List<MissionData> availableMissions = [];
 
-
-  PlayerData(){
-
-    /* Initializes Ship States */
-    for (SpaceShipData data in SpaceShipData.spaceShips){
-      if (data.shipClassName == "Small Courier"){
-        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: true,
-                                                            isEquipped: true,
-                                                            dockedAt: "");
-      }else if(data.shipClassName == "Express Shuttle"){
-        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: true,
-                                                              isEquipped: false,
-                                                              dockedAt: "Ratha");
-      }else{
-        spaceShipStates[data.shipClassName] = SpaceShipState(isOwned: false, isEquipped: false, dockedAt: "");
-      }
-      // print(spaceShipStates[data.shipClassName]?.toJson());
-    }
-
-    /* Initializes Mission States*/
-    for (int i = 0; i < 7; i++) {
-      availableMissions.add(MissionData.makeMission(this));
-    }
-
-    setEquippedShip();
-
-  }
-
   void loadPlayerData(String playerId){
     /* Assign Player ID */
     this.playerId = playerId;
 
-    /* Load Player Data from Firebase */
     Datastore dataStore = Datastore();
-    dataStore.loadPlayerData(this);
+    /* Load Data from Local Cache */
+    dataStore.loadDataLocally(this);
+
+    /* Load Player Data from Firebase */
+
+    // dataStore.loadDataFromFireBase(this);
     // print("Loading Player Data");
 
+
+    /* Initializes Mission States*/
+    for (int i = 0; i < 7; i++) {
+      MissionData? mission = MissionData.sampleMissionByDifficulty(this, 1);
+
+      if (mission != null){
+        availableMissions.add(mission);
+      }
+
+    }
+
+    setEquippedShip();
 
   }
 
@@ -223,6 +211,7 @@ class PlayerData{
 
     return true;
   }
+
 
 }
 
