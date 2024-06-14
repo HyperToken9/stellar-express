@@ -104,7 +104,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
     /* Initialize World */
     starWorld = StarWorld(userShip: userShip);
-    await starWorld.loadPlanets();
+    // await starWorld.loadPlanets();
     world = starWorld;
 
 
@@ -211,8 +211,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     if (distanceToPlanet > zoomDistanceThreshold){
       return false;
     }
-    // print("Zoommmyy");
-    print("Closest Planet: ${closestPlanet.planetData.planetName} Size:: ${closestPlanet.size}");
+    // print("Closest Planet: ${closestPlanet.planetData.planetName} Size:: ${closestPlanet.size}");
     double zoomInfinity = calculateCameraZoom(objectSize: userShip.size,
                                               screenPercentage: userShip.spaceShipData.zoomPercentage);
 

@@ -39,6 +39,7 @@ void main() async {
 
   runApp(
       MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: GameApp(game: game),
       )
       // )GameApp(game: game),

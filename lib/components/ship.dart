@@ -1,8 +1,12 @@
 
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/particles.dart';
+import 'package:flutter/material.dart';
 import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
@@ -46,7 +50,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   double _maxVelocity = 0;
   double _maxAngularVelocity = 0;
 
-  // Ship({required this.spaceShipData});
+  late ParticleSystemComponent particleComponent;
 
   Ship({required this.spaceShipData, required this.spawnLocation}){
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
@@ -66,9 +70,37 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     /* Game Attributes */
     _maxVelocity = 600;
     _maxAngularVelocity = 8;
+    priority = 2;
 
     /* Add Hit Box */
     add(RectangleHitbox());
+
+    final thrustImage = await Flame.images.load('particles/effect_yellow.png');
+
+    particleComponent = ParticleSystemComponent(
+      anchor: Anchor.center,
+      position: position,
+      priority: 1,
+      particle: Particle.generate(
+          lifespan: 1,
+          count: 100,
+          generator: (i){
+            return AcceleratedParticle(
+                position: Vector2(size.x/2, 0),
+                acceleration: Vector2(0, Random().nextDouble() * 100),
+                speed: Vector2(0, Random().nextDouble() * 100),
+                child: CircleParticle(
+                  radius: 10,
+                  paint: Paint()..color = const Color(0xFFFFCC00),
+                ),
+            );
+
+          }
+      )
+
+
+    );
+
 
   }
 
@@ -108,6 +140,32 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   @override
   void update(double dt){
     super.update(dt);
+
+
+    // particleComponent.position = position;
+    gameRef.world.add(ParticleSystemComponent(
+        anchor: Anchor.center,
+        position: position,
+        priority: 1,
+        particle: Particle.generate(
+            lifespan: 1,
+            count: 2,
+            generator: (i){
+              return AcceleratedParticle(
+                position: Vector2(size.x/2, 0),
+                acceleration: Vector2(0, Random().nextDouble() * 100),
+                speed: Vector2(0, Random().nextDouble() * 100),
+                child: CircleParticle(
+                  radius: 5,
+                  paint: Paint()..color = const Color(0xAAFFCC00),
+                ),
+              );
+
+            }
+        )));
+
+    // print("Partciel Prog: ${particleComponent.progress}");
+
     if (!applyPhysics){
       return;
     }
