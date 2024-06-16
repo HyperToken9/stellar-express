@@ -22,6 +22,7 @@ class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
 
   Planet({required this.planetData}) {
     // Initiate the background loading of the image
+    priority = 2;
     imageLoader = _loadImage();
   }
 
@@ -48,7 +49,6 @@ class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
     size = Vector2(planetData.radius, planetData.radius) * Config.radiusScaleFactor;
     position = planetData.location * Config.spaceScaleFactor;
     anchor = Anchor.center;
-    priority = 1;
     // print("Image loaded for ${planetData.spriteName}");
   }
 

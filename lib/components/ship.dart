@@ -5,9 +5,10 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
-import 'package:flame/particles.dart';
+
 import 'package:flutter/material.dart';
 import 'package:star_routes/components/planet.dart';
+import 'package:star_routes/components/thrusters.dart';
 import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 import 'package:star_routes/data/mission_data.dart';
@@ -36,6 +37,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   Vector2 linearVelocity = Vector2.zero();
   double angularVelocity = 0;
 
+
   /* Ship Orbit State */
   bool inOrbit = false;
   Vector2 orbitCenter =  Vector2(0, 0);
@@ -49,58 +51,36 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   /* Ship Attributes */
   double _maxVelocity = 0;
   double _maxAngularVelocity = 0;
+  double _linearAcceleration = 0;
+  double _angularAcceleration = 0;
 
   late ParticleSystemComponent particleComponent;
 
   Ship({required this.spaceShipData, required this.spawnLocation}){
+  // Ship(){
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
                    spaceShipData.spriteSize[1].toDouble());
     position = spawnLocation;
-    priority = 2;
+    priority = 4;
   }
 
   @override
   Future<void> onLoad() async {
     // Load the ship image
     sprite = await Sprite.load("${Assets.shipBasePath}${spaceShipData.spriteName}.png");
-    print("Loaded Ship: ${spaceShipData.shipClassName}");
-    // position = game.playerData.shipSpawnLocation;
+
     anchor = Anchor.center;
 
     /* Game Attributes */
-    _maxVelocity = 600;
-    _maxAngularVelocity = 8;
-    priority = 2;
+    _maxVelocity = 0;
+    _maxAngularVelocity = 0;
+    _linearAcceleration = 0;
+    _angularAcceleration = 0;
 
     /* Add Hit Box */
     add(RectangleHitbox());
 
-    final thrustImage = await Flame.images.load('particles/effect_yellow.png');
-
-    particleComponent = ParticleSystemComponent(
-      anchor: Anchor.center,
-      position: position,
-      priority: 1,
-      particle: Particle.generate(
-          lifespan: 1,
-          count: 100,
-          generator: (i){
-            return AcceleratedParticle(
-                position: Vector2(size.x/2, 0),
-                acceleration: Vector2(0, Random().nextDouble() * 100),
-                speed: Vector2(0, Random().nextDouble() * 100),
-                child: CircleParticle(
-                  radius: 10,
-                  paint: Paint()..color = const Color(0xFFFFCC00),
-                ),
-            );
-
-          }
-      )
-
-
-    );
-
+    add(Thrusters());
 
   }
 
@@ -119,9 +99,9 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     }
 
     /* Calculate Error  */
-    angularVelocity += (_maxAngularVelocity * impulse.y - angularVelocity) * 0.01;
+    angularVelocity += (_maxAngularVelocity * impulse.y - angularVelocity) * _angularAcceleration;
 
-    linearVelocity = linearVelocity + Vector2(sin(angle), -cos(angle)) * impulse.x * 2;
+    linearVelocity += Vector2(sin(angle), -cos(angle)) * impulse.x * _linearAcceleration;
 
 
     /* Normalize */
@@ -140,31 +120,6 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   @override
   void update(double dt){
     super.update(dt);
-
-
-    // particleComponent.position = position;
-    gameRef.world.add(ParticleSystemComponent(
-        anchor: Anchor.center,
-        position: position,
-        priority: 1,
-        particle: Particle.generate(
-            lifespan: 1,
-            count: 2,
-            generator: (i){
-              return AcceleratedParticle(
-                position: Vector2(size.x/2, 0),
-                acceleration: Vector2(0, Random().nextDouble() * 100),
-                speed: Vector2(0, Random().nextDouble() * 100),
-                child: CircleParticle(
-                  radius: 5,
-                  paint: Paint()..color = const Color(0xAAFFCC00),
-                ),
-              );
-
-            }
-        )));
-
-    // print("Partciel Prog: ${particleComponent.progress}");
 
     if (!applyPhysics){
       return;
@@ -198,7 +153,14 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
       targetShipAngle = angleInOrbit - pi;
 
       position = orbitCenter + Vector2(cos(angleInOrbit), sin(angleInOrbit)) * orbitRadius;
-      angle = angle + (targetShipAngle - angle) * 0.05;
+
+      double deltaAngle = (targetShipAngle - angle) % (2 * pi);
+      if (deltaAngle > pi) {
+        deltaAngle -= 2 * pi;
+      } else if (deltaAngle < -pi) {
+        deltaAngle += 2 * pi;
+      }
+      angle += deltaAngle * 0.05;
 
       orbitRadius += (targetOrbitRadius - orbitRadius) * 0.01 ;
 
@@ -232,19 +194,19 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     }
     Planet closestPlanet = gameRef.closestPlanets[0];
 
-    /* Set Focus the planet */
-    gameRef.camera.follow(closestPlanet, maxSpeed: 500);
-    gameRef.adjustCameraZoom(objectSize: closestPlanet.size,
-                             screenPercentage: Config.cameraZoomPercentageInOrbit);
-
     /* Set Orbital Dynamics */
-    targetOrbitRadius = closestPlanet.size.x/2 + 500;
+    targetOrbitRadius = closestPlanet.size.x / 2 + size.x / 1.1;
     orbitRadius = closestPlanet.position.distanceTo(position);
     orbitCenter = closestPlanet.position;
     Vector2 delta = closestPlanet.position - position;
     angleInOrbit = atan2(delta.y, delta.x) + pi;
     inOrbit = true;
     linearVelocity = Vector2.zero();
+
+    /* Set Focus the planet */
+    gameRef.camera.follow(closestPlanet, maxSpeed: 500);
+    gameRef.adjustCameraZoom(objectSize: Vector2.all(targetOrbitRadius * 2),
+                             screenPercentage: 95);
 
     /* Disable D-Pad */
     gameRef.dpad.setState(DPadStates.inactive);
@@ -254,6 +216,8 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
     /* Enable Delivery Button */
     /* Check if ship has cargo */
+    gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
+    /*
     final SpaceShipState shipState = game.playerData.getEquippedShipState();
 
     if (shipState.isCarryingCargo &&
@@ -278,7 +242,14 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
       }
     }
+    */
 
+    detectShipSwaping(closestPlanet);
+
+
+  }
+
+  void detectShipSwaping(Planet closestPlanet){
     /* Swapping Ships */
     for (SpaceShipData shipData in SpaceShipData.spaceShips){
       SpaceShipState? shipState = game.playerData.spaceShipStates[shipData.shipClassName];
@@ -291,23 +262,16 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
       if (shipState.dockedAt
           == closestPlanet.planetData.planetName){
         print("Found: ${shipData.shipClassName}");
-        gameRef.swapShipButton.planetData = closestPlanet.planetData;
+        gameRef.swapShipButton.planetComponent = closestPlanet;
         gameRef.swapShipButton.setState(SwapShipButtonStates.idle);
         break;
       }
     }
-    /* If A ship exits on planet */
-    // for (SpaceShipData shipData in gameRef.worldData.spaceShips){
-    //   if (shipData.dockedPlanet == closestPlanet.planetData.planetName){
-    //     gameRef.swapShipButton.planetData = closestPlanet.planetData;
-    //     gameRef.swapShipButton.setState(SwapShipButtonStates.idle);
-    //     break;
-    //   }
-    // }
-
   }
 
   void removeFromOrbit(){
+
+
     inOrbit = false;
 
     /* Enable DPad */
@@ -334,10 +298,23 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   }
 
   void loadNewShip() async {
+    for  (SpaceShipData shipData in SpaceShipData.spaceShips){
+      if (shipData.shipClassName == game.playerData.equippedShip){
+        spaceShipData = shipData;
+        // print("Equipped Ship: ${spaceShipData.shipClassName}");
+        break;
+      }
+    }
+
     sprite = await Sprite.load("${Assets.shipBasePath}${spaceShipData.spriteName}.png");
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
                    spaceShipData.spriteSize[1].toDouble());
     position = game.playerData.shipSpawnLocation;
+
+    _maxVelocity = spaceShipData.maxVelocity;
+    _maxAngularVelocity = spaceShipData.maxAngularVelocity;
+    _linearAcceleration = spaceShipData.linearAcceleration;
+    _angularAcceleration = spaceShipData.angularAcceleration;
 
     if (!inOrbit){
       game.adjustCameraZoom(objectSize: size, screenPercentage: spaceShipData.zoomPercentage);
@@ -349,12 +326,12 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   }
 
-  @override
+/*  @override
   void onCollision(Set<Vector2> intersectionPoints, ShapeHitbox other) {
 
     print("Collision Detected");
 
-  }
+  }*/
 
 
 }

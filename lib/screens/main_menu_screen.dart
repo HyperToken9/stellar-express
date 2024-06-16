@@ -45,6 +45,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 ),
                 TextButton(
                   onPressed: () {
+                    widget.game.resumeEngine();
                     widget.game.overlays.remove(MainMenuScreen.id);
                     widget.game.overlays.add(HangarScreen.id);
                   },

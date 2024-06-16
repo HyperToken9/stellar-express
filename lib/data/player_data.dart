@@ -19,7 +19,7 @@ class PlayerData{
 
   int totalExperience = 165;
 
-  String equippedShip  = "Small Courier";
+  String equippedShip  = "";
 
   Vector2 shipSpawnLocation = Vector2(3766.0, -2102.0) + Vector2(0, 300);
 
@@ -65,8 +65,15 @@ class PlayerData{
 
   void setEquippedShip(){
     for (SpaceShipData data in SpaceShipData.spaceShips){
-      if (spaceShipStates[data.shipClassName]!.isEquipped){
+      SpaceShipState shipState = spaceShipStates[data.shipClassName]!;
+
+      if (!shipState.isOwned)
+      {
+        continue;
+      }
+      if (shipState.isEquipped){
         equippedShip = data.shipClassName;
+        return;
       }
     }
   }

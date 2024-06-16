@@ -43,6 +43,8 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
         position: Vector2(0, 0),
         size: size,
         onTap: () {
+          game.world.add(CargoShip());
+          return;
           if (isDelivering){
 
             print("We do delivery");

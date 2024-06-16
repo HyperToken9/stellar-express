@@ -2,9 +2,11 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:star_routes/data/planet_data.dart';
+
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
+
+import 'package:star_routes/components/planet.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/tappable_region.dart';
@@ -15,7 +17,7 @@ import 'package:star_routes/states/swap_ship_button.dart';
 class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with HasGameRef<StarRoutes> {
 
 
-  late PlanetData planetData;
+  late Planet planetComponent;
 
   SwapShipButton() : super(priority: 1);
 
@@ -56,13 +58,18 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
               if (shipState.isEquipped){
                 continue;
               }
-              if (shipState.dockedAt != planetData.planetName){
+              if (shipState.dockedAt != planetComponent.planetData.planetName){
                 continue;
               }
               print("Swapping Ship from ${game.playerData.equippedShip} to ${shipData.shipClassName}");
+
+              /* Land Current Ship */
+
+
+
               /* Unequipped Old ship */
               SpaceShipState oldShipState = game.playerData.spaceShipStates[game.playerData.equippedShip]!;
-              oldShipState.dockedAt = planetData.planetName;
+              oldShipState.dockedAt = planetComponent.planetData.planetName;
               oldShipState.isEquipped = false;
               /* Equipping New Ship */
               shipState.dockedAt = "";
@@ -72,7 +79,7 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
               game.userShip.loadNewShip();
 
               gameRef.swapShipButton.setState(SwapShipButtonStates.inactive);
-
+              gameRef.userShip.detectShipSwaping(planetComponent);
               break;
             }
           },

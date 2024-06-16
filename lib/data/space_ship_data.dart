@@ -14,6 +14,11 @@ class SpaceShipData{
   final int displayManeuverability;
   final int unlockLevel;
 
+  final double maxVelocity;
+  final double maxAngularVelocity;
+  final double linearAcceleration;
+  final double angularAcceleration;
+
   final int baseCostValue;
   final int baseSalvageValue;
 
@@ -38,8 +43,11 @@ class SpaceShipData{
     required this.cargoTypes,
     required this.spriteSize,
     required this.unlockLevel,
-    this.zoomPercentage = 20.0,
-
+    this.maxVelocity = 1000,
+    this.maxAngularVelocity = 8,
+    this.zoomPercentage = 30,  //20.0,
+    this.linearAcceleration = 2,
+    this.angularAcceleration = 0.01,
   });
 
 
@@ -72,8 +80,13 @@ class SpaceShipData{
       cargoCapacities: {"Small"},
       cargoTypes: {CargoTypes.parcels, CargoTypes.specialCargo, CargoTypes.timeSensitive},
       spriteName: "small_courier",
-      spriteSize: [249, 429],
-      unlockLevel: 1, // Suggest level 1
+      spriteSize: [294, 429],
+      unlockLevel: 1,
+      maxVelocity: 250,
+      linearAcceleration: 1.5,
+      maxAngularVelocity: 7,
+      angularAcceleration: 0.002,
+      // zoomPercentage: 70.0,
     ),
     SpaceShipData(
       shipClassName: "Express Shuttle",
@@ -87,7 +100,12 @@ class SpaceShipData{
       cargoTypes: {CargoTypes.parcels, CargoTypes.highValue, CargoTypes.timeSensitive},
       spriteName: "express_shuttle",
       spriteSize: [459, 543],
-      unlockLevel: 5, // Suggest level 5
+      unlockLevel: 5,
+      maxVelocity: 450,
+      linearAcceleration: 4.0,
+      maxAngularVelocity: 10,
+      angularAcceleration: 0.007,
+      // zoomPercentage: 70.0,
     ),
     SpaceShipData(
       shipClassName: "Endurance Cruiser",
@@ -158,6 +176,7 @@ class SpaceShipData{
       spriteName: "heavy_hauler",
       spriteSize: [1606, 1898],
       unlockLevel: 30, // Suggest level 30
+      // maxAngularVelocity:
     ),
 
   ];

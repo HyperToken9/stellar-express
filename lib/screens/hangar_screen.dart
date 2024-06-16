@@ -104,6 +104,7 @@ class _MainMenuScreenState extends State<HangarScreen> {
     BackButtonInterceptor.add(myInterceptor);
     // widget.game.l
     widget.game.setupHanger();
+    print("Hangar Screen Initialized");
   }
 
   @override

@@ -24,7 +24,6 @@ class Datastore {
     'coin': 100,
     'totalExperience': 0,
     'shipSpawnLocation': [0, 0],
-    'equippedShip': 'Small Courier',
     'spaceShipStates': {
       'Small Courier': SpaceShipState(isOwned: true, isEquipped: true).toJson(),
       'Express Shuttle': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
@@ -45,16 +44,15 @@ class Datastore {
   final Map<String, dynamic> overrideCustomData = {
     'coin': 696969,
     // 'totalExperience': 0,
-    'shipSpawnLocation': [3361.0* Config.spaceScaleFactor,  923.0* Config.spaceScaleFactor],
-    // 'equippedShip': 'Small Courier',
+    'shipSpawnLocation': [46.0* Config.spaceScaleFactor, -4516.0 * Config.spaceScaleFactor],
     'spaceShipStates': {
-      'Small Courier': SpaceShipState(isOwned: true, isEquipped: true).toJson(),
-      'Express Shuttle': SpaceShipState(isOwned: false, isEquipped: false, dockedAt: "Ratha").toJson(),
-      'Heavy Hauler': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
-      'Large Freighter': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
-      'Endurance Cruiser': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Small Courier': SpaceShipState(isOwned: false, isEquipped: true, dockedAt: "").toJson(),
+      'Express Shuttle': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
+      'Large Freighter': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Icarion").toJson(),
+      'Endurance Cruiser': SpaceShipState(isOwned: false, isEquipped: true).toJson(),
+      'Stealth Courier': SpaceShipState(isOwned: false, isEquipped: true).toJson(),
       'Specialized Vessel': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
-      'Stealth Courier': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
+      'Heavy Hauler': SpaceShipState(isOwned: false, isEquipped: true).toJson(),
     },
     // 'availableMissions': [],
 
@@ -100,8 +98,9 @@ class Datastore {
     playerData.totalExperience = playerDocument['totalExperience'].toInt();
     playerData.shipSpawnLocation = Vector2(playerDocument['shipSpawnLocation'][0].toDouble(),
                                       playerDocument['shipSpawnLocation'][1].toDouble());
-    playerData.equippedShip = playerDocument['equippedShip'];
+    // playerData.equippedShip = playerDocument['equippedShip'];
 
+    // print("Equpped SHip: ${playerDocument['equippedShip']}");
 
     playerData.spaceShipStates = (playerDocument['spaceShipStates'] ?? defaultPlayerData['spaceShipStates'])
                                       .cast<String, dynamic>()
@@ -132,7 +131,7 @@ class Datastore {
     playerDocument['totalExperience'] = playerData.totalExperience;
     playerDocument['shipSpawnLocation'] = [game.userShip.position.x,
                                            game.userShip.position.y];
-    playerDocument['equippedShip'] = playerData.equippedShip;
+    // playerDocument['equippedShip'] = playerData.equippedShip;
     playerDocument['spaceShipStates'] = playerData.spaceShipStates.map(
                                           (key, value) => MapEntry(key, value.toJson()));
     playerDocument['archivedMissions'] = playerData.archivedMissions.map(
@@ -179,7 +178,8 @@ class Datastore {
     for (String key in overrideCustomData.keys){
       playerDocument[key] = overrideCustomData[key];
     }
-    print("Loding SdAAQ");
+    // print("Loding SdAAQ");
+    // print("Equipped SHip: ${playerDocument['equippedShip']}");
     _playerDocumentToPlayerData(playerData);
   }
 

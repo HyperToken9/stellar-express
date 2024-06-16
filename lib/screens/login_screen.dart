@@ -36,8 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
     /*
       TODO Replace with load data method call
     */
-    // widget.game.playerData.playerId = id;
-    widget.game.playerData.loadPlayerData(id);
+
+
+    widget.game.initializePlayerData(id);
+
     // widget.game.experienceBar.up
     widget.game.overlays.add(MainMenuScreen.id);
     widget.game.overlays.remove(LoginScreen.id);

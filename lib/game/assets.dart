@@ -11,7 +11,7 @@ class Assets{
   static const planet = "planet_sprite.png";
 
   static const shipBasePath = "space_ships/";
-  static const cargoShip = "cargo_ships/spaceship.png";
+  static const cargoShip = "cargo_ships/cargo_ship1.png";
 
   static const controller = "control_interface/controller.png";
   static const enterOrbitButton = "control_interface/enter_orbit_button.png";

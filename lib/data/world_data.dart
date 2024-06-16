@@ -66,6 +66,7 @@ class WorldData{
       spriteSize: Vector2(110, 110),
       numSprites: 50,
       miniMapColor: const Color(0xFFa6b5b9),
+      spriteSpeed: 0.08,
     ),
     PlanetData(
       planetName: "Targalon",
@@ -109,6 +110,7 @@ class WorldData{
       spriteName: "cryon",
       spriteSize: Vector2(105, 105),
       numSprites: 50,
+      spriteSpeed: 0.05,
       miniMapColor: const Color(0xFF8485b9),
     ),
 

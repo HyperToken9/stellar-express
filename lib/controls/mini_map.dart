@@ -10,6 +10,7 @@ import 'package:star_routes/data/world_data.dart';
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/assets.dart';
 import 'package:star_routes/game/tappable_region.dart';
+import 'package:star_routes/game/config.dart';
 
 import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/components/planet.dart';
@@ -67,8 +68,8 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
     List<Vector3> result = [];
 
     /* Pixel to Distance Ratio */
-    double miniMapDistanceScale = 0.01;
-    double miniMapSizeScale = 0.01;
+    double miniMapDistanceScale = 0.1 / Config.spaceScaleFactor;
+    double miniMapSizeScale = 0.2 /  Config.radiusScaleFactor;
 
     for (Planet data in game.starWorld.planetComponents){
 

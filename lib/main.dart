@@ -20,7 +20,7 @@ import 'package:star_routes/screens/mini_map_screen.dart';
 import 'package:star_routes/data/player_data.dart';
 
 
-final PlayerData playerData = PlayerData();
+
 
 
 void main() async {
@@ -35,6 +35,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  final PlayerData playerData = PlayerData();
   final StarRoutes game = StarRoutes(playerData: playerData);
 
   runApp(
