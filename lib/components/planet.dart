@@ -1,10 +1,12 @@
 
 
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
+import 'package:star_routes/effects/orbit_effects.dart';
 import 'package:star_routes/game/config.dart';
 
 import 'package:star_routes/game/star_routes.dart';
@@ -84,14 +86,42 @@ class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
     // Draw the circle with the gradient
     canvas.drawCircle(Offset(size.x / 2, size.y / 2), size.x * 5, auraPaint);
 
+    super.render(canvas);
+
+
+
+    /* Debugging ??? */
+
 
     /*Draw a red circle of size */
     Paint circlePaint = Paint()
       ..color = Colors.red
       ..style = PaintingStyle.stroke
       ..strokeWidth = 20.0;
-    super.render(canvas);
+
     // canvas.drawCircle(Offset(size.x / 2, size.y / 2), size.x, circlePaint);
+
+
+    // Path orbitalArc = OrbitEffects().scalePath(
+    //                     OrbitEffects().makeDeOrbitPath(),
+    //                     game.userShip.orbitRadius);
+    // orbitalArc = OrbitEffects().scalePath(orbitalArc, scalePathBy);
+    /*pRINT THE last point on the path */
+
+    /*(-106.922, 102.033); */
+    // double currentAngle = atan2(102.033, -106.922);
+    // double requiredAngle = atan2(game.userShip.position.y - game.userShip.orbitCenter.y,
+    //                              game.userShip.position.x - game.userShip.orbitCenter.x);
+    //
+    // double angleDifference = requiredAngle - currentAngle + pi/2;
+    //
+    // orbitalArc = OrbitEffects().rotatePath(orbitalArc, angleDifference);
+    //
+    // canvas.translate(size.x / 2, size.y / 2);
+    // Vector2 delta = game.userShip.orbitCenter - game.userShip.position;
+    // canvas.translate(-delta.x, -delta.y);
+    //
+    // canvas.drawPath(orbitalArc, circlePaint);
 
 
   }

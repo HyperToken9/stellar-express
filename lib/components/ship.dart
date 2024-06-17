@@ -45,6 +45,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   double targetShipAngle = 0;
   double orbitRadius = 300;
   double angleInOrbit = 0;
+  double offsetAngle = 0;
   //TODO: int orbitDirection = 1;
 
 
@@ -206,6 +207,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     /* Set Focus the planet */
     gameRef.camera.follow(closestPlanet, maxSpeed: 500);
     gameRef.adjustCameraZoom(objectSize: Vector2.all(targetOrbitRadius * 2),
+                             // screenPercentage: 40); // todo: revert angle back
                              screenPercentage: 95);
 
     /* Disable D-Pad */
@@ -244,12 +246,13 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     }
     */
 
-    detectShipSwaping(closestPlanet);
+    detectShipSwapping(closestPlanet);
 
 
   }
 
-  void detectShipSwaping(Planet closestPlanet){
+
+  void detectShipSwapping(Planet closestPlanet){
     /* Swapping Ships */
     for (SpaceShipData shipData in SpaceShipData.spaceShips){
       SpaceShipState? shipState = game.playerData.spaceShipStates[shipData.shipClassName];
@@ -297,7 +300,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   }
 
-  void loadNewShip() async {
+  void loadNewShip({Vector2? atPosition}) async {
     for  (SpaceShipData shipData in SpaceShipData.spaceShips){
       if (shipData.shipClassName == game.playerData.equippedShip){
         spaceShipData = shipData;
@@ -309,7 +312,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     sprite = await Sprite.load("${Assets.shipBasePath}${spaceShipData.spriteName}.png");
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
                    spaceShipData.spriteSize[1].toDouble());
-    position = game.playerData.shipSpawnLocation;
+    position = atPosition ?? game.playerData.shipSpawnLocation;
 
     _maxVelocity = spaceShipData.maxVelocity;
     _maxAngularVelocity = spaceShipData.maxAngularVelocity;
@@ -324,6 +327,14 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
       game.miniMap.setState(false);
     }
 
+  }
+
+  @override
+  double get angle => super.angle + offsetAngle;
+
+  @override
+  set angle(double newAngle) {
+    super.angle = newAngle - offsetAngle;
   }
 
 /*  @override

@@ -1,10 +1,14 @@
 
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
+
+import 'package:star_routes/effects/orbit_effects.dart';
 
 import 'package:star_routes/components/planet.dart';
 
@@ -66,21 +70,58 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
               /* Land Current Ship */
 
 
+              double orbitRotateByAngle = atan2(game.userShip.position.y - game.userShip.orbitCenter.y,
+                  game.userShip.position.x - game.userShip.orbitCenter.x);
 
-              /* Unequipped Old ship */
-              SpaceShipState oldShipState = game.playerData.spaceShipStates[game.playerData.equippedShip]!;
-              oldShipState.dockedAt = planetComponent.planetData.planetName;
-              oldShipState.isEquipped = false;
-              /* Equipping New Ship */
-              shipState.dockedAt = "";
-              shipState.isEquipped = true;
-              game.playerData.equippedShip = shipData.shipClassName;
-              game.userShip.spaceShipData = shipData;
-              game.userShip.loadNewShip();
+              onDeOrbitComplete() {
 
+
+                /* Unequipped Old ship */
+                SpaceShipState oldShipState = game.playerData.spaceShipStates[game.playerData.equippedShip]!;
+                oldShipState.dockedAt = planetComponent.planetData.planetName;
+                oldShipState.isEquipped = false;
+
+                // game.userShip.position = planetComponent.position;
+
+                /* Equipping New Ship */
+                shipState.dockedAt = "";
+                shipState.isEquipped = true;
+                game.playerData.equippedShip = shipData.shipClassName;
+                game.userShip.spaceShipData = shipData;
+                game.userShip.loadNewShip(atPosition: planetComponent.position);
+
+                print("Ship Position: ${game.userShip.position}");
+
+                /* Orbit New Ship*/
+                final List<Effect> orbitEffect = OrbitEffects()
+                    .orbitEffect(10, game.userShip.orbitRadius, 0, (){
+                  /* Reset Physics */
+                  game.userShip.insertIntoOrbit();
+                  game.userShip.applyPhysics = true;
+                  game.userShip.offsetAngle = 0;
+
+                  gameRef.userShip.detectShipSwapping(planetComponent);
+                }, game.userShip);
+
+                game.userShip.addAll(orbitEffect);
+
+
+              }
               gameRef.swapShipButton.setState(SwapShipButtonStates.inactive);
-              gameRef.userShip.detectShipSwaping(planetComponent);
+              final List<Effect> deOrbitingEffect = OrbitEffects()
+                  .deOrbitEffect(10, game.userShip.orbitRadius, orbitRotateByAngle,
+                                 onDeOrbitComplete, game.userShip);
+
+              game.userShip.applyPhysics = false;
+              game.userShip.offsetAngle = - pi / 2;
+
+
+              game.userShip.addAll(deOrbitingEffect);
+
               break;
+
+
+
             }
           },
           onRelease: () {},

@@ -44,7 +44,7 @@ class Datastore {
   final Map<String, dynamic> overrideCustomData = {
     'coin': 696969,
     // 'totalExperience': 0,
-    'shipSpawnLocation': [46.0* Config.spaceScaleFactor, -4516.0 * Config.spaceScaleFactor],
+    'shipSpawnLocation': [135.488* Config.spaceScaleFactor, -4552.0 * Config.spaceScaleFactor],
     'spaceShipStates': {
       'Small Courier': SpaceShipState(isOwned: false, isEquipped: true, dockedAt: "").toJson(),
       'Express Shuttle': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
