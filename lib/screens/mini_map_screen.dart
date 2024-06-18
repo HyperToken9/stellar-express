@@ -416,7 +416,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    print("MiniMap Back button intercepted");
+    // print("MiniMap Back button intercepted");
     _closeMiniMap();
     return true;
   }

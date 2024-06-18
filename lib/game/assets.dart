@@ -5,8 +5,8 @@ class Assets{
 
   // static const background = "extra-starry-background.jpg";
 
-  static const backgroundAway = "stars1.png";
-  static const backgroundClose = "stars2.png";
+  static const backgroundAway = "background1.png"; //"stars1.png";
+  static const backgroundClose = "background2.png";//"stars2.png";
 
   static const planet = "planet_sprite.png";
 

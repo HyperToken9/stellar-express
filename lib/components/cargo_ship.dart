@@ -46,8 +46,8 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
     double pathScaleBy = game.userShip.orbitRadius;
     // print("Scale By: $pathScaleBy");
     // print("User Positoon ${game.userShip.position}");
-    double rotateBy = game.userShip.angleInOrbit - pi / 1.6 - game.userShip.orbitRadius / 200;
-    print("Uinsg 185");
+    double rotateBy = game.userShip.angleInOrbit + Random().nextDouble() * 2 * pi;
+    // print("Uinsg 185");
     size = size;
     double effectDuration = 10;
 
@@ -96,6 +96,7 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
 
   }
 
+  @override
   void update(double dt) {
     super.update(dt);
 
@@ -112,10 +113,18 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
       removeFromParent();
     }
 
-    angleInOrbit += 0.009;
+    if ((game.userShip.angleInOrbit - angleInOrbit) % (2 * pi) > pi){
+      angleInOrbit -= 0.009;
+    }else{
+      angleInOrbit += 0.009;
+    }
+    // angleInOrbit += 0.009;
+
+
     targetShipAngle = angleInOrbit + pi /2;
 
     position = orbitCenter + Vector2(cos(angleInOrbit), sin(angleInOrbit)) * orbitRadius;
+
     double deltaAngle = (targetShipAngle - angle) % (2 * pi);
     if (deltaAngle > pi) {
       deltaAngle -= 2 * pi;

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/assets.dart';
+import 'package:star_routes/game/config.dart';
 
 
 class Background extends ParallaxComponent<StarRoutes>
@@ -24,11 +25,11 @@ class Background extends ParallaxComponent<StarRoutes>
     parallax = Parallax([
       ParallaxLayer(
           ParallaxImage(backgroundAway, repeat: ImageRepeat.repeat),
-          velocityMultiplier: Vector2(0.05, 0.05)
+          velocityMultiplier: Vector2(3, 3) / Config.spaceScaleFactor,
       ),
       ParallaxLayer(
           ParallaxImage(backgroundClose, repeat: ImageRepeat.repeat),
-          velocityMultiplier: Vector2(0.22, 0.22)
+          velocityMultiplier: Vector2(0.5, 0.51) / Config.spaceScaleFactor,
       )
     ]);
 

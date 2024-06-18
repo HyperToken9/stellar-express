@@ -43,8 +43,7 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
         position: Vector2(0, 0),
         size: size,
         onTap: () {
-          game.world.add(CargoShip());
-          return;
+
           if (isDelivering){
 
             print("We do delivery");
@@ -63,6 +62,9 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
             game.playerData.getEquippedShipState().isCarryingCargo = false;
 
           }else{
+
+            game.world.add(CargoShip());
+            return;
             /* Ship Goods to the ship */
             /* Move the mission to initiaed */
             print("PickUp TIMe");

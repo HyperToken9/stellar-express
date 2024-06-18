@@ -44,7 +44,7 @@ class Datastore {
   final Map<String, dynamic> overrideCustomData = {
     'coin': 696969,
     // 'totalExperience': 0,
-    'shipSpawnLocation': [135.488* Config.spaceScaleFactor, -4552.0 * Config.spaceScaleFactor],
+    // 'shipSpawnLocation': [135.488* Config.spaceScaleFactor, -4552.0 * Config.spaceScaleFactor],
     'spaceShipStates': {
       'Small Courier': SpaceShipState(isOwned: false, isEquipped: true, dockedAt: "").toJson(),
       'Express Shuttle': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
@@ -98,9 +98,7 @@ class Datastore {
     playerData.totalExperience = playerDocument['totalExperience'].toInt();
     playerData.shipSpawnLocation = Vector2(playerDocument['shipSpawnLocation'][0].toDouble(),
                                       playerDocument['shipSpawnLocation'][1].toDouble());
-    // playerData.equippedShip = playerDocument['equippedShip'];
-
-    // print("Equpped SHip: ${playerDocument['equippedShip']}");
+    // print("Loading Ship Spawn Location: ${playerDocument['shipSpawnLocation']}");
 
     playerData.spaceShipStates = (playerDocument['spaceShipStates'] ?? defaultPlayerData['spaceShipStates'])
                                       .cast<String, dynamic>()
@@ -131,7 +129,7 @@ class Datastore {
     playerDocument['totalExperience'] = playerData.totalExperience;
     playerDocument['shipSpawnLocation'] = [game.userShip.position.x,
                                            game.userShip.position.y];
-    // playerDocument['equippedShip'] = playerData.equippedShip;
+    // print("Saving Ship Spawn Location: ${playerDocument['shipSpawnLocation']}");
     playerDocument['spaceShipStates'] = playerData.spaceShipStates.map(
                                           (key, value) => MapEntry(key, value.toJson()));
     playerDocument['archivedMissions'] = playerData.archivedMissions.map(
@@ -168,7 +166,7 @@ class Datastore {
 
   }
 
-  void loadDataLocally(PlayerData playerData){
+    void loadDataLocally(PlayerData playerData){
     final Box<dynamic> playerDataBox = Hive.box("playerData");
     print("Loading Data Locally");
     playerDocument = Map<String, dynamic>.from(playerDataBox.get('data')

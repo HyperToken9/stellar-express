@@ -30,6 +30,7 @@ import 'package:star_routes/controls/dashboard_button.dart';
 import 'package:star_routes/controls/swap_ship_button.dart';
 import 'package:star_routes/screens/loading_screen.dart';
 import 'package:star_routes/screens/main_menu_screen.dart';
+import 'package:star_routes/services/datastore.dart';
 
 import "package:star_routes/states/dpad.dart";
 
@@ -159,6 +160,9 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   }
 
   void setupGame(){
+
+    loadGame();
+
     dpad.setState(DPadStates.idle);
     miniMap.setState(true);
 
@@ -180,6 +184,21 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     userShip.loadNewShip();
 
   }
+
+  void saveGame(){
+
+    Datastore dataStore = Datastore();
+    dataStore.saveDataLocally(this);
+
+  }
+
+  void loadGame(){
+
+    Datastore dataStore = Datastore();
+    dataStore.loadDataLocally(playerData);
+
+  }
+
 
   void initializePlayerData(String playerId){
     playerData.loadPlayerData(playerId);

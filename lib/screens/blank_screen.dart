@@ -34,11 +34,6 @@ class _BlankScreenState extends State<BlankScreen> {
     widget.game.overlays.add(MainMenuScreen.id);
     widget.game.overlays.remove(BlankScreen.id);
 
-    Datastore dataStore = Datastore();
-
-    /* Write data locally */
-    dataStore.saveDataLocally(widget.game);
-
     /* Write the changes back to fire base */
     // dataStore.saveDataToFireBase(widget.game);
     print("Saving Player Data");
@@ -57,7 +52,7 @@ class _BlankScreenState extends State<BlankScreen> {
   @override
   void dispose() {
     print("DISPOSING BLANK SCREEN");
-    // print("PAUSING ENGINE");/
+    widget.game.saveGame();
     widget.game.pauseEngine();
     BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
