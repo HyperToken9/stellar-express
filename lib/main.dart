@@ -21,9 +21,14 @@ import 'package:star_routes/data/player_data.dart';
 
 
 
-
-
 void main() async {
+
+  /* Today's Date if more than 25 June 2023 do not open the app */
+  // DateTime today = DateTime.now();
+  // DateTime lastDate = DateTime(2023, 6, 25);
+  // if (today.isAfter(lastDate)){
+  //   return;
+  // }
 
   WidgetsFlutterBinding.ensureInitialized();
   // TODO: This is very forced, but no time right now

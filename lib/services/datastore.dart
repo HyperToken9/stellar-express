@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/player_data.dart';
+import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 
 import 'package:star_routes/game/star_routes.dart';
@@ -44,18 +45,19 @@ class Datastore {
   final Map<String, dynamic> overrideCustomData = {
     'coin': 696969,
     // 'totalExperience': 0,
-    // 'shipSpawnLocation': [135.488* Config.spaceScaleFactor, -4552.0 * Config.spaceScaleFactor],
-    'spaceShipStates': {
-      'Small Courier': SpaceShipState(isOwned: false, isEquipped: true, dockedAt: "").toJson(),
-      'Express Shuttle': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
-      'Large Freighter': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Icarion").toJson(),
-      'Endurance Cruiser': SpaceShipState(isOwned: false, isEquipped: true).toJson(),
-      'Stealth Courier': SpaceShipState(isOwned: false, isEquipped: true).toJson(),
-      'Specialized Vessel': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
-      'Heavy Hauler': SpaceShipState(isOwned: false, isEquipped: true).toJson(),
-    },
+    // 'shipSpawnLocation': [46.0* Config.spaceScaleFactor, -4516.0 * Config.spaceScaleFactor],
+    // 'spaceShipStates': {
+    //   'Small Courier': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
+    //   'Express Shuttle': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
+    //   'Large Freighter': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Icarion").toJson(),
+    //   'Endurance Cruiser': SpaceShipState(isOwned: false, isEquipped: true).toJson(),
+    //   'Stealth Courier': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Marid").toJson(),
+    //   'Specialized Vessel': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Ratha").toJson(),
+    //   'Heavy Hauler': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Pyros").toJson(),
+    // },
     // 'availableMissions': [],
-
+    // 'initiatedMissions': <MissionData>[],
+    // 'acceptedMissions' : <MissionData>[],
   };
 
 
@@ -103,8 +105,17 @@ class Datastore {
     playerData.spaceShipStates = (playerDocument['spaceShipStates'] ?? defaultPlayerData['spaceShipStates'])
                                       .cast<String, dynamic>()
                                       .map<String, SpaceShipState>((String key, dynamic value) {
+                                        print("Loading Ship State: $key");
                                     return MapEntry(key, SpaceShipState.fromJson(Map<String, dynamic>.from(value)));
                                   });
+
+    for (SpaceShipData shipData in SpaceShipData.spaceShips){
+      if (!playerData.spaceShipStates.containsKey(shipData.shipClassName)){
+        // print("Loading Additionaonals: ${shipData.shipClassName}");
+        playerData.spaceShipStates[shipData.shipClassName] = SpaceShipState(isOwned: false, isEquipped: false);
+      }
+    }
+
     playerData.archivedMissions = (playerDocument['archivedMissions'] ??
                                       defaultPlayerData['archivedMissions'])
                                     .map<MissionData>((data) => MissionData.fromJson(Map<String, dynamic>.from(data))).toList();
@@ -132,6 +143,7 @@ class Datastore {
     // print("Saving Ship Spawn Location: ${playerDocument['shipSpawnLocation']}");
     playerDocument['spaceShipStates'] = playerData.spaceShipStates.map(
                                           (key, value) => MapEntry(key, value.toJson()));
+
     playerDocument['archivedMissions'] = playerData.archivedMissions.map(
                                           (mission) => mission.toJson()).toList();
     playerDocument['completedMissions'] = playerData.completedMissions.map(
@@ -166,7 +178,7 @@ class Datastore {
 
   }
 
-    void loadDataLocally(PlayerData playerData){
+  void loadDataLocally(PlayerData playerData){
     final Box<dynamic> playerDataBox = Hive.box("playerData");
     print("Loading Data Locally");
     playerDocument = Map<String, dynamic>.from(playerDataBox.get('data')
@@ -176,8 +188,6 @@ class Datastore {
     for (String key in overrideCustomData.keys){
       playerDocument[key] = overrideCustomData[key];
     }
-    // print("Loding SdAAQ");
-    // print("Equipped SHip: ${playerDocument['equippedShip']}");
     _playerDocumentToPlayerData(playerData);
   }
 

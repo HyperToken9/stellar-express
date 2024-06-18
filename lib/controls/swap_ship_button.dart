@@ -55,13 +55,20 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
           onTap: () {
             print("Swapping Ship");
             for (SpaceShipData shipData in SpaceShipData.spaceShips){
-              SpaceShipState shipState = game.playerData.spaceShipStates[shipData.shipClassName]!;
+              SpaceShipState? shipState = game.playerData.spaceShipStates[shipData.shipClassName];
+              // print("Ship State: ${shipState}");
+
+              if (shipState == null){
+                continue;
+              }
               if (!shipState.isOwned){
                 continue;
               }
+              // print("Equipped: ${shipState.isEquipped}");
               if (shipState.isEquipped){
                 continue;
               }
+
               if (shipState.dockedAt != planetComponent.planetData.planetName){
                 continue;
               }

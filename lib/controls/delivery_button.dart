@@ -43,41 +43,33 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
         position: Vector2(0, 0),
         size: size,
         onTap: () {
-
+          setState(DeliveryButtonStates.inactive);
           if (isDelivering){
+            game.world.add(CargoShip(toOrbit: false, onDeliveryComplete: () {
+              print("Delivery Complete");
+              print("We do delivery");
+              print("Initiated Missions: ${game.playerData.initiatedMissions}");
+              print("remove mission: $missionData");
+              game.playerData.initiatedMissions.remove(missionData!);
+              print("Initiated Missions: ${game.playerData.initiatedMissions}");
+              game.playerData.completedMissions.add(missionData!);
 
-            print("We do delivery");
-            print("Initiated Missions: ${game.playerData.initiatedMissions}");
-            print("remove mission: $missionData");
-            game.playerData.initiatedMissions.remove(missionData!);
-            print("Initiated Missions: ${game.playerData.initiatedMissions}");
-            game.playerData.completedMissions.add(missionData!);
+              print("Mission Completed");
 
-            print("Mission Completed");
+              /* Add Money to the player */
+              game.playerData.coin += missionData!.reward;
+              // game.balance = game.playerData.coin;
 
-            /* Add Money to the player */
-            game.playerData.coin += missionData!.reward;
-            // game.balance = game.playerData.coin;
-
-            game.playerData.getEquippedShipState().isCarryingCargo = false;
+              game.playerData.getEquippedShipState().isCarryingCargo = false;
+              game.playerData.getEquippedShipState().currentMission = null;
+            }));
 
           }else{
 
-            game.world.add(CargoShip());
-            return;
-            /* Ship Goods to the ship */
-            /* Move the mission to initiaed */
-            print("PickUp TIMe");
-            game.playerData.initiatedMissions.add(missionData!);
-            game.playerData.acceptedMissions.remove(missionData!);
-            print("Mission Moved to Initiated");
-
-            /* Move the cargo to the ship */
-            game.playerData.getEquippedShipState().isCarryingCargo = true;
-            game.playerData.getEquippedShipState().currentMission = missionData!;
+            game.world.add(CargoShip(toOrbit: true, onDeliveryComplete: onLoadingCargo));
 
           }
-          setState(DeliveryButtonStates.inactive);
+
         },
         onRelease: () {},
         buttonEnabled: isEnabled,
@@ -85,6 +77,18 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
     );
 
 
+  }
+
+  void onLoadingCargo(){
+
+    /* Move the mission to initiaed */
+    game.playerData.initiatedMissions.add(missionData!);
+    game.playerData.acceptedMissions.remove(missionData!);
+    print("Picked Up Cargo");
+
+    /* Move the cargo to the ship */
+    game.playerData.getEquippedShipState().isCarryingCargo = true;
+    game.playerData.getEquippedShipState().currentMission = missionData!;
   }
 
   void setState(DeliveryButtonStates state){

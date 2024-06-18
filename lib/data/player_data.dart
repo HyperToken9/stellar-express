@@ -51,7 +51,7 @@ class PlayerData{
 
     /* Initializes Mission States*/
     for (int i = 0; i < 7; i++) {
-      MissionData? mission = MissionData.sampleMissionByDifficulty(this, 1);
+      MissionData? mission = MissionData.sampleMissionByDifficulty(this, 0);
 
       if (mission != null){
         availableMissions.add(mission);

@@ -8,12 +8,12 @@ import 'package:star_routes/data/player_data.dart';
 import 'package:star_routes/data/cargo_items.dart';
 import 'package:star_routes/data/cargo_type_size_data.dart';
 
-enum MissionStatus{
-  pending,
-  inProgress,
-  completed,
-  failed,
-}
+// enum MissionStatus{
+//   pending,
+//   inProgress,
+//   completed,
+//   failed,
+// }
 
 class MissionData{
 
@@ -168,7 +168,9 @@ class MissionData{
       return null;
     }
 
-    int missionIndex = (difficulty * sampleMissions.length - 1).toInt();
+    int missionIndex = (max(difficulty * sampleMissions.length - 1, 0)).toInt();
+    // print("Number of Missions: ${sampleMissions.length}");
+    // print("Mission Index: $missionIndex");
     MissionData selectedMission = sampleMissions[missionIndex];
 
     /* Assign Reward */

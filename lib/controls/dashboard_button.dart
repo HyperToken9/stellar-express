@@ -22,6 +22,7 @@ class DashboardButton extends SpriteGroupComponent<DashboardButtonStates> with H
 
     } else {
       current = DashboardButtonStates.dashBoardClosed;
+      game.saveGame();
       game.overlays.remove(DashboardScreen.id);
       game.overlays.add(BlankScreen.id);
       game.miniMap.setState(true);

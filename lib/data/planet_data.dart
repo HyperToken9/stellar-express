@@ -1,4 +1,5 @@
 
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -43,5 +44,10 @@ class PlanetData{
     this.miniMapColor = const Color(0xEEFFFFFF),
     this.spriteSpeed = 0.0085,
   });
+
+
+  double getAngularVelocityFactor(){
+    return 75000 * sqrt(mass);
+  }
 
 }

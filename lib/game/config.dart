@@ -12,7 +12,7 @@ class Config{
 
 
   /* The planets need to be spaced out more than their representation in the data */
-  static const double spaceScaleFactor = 35;
+  static const double spaceScaleFactor = 20;
   /* Similarly for their size */
   static const double radiusScaleFactor = 80;
 

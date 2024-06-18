@@ -101,7 +101,7 @@ class SpaceShipData{
       spriteName: "express_shuttle",
       spriteSize: [459, 543],
       unlockLevel: 5,
-      maxVelocity: 450,
+      maxVelocity: 700,
       linearAcceleration: 4.0,
       maxAngularVelocity: 10,
       angularAcceleration: 0.007,

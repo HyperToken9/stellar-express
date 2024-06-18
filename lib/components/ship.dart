@@ -41,11 +41,14 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   /* Ship Orbit State */
   bool inOrbit = false;
   Vector2 orbitCenter =  Vector2(0, 0);
+  double orbitalAngularVelocityFactor = 0;
+  double orbitalAngularVelocity = 0;
   double targetOrbitRadius = 300;
   double targetShipAngle = 0;
   double orbitRadius = 300;
   double angleInOrbit = 0;
   double offsetAngle = 0;
+  Planet? orbitingPlanet;
   //TODO: int orbitDirection = 1;
 
 
@@ -62,7 +65,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
                    spaceShipData.spriteSize[1].toDouble());
     position = spawnLocation;
-    priority = 4;
+    priority = 6;
   }
 
   @override
@@ -90,32 +93,36 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     impulse = impulseUpdate;
   }
 
-  void setVelocity(){
+  void setVelocity() {
     /* Momentum Decay */
-    if (impulse.y == 0){
+    if (impulse.y == 0) {
       angularVelocity = angularVelocity * 0.99;
     }
-    if (impulse.x == 0){
+    if (impulse.x == 0) {
       linearVelocity = linearVelocity * 0.999;
     }
+
+    Vector2 addedLinearVelocity = Vector2(sin(angle), -cos(angle)) * impulse.x * _linearAcceleration;
+    Vector2 bufferLinearVelocity = linearVelocity;
+    double currentSpeed = bufferLinearVelocity.length;
 
     /* Calculate Error  */
     angularVelocity += (_maxAngularVelocity * impulse.y - angularVelocity) * _angularAcceleration;
 
-    linearVelocity += Vector2(sin(angle), -cos(angle)) * impulse.x * _linearAcceleration;
+    bufferLinearVelocity += addedLinearVelocity;
 
-
-    /* Normalize */
-    if (linearVelocity.length > _maxVelocity){
-      linearVelocity = linearVelocity.normalized() * _maxVelocity;
-      // print("Max Velocity Reached");
+    // If the new velocity exceeds the max velocity and the current speed is less than the new speed
+    if (bufferLinearVelocity.length > _maxVelocity && currentSpeed < bufferLinearVelocity.length) {
+      // Cap the velocity to the previous current speed if it exceeds the max velocity
+      bufferLinearVelocity = bufferLinearVelocity.normalized() * currentSpeed;
     }
 
-    if (angularVelocity.abs() > _maxAngularVelocity){
+    linearVelocity = bufferLinearVelocity;
+
+
+    if (angularVelocity.abs() > _maxAngularVelocity) {
       angularVelocity = _maxAngularVelocity * angularVelocity.sign;
     }
-
-
   }
 
   @override
@@ -127,10 +134,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     }
     // print("${gameRef.camera.}");
     // print("Ship name: $shipName");
-    /* Update Position */
-    setVelocity();
-    position += linearVelocity * dt;
-    angle += angularVelocity * dt;
+
 
     /* Check If Eligible to enter orbit */
     if (gameRef.closestPlanets.isNotEmpty && !inOrbit){
@@ -150,8 +154,10 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     /* Orbit Mechanics */
     if (inOrbit){
 
-      angleInOrbit += 0.006;
-      targetShipAngle = angleInOrbit - pi;
+      orbitalAngularVelocity = orbitalAngularVelocityFactor / pow(max(orbitRadius,1), 3 / 2);
+
+      angleInOrbit += orbitalAngularVelocity * dt;
+      targetShipAngle = angleInOrbit - pi + degrees2Radians * 12;
 
       position = orbitCenter + Vector2(cos(angleInOrbit), sin(angleInOrbit)) * orbitRadius;
 
@@ -165,6 +171,15 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
       orbitRadius += (targetOrbitRadius - orbitRadius) * 0.01 ;
 
+      if (orbitingPlanet != null){
+        detectCargoDelivery(orbitingPlanet!);
+      }
+
+    }else{
+      /* Update Position */
+      setVelocity();
+      position += linearVelocity * dt;
+      angle += angularVelocity * dt;
     }
 
 
@@ -195,36 +210,52 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     }
     Planet closestPlanet = gameRef.closestPlanets[0];
 
+    orbitingPlanet = closestPlanet;
+
     /* Set Orbital Dynamics */
     targetOrbitRadius = closestPlanet.size.x / 2 + size.x / 1.1;
     orbitRadius = closestPlanet.position.distanceTo(position);
     orbitCenter = closestPlanet.position;
+    orbitalAngularVelocityFactor = closestPlanet.planetData.getAngularVelocityFactor();
     Vector2 delta = closestPlanet.position - position;
     angleInOrbit = atan2(delta.y, delta.x) + pi;
     inOrbit = true;
     linearVelocity = Vector2.zero();
 
     /* Set Focus the planet */
-    gameRef.camera.follow(closestPlanet, maxSpeed: 500);
+    double distanceToClosestPlanet = closestPlanet.position.distanceTo(position);
+    gameRef.camera.follow(closestPlanet, maxSpeed: 1 + distanceToClosestPlanet);
     gameRef.adjustCameraZoom(objectSize: Vector2.all(targetOrbitRadius * 2),
-                             // screenPercentage: 40); // todo: revert angle back
                              screenPercentage: 95);
 
     /* Disable D-Pad */
     gameRef.dpad.setState(DPadStates.inactive);
 
-    /* Disable MiniMap */
-    gameRef.miniMap.setState(false);
+    // /* Disable MiniMap */
+    // gameRef.miniMap.setState(false);
 
     /* Enable Delivery Button */
     /* Check if ship has cargo */
-    gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
-    /*
-    final SpaceShipState shipState = game.playerData.getEquippedShipState();
 
+
+
+
+    // gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
+    // gameRef.deliveryButton.isDelivering = true;
+
+
+    detectCargoDelivery(closestPlanet);
+
+    detectShipSwapping(closestPlanet);
+
+
+  }
+
+  void detectCargoDelivery(Planet closestPlanet){
+    final SpaceShipState shipState = game.playerData.getEquippedShipState();
     if (shipState.isCarryingCargo &&
         shipState.currentMission!.destinationPlanet == closestPlanet.planetData.planetName){
-      print("Cargo Delivery");
+      // print("Cargo Delivery");
       gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
       gameRef.deliveryButton.missionData = shipState.currentMission;
       gameRef.deliveryButton.planetData = closestPlanet.planetData;
@@ -234,7 +265,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
       for (MissionData mission in game.playerData.acceptedMissions){
 
         if (mission.sourcePlanet == closestPlanet.planetData.planetName){
-          print("Cargo Pickup");
+          // print("Cargo Pickup");
           gameRef.deliveryButton.setState(DeliveryButtonStates.idle);
           gameRef.deliveryButton.planetData = closestPlanet.planetData;
           gameRef.deliveryButton.missionData = mission;
@@ -244,11 +275,6 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
       }
     }
-    */
-
-    detectShipSwapping(closestPlanet);
-
-
   }
 
 
@@ -276,11 +302,13 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
 
     inOrbit = false;
+    orbitingPlanet = null;
+
 
     /* Enable DPad */
     gameRef.dpad.setState(DPadStates.idle);
     /* Enable MiniMap */
-    gameRef.miniMap.setState(true);
+    // gameRef.miniMap.setState(true);
 
     /* Set Focus on Ship */
     // gameRef.camera.moveTo(position, speed: 500);
@@ -293,7 +321,8 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
     /* Exit Orbit with half max velocity along the tangent */
     double tangentAngle = angleInOrbit + pi / 2;
-    linearVelocity = Vector2(cos(tangentAngle), sin(tangentAngle)) * _maxVelocity * 0.25;
+    linearVelocity = Vector2(cos(tangentAngle), sin(tangentAngle)).normalized() /* Direction */
+                     * orbitalAngularVelocity * orbitRadius; /* Magnitude */
 
     gameRef.deliveryButton.setState(DeliveryButtonStates.inactive);
     gameRef.swapShipButton.setState(SwapShipButtonStates.inactive);
@@ -324,7 +353,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
       game.camera.follow(this);
     }else{
       game.dpad.setState(DPadStates.inactive);
-      game.miniMap.setState(false);
+      // game.miniMap.setState(false);
     }
 
   }

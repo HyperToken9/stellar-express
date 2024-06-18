@@ -20,79 +20,63 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
   DateTime endTime = DateTime.now().add(const Duration(seconds: 30));
 
   /*Orbital Parameters*/
+  bool applyPhysics = true;
   bool isInOrbit = false;
   double angleInOrbit = 0;
   double targetShipAngle = 0;
   Vector2 orbitCenter = Vector2(0, 0);
   double orbitRadius = 300;
   double targetOrbitRadius = 0;
+  double angleInOrbitOffset = 0;
+  bool toOrbit;
+  Function onDeliveryComplete;
 
-  CargoShip() : super();
+  CargoShip({required this.toOrbit, required this.onDeliveryComplete}) : super();
 
   @override
   Future<void> onLoad() async {
     sprite = await Sprite.load(Assets.cargoShip);
     size = Vector2(560, 184);
     anchor = Anchor.center;
-    position = gameRef.userShip.orbitCenter;
-    priority = 4;
+
+    if (toOrbit){
+      position = gameRef.userShip.orbitCenter;
+      priority = 1;
 
 
+      double pathScaleBy = game.userShip.orbitRadius;
 
-    // print(scalingMatrix.storage);
+      double rotateBy = game.userShip.angleInOrbit + Random().nextDouble() * 2 * pi;
 
-    // Path path = makeFinalSegment();
+      size = size;
+      double effectDuration = 10;
 
-    double pathScaleBy = game.userShip.orbitRadius;
-    // print("Scale By: $pathScaleBy");
-    // print("User Positoon ${game.userShip.position}");
-    double rotateBy = game.userShip.angleInOrbit + Random().nextDouble() * 2 * pi;
-    // print("Uinsg 185");
-    size = size;
-    double effectDuration = 10;
-
-    final List<Effect> moveAlongPathEffect =
+      final List<Effect> orbitEffect =
       OrbitEffects().orbitEffect(
           effectDuration,
           pathScaleBy,
           rotateBy,
-          () {
-              isInOrbit = true;
-              orbitCenter = game.userShip.orbitCenter;
-              Vector2 delta = orbitCenter - position;
-              angleInOrbit = atan2(delta.y, delta.x) + pi;
-              targetOrbitRadius = game.userShip.orbitRadius;
-              orbitRadius = orbitCenter.distanceTo(position);
+              () {
+            isInOrbit = true;
+            orbitCenter = game.userShip.orbitCenter;
+            Vector2 delta = orbitCenter - position;
+            angleInOrbit = atan2(delta.y, delta.x) + pi;
+            targetOrbitRadius = game.userShip.orbitRadius;
+            orbitRadius = orbitCenter.distanceTo(position);
           },
           this
       );
 
-    /*MoveAlongPathEffect(
-      path,
-      EffectController(
-        duration: effectDuration,
-        // speed: 2,
-        curve: Curves.easeInOut,
-      ),
-      onComplete: () {
-        isInOrbit = true;
-        orbitCenter = game.userShip.orbitCenter;
-        Vector2 delta = orbitCenter - position;
-        angleInOrbit = atan2(delta.y, delta.x) + pi;
-        targetOrbitRadius = game.userShip.orbitRadius;
-        orbitRadius = orbitCenter.distanceTo(position);
-      },
-      oriented: true,
-    );*/
 
-    addAll(
+      addAll(orbitEffect);
+    }else{
+      position = gameRef.userShip.position;
+      orbitCenter = gameRef.userShip.orbitCenter;
+      orbitRadius = gameRef.userShip.orbitRadius;
+      angle = gameRef.userShip.angle - pi /2;
+      priority = 4;
+    }
 
-          // scaleUpEffect,
-          moveAlongPathEffect
-          // scaleDownEffect,
-          // displayOrderEffect
-
-    );
 
   }
 
@@ -100,31 +84,61 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
   void update(double dt) {
     super.update(dt);
 
+    if (!applyPhysics){
+      return;
+    }
+
     if (DateTime.now().isAfter(endTime)){
       removeFromParent();
     }
 
-    if (!isInOrbit){
-      return;
-    }
+    if (toOrbit){
+      if (!isInOrbit){
+        return;
+      }
 
-    if ((angleInOrbit - gameRef.userShip.angleInOrbit) % (2 * pi) < 0.1){
-      print("Reached Destination");
-      removeFromParent();
-    }
+      if ((angleInOrbit - gameRef.userShip.angleInOrbit) % (2 * pi) < 0.1){
+        // print("Reached Destination");
+        onDeliveryComplete();
+        removeFromParent();
+      }
 
-    if ((game.userShip.angleInOrbit - angleInOrbit) % (2 * pi) > pi){
-      angleInOrbit -= 0.009;
+      if ((game.userShip.angleInOrbit - angleInOrbit) % (2 * pi) > pi){
+        angleInOrbit -= 0.009;
+      }else{
+        angleInOrbit += 0.009;
+      }
+      // angleInOrbit += 0.009;
+
+
+
+
+      position = orbitCenter + Vector2(cos(angleInOrbit), sin(angleInOrbit)) * orbitRadius;
+
+      orbitRadius += (targetOrbitRadius - orbitRadius) * 0.01 ;
     }else{
-      angleInOrbit += 0.009;
+      angleInOrbitOffset -= 0.003;
+      angleInOrbit = gameRef.userShip.angleInOrbit + angleInOrbitOffset;
+      position = orbitCenter + Vector2(cos(angleInOrbit), sin(angleInOrbit)) * orbitRadius;
+
+      if (angleInOrbitOffset.abs() > 10 * degrees2Radians){
+        print("Commencing Deorbit");
+
+        final List<Effect> deOrbitingEffect = OrbitEffects()
+              .deOrbitEffect(10, orbitRadius, angleInOrbit,
+                (){
+                  print("Is this is on complete effect");
+                  onDeliveryComplete();
+                  removeFromParent();
+                }, this);
+
+        addAll(deOrbitingEffect);
+        applyPhysics = false;
+
+      }
+
     }
-    // angleInOrbit += 0.009;
-
-
-    targetShipAngle = angleInOrbit + pi /2;
-
-    position = orbitCenter + Vector2(cos(angleInOrbit), sin(angleInOrbit)) * orbitRadius;
-
+    targetShipAngle = angleInOrbit + pi /2 + degrees2Radians * 12;
     double deltaAngle = (targetShipAngle - angle) % (2 * pi);
     if (deltaAngle > pi) {
       deltaAngle -= 2 * pi;
@@ -132,9 +146,6 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
       deltaAngle += 2 * pi;
     }
     angle += deltaAngle * 0.05;
-
-    orbitRadius += (targetOrbitRadius - orbitRadius) * 0.01 ;
-
 
   }
 

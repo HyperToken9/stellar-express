@@ -149,7 +149,6 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   void dispose() {
 
     widget.game.dashboardButton.setState(false);
-
     BackButtonInterceptor.remove(myInterceptor);
     _tabController.dispose();
     super.dispose();

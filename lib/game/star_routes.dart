@@ -33,8 +33,11 @@ import 'package:star_routes/screens/main_menu_screen.dart';
 import 'package:star_routes/services/datastore.dart';
 
 import "package:star_routes/states/dpad.dart";
+import 'package:star_routes/states/delivery_button.dart';
 
 import 'package:star_routes/services/authentication.dart';
+import 'package:star_routes/states/orbit_button.dart';
+import 'package:star_routes/states/swap_ship_button.dart';
 
 
 
@@ -131,8 +134,14 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
   void setupHanger() {
     print("Setting up Hangar");
+
     dpad.setState(DPadStates.inactive);
     miniMap.setState(false);
+    orbitButton.setState(OrbitButtonStates.inactive);
+    swapShipButton.setState(SwapShipButtonStates.inactive);
+    deliveryButton.setState(DeliveryButtonStates.inactive);
+
+
     isDetectingPlanet = false;
 
     for (Ship ship in showRoomShips){
@@ -179,7 +188,20 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     }
     // print("Player Data location: ${playerData.shipSpawnLocation}");
     // print("Ship Spawn Location: ${userShip.position}");
-    // print("Equpped SHip: ${playerData.equippedShip}");
+
+    if (userShip.inOrbit){
+      camera.follow(userShip.orbitingPlanet!);
+      adjustCameraZoom(objectSize: Vector2.all(userShip.targetOrbitRadius*2),
+                       screenPercentage: 95);
+      orbitButton.setState(OrbitButtonStates.exitOrbitIdle);
+
+      if (userShip.orbitingPlanet != null){
+        userShip.detectShipSwapping(userShip.orbitingPlanet!);
+      }
+
+    }else{
+      camera.follow(userShip);
+    }
     userShip.opacity = 1;
     userShip.loadNewShip();
 
