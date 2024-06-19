@@ -32,7 +32,7 @@ class OrbitEffects{
         [ ScaleEffect.by(
           Vector2.all(1),
           EffectController(
-              duration: 10/3,
+              duration: duration/3,
           ),
           onComplete: () {
             target.priority = 4;
@@ -40,17 +40,23 @@ class OrbitEffects{
         ),
           ScaleEffect.by(
               Vector2.all(1),
-              EffectController(duration: 10/3),
+              EffectController(duration: duration/3),
 
           ),
           ScaleEffect.by(
             Vector2.all(1),
-            EffectController(duration: 10/3),
+            EffectController(duration: duration/3),
           ),
         ]
     );
 
+    ScaleEffect scaleEffect = ScaleEffect.by(
+      Vector2.all(2),
+      EffectController(duration: duration),
+    );
+
     return [moveEffect, spritePriorityEffect];
+    return [moveEffect, spritePriorityEffect, scaleEffect];
 
 
   }
@@ -77,18 +83,18 @@ class OrbitEffects{
     Effect spritePriorityEffect = SequenceEffect(
         [ ScaleEffect.by(
           Vector2.all(1),
-          EffectController(duration: 10/3),
+          EffectController(duration: duration/3),
         ),
           ScaleEffect.by(
               Vector2.all(1),
-              EffectController(duration: 10/3),
+              EffectController(duration: duration/3),
               onComplete: () {
                 target.priority = 1;
               }
           ),
           ScaleEffect.by(
             Vector2.all(1),
-            EffectController(duration: 10/3),
+            EffectController(duration: duration/3),
           ),
         ]
     );

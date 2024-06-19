@@ -74,9 +74,13 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
               }
               print("Swapping Ship from ${game.playerData.equippedShip} to ${shipData.shipClassName}");
 
+              // if (game.playerData.getEquippedShipState().isCarryingCargo){
+              //   print("Can not swap ship while carrying cargo");
+              //   return;
+              // }
+              game.userShip.cargo.offsetAngle = - pi / 2;
+
               /* Land Current Ship */
-
-
               double orbitRotateByAngle = atan2(game.userShip.position.y - game.userShip.orbitCenter.y,
                   game.userShip.position.x - game.userShip.orbitCenter.x);
 
@@ -106,7 +110,7 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
                   game.userShip.insertIntoOrbit();
                   game.userShip.applyPhysics = true;
                   game.userShip.offsetAngle = 0;
-
+                  game.userShip.cargo.offsetAngle = 0;
                   gameRef.userShip.detectShipSwapping(planetComponent);
                 }, game.userShip);
 

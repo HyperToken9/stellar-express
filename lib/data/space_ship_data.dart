@@ -86,7 +86,7 @@ class SpaceShipData{
       linearAcceleration: 1.5,
       maxAngularVelocity: 7,
       angularAcceleration: 0.002,
-      // zoomPercentage: 70.0,
+      zoomPercentage: 70.0,
     ),
     SpaceShipData(
       shipClassName: "Express Shuttle",

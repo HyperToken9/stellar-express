@@ -46,15 +46,15 @@ class Datastore {
     'coin': 696969,
     // 'totalExperience': 0,
     // 'shipSpawnLocation': [230.0* Config.spaceScaleFactor, -3960.0 * Config.spaceScaleFactor],
-    'spaceShipStates': {
-      'Small Courier': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "", isCarryingCargo: true).toJson(),
+    // 'spaceShipStates': {
+      // 'Small Courier': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
       // 'Express Shuttle': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
       // 'Large Freighter': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Icarion").toJson(),
       // 'Endurance Cruiser': SpaceShipState(isOwned: false, isEquipped: true).toJson(),
       // 'Stealth Courier': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Marid").toJson(),
       // 'Specialized Vessel': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Ratha").toJson(),
       // 'Heavy Hauler': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Pyros").toJson(),
-    },
+    // },
     // 'availableMissions': [],
     // 'initiatedMissions': <MissionData>[],
     // 'acceptedMissions' : <MissionData>[],

@@ -1,23 +1,22 @@
 
 import 'dart:math';
-import 'dart:ui';
-import 'package:flame/extensions.dart';
-
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flutter/animation.dart';
+
+import 'package:star_routes/components/cargo.dart';
 
 import 'package:star_routes/effects/orbit_effects.dart';
 
-import 'package:star_routes/game/config.dart';
 import 'package:star_routes/game/star_routes.dart';
-import 'package:star_routes/game/assets.dart';
 
-class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
+import 'package:star_routes/data/mission_data.dart';
+
+class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
 
   // Vector2 spawnPosition;
   /* Kill Sprite */
   DateTime endTime = DateTime.now().add(const Duration(seconds: 30));
+
 
   /*Orbital Parameters*/
   bool applyPhysics = true;
@@ -31,25 +30,30 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
   bool toOrbit;
   Function onDeliveryComplete;
 
-  CargoShip({required this.toOrbit, required this.onDeliveryComplete}) : super();
+  MissionData missionData;
+
+  CargoShip({required this.missionData, required this.toOrbit, required this.onDeliveryComplete}) : super();
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load(Assets.cargoShip);
+    // sprite = await Sprite.load(Assets.cargoShip);
     size = Vector2(560, 184);
     anchor = Anchor.center;
-
+    add(Cargo(cargoSize: missionData.cargoTypeSizeData.cargoSize, isInUserShip: false));
     if (toOrbit){
       position = gameRef.userShip.orbitCenter;
       priority = 1;
 
+      double effectDuration = 10;
 
       double pathScaleBy = game.userShip.orbitRadius;
 
-      double rotateBy = game.userShip.angleInOrbit + Random().nextDouble() * 2 * pi;
+      double estimateShipAngle = game.userShip.angleInOrbit
+                        + game.userShip.orbitalAngularVelocity * effectDuration;
 
-      size = size;
-      double effectDuration = 10;
+      double rotateBy = estimateShipAngle % (2 * pi) + 180 * degrees2Radians;
+
+
 
       final List<Effect> orbitEffect =
       OrbitEffects().orbitEffect(
@@ -88,9 +92,9 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
       return;
     }
 
-    if (DateTime.now().isAfter(endTime)){
-      removeFromParent();
-    }
+    // if (DateTime.now().isAfter(endTime)){
+    //   removeFromParent();
+    // }
 
     if (toOrbit){
       if (!isInOrbit){
@@ -103,15 +107,7 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
         removeFromParent();
       }
 
-      if ((game.userShip.angleInOrbit - angleInOrbit) % (2 * pi) > pi){
-        angleInOrbit -= 0.009;
-      }else{
-        angleInOrbit += 0.009;
-      }
-      // angleInOrbit += 0.009;
-
-
-
+      angleInOrbit += (game.userShip.orbitalAngularVelocity * 1.5) * dt;
 
       position = orbitCenter + Vector2(cos(angleInOrbit), sin(angleInOrbit)) * orbitRadius;
 
@@ -151,7 +147,6 @@ class CargoShip extends SpriteComponent with HasGameRef<StarRoutes> {
 
 
 
-  // @override
 
 }
 

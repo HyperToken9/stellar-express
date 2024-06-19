@@ -3,11 +3,14 @@ import 'package:flame/components.dart';
 import 'package:star_routes/components/cargo_ship.dart';
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/planet_data.dart';
+import 'package:star_routes/data/space_ship_state.dart';
 
 import 'package:star_routes/game/assets.dart';
 import 'package:star_routes/game/star_routes.dart';
-import 'package:star_routes/states/delivery_button.dart';
 import 'package:star_routes/game/tappable_region.dart';
+
+import 'package:star_routes/states/delivery_button.dart';
+import 'package:star_routes/states/orbit_button.dart';
 
 class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with HasGameRef<StarRoutes>{
 
@@ -45,28 +48,41 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
         onTap: () {
           setState(DeliveryButtonStates.inactive);
           if (isDelivering){
-            game.world.add(CargoShip(toOrbit: false, onDeliveryComplete: () {
-              print("Delivery Complete");
-              print("We do delivery");
-              print("Initiated Missions: ${game.playerData.initiatedMissions}");
-              print("remove mission: $missionData");
-              game.playerData.initiatedMissions.remove(missionData!);
-              print("Initiated Missions: ${game.playerData.initiatedMissions}");
-              game.playerData.completedMissions.add(missionData!);
 
-              print("Mission Completed");
+            SpaceShipState shipState = game.playerData.getEquippedShipState();
 
-              /* Add Money to the player */
-              game.playerData.coin += missionData!.reward;
-              // game.balance = game.playerData.coin;
+            CargoShip cargoShip = CargoShip(missionData: missionData!, toOrbit: false,
+                onDeliveryComplete: () {
+                  // print("Delivery Complete");
+                  // print("Initiated Missions: ${game.playerData.initiatedMissions}");
+                  game.playerData.initiatedMissions.remove(missionData!);
+                  // print("Initiated Missions: ${game.playerData.initiatedMissions}");
+                  game.playerData.completedMissions.add(missionData!);
 
-              game.playerData.getEquippedShipState().isCarryingCargo = false;
-              game.playerData.getEquippedShipState().currentMission = null;
-            }));
+                  game.displayMessage("Mission Complete\n +${missionData!.reward} ATH");
+                  /* Add Money to the player */
+                  game.playerData.coin += missionData!.reward;
+
+                });
+
+
+            shipState.isCarryingCargo = false;
+            shipState.currentMission = null;
+
+            game.userShip.loadNewShip();
+
+            game.world.add(cargoShip);
 
           }else{
+            /* Move the mission to initiaed */
+            game.orbitButton.setState(OrbitButtonStates.inactive);
+            game.playerData.initiatedMissions.add(missionData!);
+            game.playerData.acceptedMissions.remove(missionData!);
 
-            game.world.add(CargoShip(toOrbit: true, onDeliveryComplete: onLoadingCargo));
+            CargoShip cargoShip = CargoShip(missionData: missionData!, toOrbit: true,
+                                            onDeliveryComplete: onLoadingCargo);
+            cargoShip.size /= 2;
+            game.world.add(cargoShip);
 
           }
 
@@ -81,14 +97,15 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
 
   void onLoadingCargo(){
 
-    /* Move the mission to initiaed */
-    game.playerData.initiatedMissions.add(missionData!);
-    game.playerData.acceptedMissions.remove(missionData!);
-    print("Picked Up Cargo");
+
+    game.displayMessage("Cargo Loaded");
 
     /* Move the cargo to the ship */
     game.playerData.getEquippedShipState().isCarryingCargo = true;
     game.playerData.getEquippedShipState().currentMission = missionData!;
+    game.orbitButton.setState(OrbitButtonStates.exitOrbitIdle);
+
+    game.userShip.loadNewShip();
   }
 
   void setState(DeliveryButtonStates state){

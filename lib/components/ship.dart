@@ -7,6 +7,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 
 import 'package:flutter/material.dart';
+import 'package:star_routes/components/cargo.dart';
 import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/components/thrusters.dart';
 import 'package:star_routes/data/planet_data.dart';
@@ -59,6 +60,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
   double _angularAcceleration = 0;
 
   late ParticleSystemComponent particleComponent;
+  late Cargo cargo;
 
   Ship({required this.spaceShipData, required this.spawnLocation}){
   // Ship(){
@@ -80,6 +82,8 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     _maxAngularVelocity = 0;
     _linearAcceleration = 0;
     _angularAcceleration = 0;
+
+    cargo = Cargo(cargoSize: "Small", isInUserShip: true);
 
     /* Add Hit Box */
     add(RectangleHitbox());
@@ -350,8 +354,16 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
     SpaceShipState shipState = game.playerData.getEquippedShipState();
 
-    if (shipState.isCarryingCargo){
-      print("Cargo Should be added");
+    if (shipState.isCarryingCargo && shipState.currentMission != null){
+
+      MissionData mission = shipState.currentMission!;
+
+      cargo.setCargoSize(mission.cargoTypeSizeData.cargoSize);
+      game.world.add(cargo);
+    }else{
+      if (game.world.contains(cargo)){
+        game.world.remove(cargo);
+      }
     }
 
     if (!inOrbit){

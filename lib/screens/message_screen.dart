@@ -75,6 +75,13 @@ class _MessageScreenState extends State<MessageScreen> with SingleTickerProvider
                     fontSize: 20.0,
                     color: Colors.white,
                     fontFamily: 'SpaceMono',
+                    shadows: [
+                      Shadow(
+                        color: Colors.black,
+                        offset: Offset(2, 2),
+                        blurRadius: 3,
+                      ),
+                    ],
 
                   ),
                 ),
