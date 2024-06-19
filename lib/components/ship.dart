@@ -348,6 +348,12 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     _linearAcceleration = spaceShipData.linearAcceleration;
     _angularAcceleration = spaceShipData.angularAcceleration;
 
+    SpaceShipState shipState = game.playerData.getEquippedShipState();
+
+    if (shipState.isCarryingCargo){
+      print("Cargo Should be added");
+    }
+
     if (!inOrbit){
       game.adjustCameraZoom(objectSize: size, screenPercentage: spaceShipData.zoomPercentage);
       game.camera.follow(this);

@@ -174,7 +174,8 @@ class Thrusters extends Component with HasGameRef<StarRoutes> {
   @override
   void update(double dt) {
     super.update(dt);
-
+    // print("In Thrusters Update");
+    // print("No. thrusters: ${thrusters.length}");
     if (currentShipThrusters != gameRef.playerData.equippedShip){
       currentShipThrusters = gameRef.playerData.equippedShip;
       updateThrusters();
@@ -184,6 +185,7 @@ class Thrusters extends Component with HasGameRef<StarRoutes> {
     if (gameRef.userShip.impulse.x > 0) {
       for (Thruster thruster in thrusters){
         if (thruster.triggers.contains("forward")){
+          // print("Shuoudl be thrusting");
           _addParticles(thruster);
         }
       }

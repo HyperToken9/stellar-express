@@ -17,6 +17,7 @@ class NavigationPointer extends SpriteComponent with HasGameRef<StarRoutes> {
   late double radiusY = 50;
   final double reachThreshold = 300;
   final double speedThreshold = 30;
+  String destinationName = "";
 
   @override
   Future<void> onLoad() async {
@@ -41,7 +42,7 @@ class NavigationPointer extends SpriteComponent with HasGameRef<StarRoutes> {
         ),
         position: Vector2(0, 0),
         anchor: Anchor.center);
-    print("Distance Size: ${distanceText.size}");
+    // print("Distance Size: ${distanceText.size}");
     add(distanceText);
   }
 
@@ -74,14 +75,15 @@ class NavigationPointer extends SpriteComponent with HasGameRef<StarRoutes> {
     distanceText.text = formattedDistance();
 
     distanceText.anchor = Anchor.center;
-    distanceText.position = Vector2(distanceText.scaledSize.x * 0.5, distanceText.scaledSize.y * 2);
+    distanceText.position = Vector2(distanceText.absoluteScaledSize.x * 0.5,
+                                    distanceText.absoluteScaledSize.y * 2);
     // Keep the text horizontal
     distanceText.angle = -angle;
 
     if (game.userShip.inOrbit &&
         game.userShip.orbitCenter.distanceTo(targetLocation!) < 100){
-      setNavigationTarget(null);
-      // print("User reached destination");
+      setNavigationTarget(null, "");
+      game.displayMessage("Reached $destinationName");
       return;
     }
 
@@ -89,26 +91,21 @@ class NavigationPointer extends SpriteComponent with HasGameRef<StarRoutes> {
       // print("Destination is clsoe");
       // print("Speed Threshold: $speedThreshold User Speed: ${game.userShip.linearVelocity.length}");
       if (game.userShip.linearVelocity.length < speedThreshold) {
-        setNavigationTarget(null);
+        setNavigationTarget(null, "");
+        game.displayMessage("Reached $destinationName");
         // print("User reached destination");
         return;
       }
 
 
       //TODO: Make a overlay to display user reached destination
-      //TODO: Distance Indicator
     }
 
 
   }
 
 
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-  }
-
-  void setNavigationTarget(Vector2? target){
+  void setNavigationTarget(Vector2? target, String destinationName){
 
     if (target == null ){
       opacity = 0;

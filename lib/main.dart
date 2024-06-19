@@ -5,18 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'firebase_options.dart';
 
 import 'package:star_routes/screens/blank_screen.dart';
 import 'package:star_routes/screens/options_screen.dart';
-import 'firebase_options.dart';
-
-import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/screens/dashboard_screen.dart';
 import 'package:star_routes/screens/hangar_screen.dart';
 import 'package:star_routes/screens/login_screen.dart';
 import 'package:star_routes/screens/loading_screen.dart';
 import 'package:star_routes/screens/main_menu_screen.dart';
 import 'package:star_routes/screens/mini_map_screen.dart';
+import 'package:star_routes/screens/message_screen.dart';
+
+import 'package:star_routes/game/star_routes.dart';
 
 import 'package:star_routes/data/player_data.dart';
 
@@ -72,7 +73,7 @@ class _GameAppState extends State<GameApp> {
     return GameWidget(
       game: game,
       loadingBuilder: (context) => LoadingScreen(game: game),
-      initialActiveOverlays: const [LoginScreen.id],
+      initialActiveOverlays: const [LoginScreen.id, MessageScreen.id],
       overlayBuilderMap: {
         LoginScreen.id: (context, _) => LoginScreen(game: game),
         LoadingScreen.id: (context, _) => LoadingScreen(game: game),
@@ -82,6 +83,7 @@ class _GameAppState extends State<GameApp> {
         DashboardScreen.id: (context, _) => DashboardScreen(game: game),
         BlankScreen.id: (context, _) => BlankScreen(game: game),
         OptionsScreen.id: (context, _) => OptionsScreen(game: game),
+        MessageScreen.id: (context, _) => MessageScreen(game: game),
       },
     );
   }

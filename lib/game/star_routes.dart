@@ -29,7 +29,7 @@ import 'package:star_routes/controls/delivery_button.dart';
 import 'package:star_routes/controls/dashboard_button.dart';
 import 'package:star_routes/controls/swap_ship_button.dart';
 import 'package:star_routes/screens/loading_screen.dart';
-import 'package:star_routes/screens/main_menu_screen.dart';
+import 'package:star_routes/screens/message_screen.dart';
 import 'package:star_routes/services/datastore.dart';
 
 import "package:star_routes/states/dpad.dart";
@@ -59,6 +59,8 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   late NavigationPointer navigationPointer;
   late ExperienceBar experienceBar;
   late Balance balance;
+
+  String overlayDisplayMessage = "";
 
   bool isDetectingPlanet = false;
   double cameraZoomSetPoint = 1.0;
@@ -128,7 +130,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     }
 
 
-    print("Loaded Game");
+    // print("Loaded Game");
 
   }
 
@@ -140,7 +142,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     orbitButton.setState(OrbitButtonStates.inactive);
     swapShipButton.setState(SwapShipButtonStates.inactive);
     deliveryButton.setState(DeliveryButtonStates.inactive);
-
+    navigationPointer.opacity = 0;
 
     isDetectingPlanet = false;
 
@@ -174,7 +176,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
     dpad.setState(DPadStates.idle);
     miniMap.setState(true);
-
+    navigationPointer.opacity = 1;
     isDetectingPlanet = true;
 
     for (Ship ship in showRoomShips){
@@ -204,6 +206,8 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     }
     userShip.opacity = 1;
     userShip.loadNewShip();
+    // playerData.setEquippedShip();
+    print("Equipped Ship: ${playerData.equippedShip}");
 
   }
 
@@ -291,6 +295,11 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   }
 
 
+  void displayMessage(String message){
+    overlayDisplayMessage = message;
+    overlays.add(MessageScreen.id);
+  }
+
   double calculateCameraZoom({required Vector2 objectSize, required double screenPercentage}) {
     Vector2 screenSize = size;
 
@@ -307,7 +316,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     cameraZoomSetPoint = calculateCameraZoom(objectSize: objectSize,
                                               screenPercentage: screenPercentage);
 
-    print("Camera Zoom Set Point: $cameraZoomSetPoint");
+    // print("Camera Zoom Set Point: $cameraZoomSetPoint");
   }
 
 

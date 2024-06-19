@@ -19,7 +19,8 @@ class PlayerData{
 
   int totalExperience = 165;
 
-  String equippedShip  = "";
+  /*TODO: Should be removed */
+  // String equippedShip  = "";
 
   Vector2 shipSpawnLocation = Vector2(3766.0, -2102.0) + Vector2(0, 300);
 
@@ -59,24 +60,38 @@ class PlayerData{
 
     }
 
-    setEquippedShip();
+    // setEquippedShip();
 
   }
 
-  void setEquippedShip(){
+  /* Getter function for equipped ship */
+  String get equippedShip{
     for (SpaceShipData data in SpaceShipData.spaceShips){
       SpaceShipState shipState = spaceShipStates[data.shipClassName]!;
 
-      if (!shipState.isOwned)
-      {
-        continue;
-      }
       if (shipState.isEquipped){
-        equippedShip = data.shipClassName;
-        return;
+        return data.shipClassName;
       }
     }
+    assert(false, "No Equipped Ship Found");
+    return "";
   }
+
+  // void setEquippedShip(){
+  //   // print("Setting Equipped Ship");
+  //   for (SpaceShipData data in SpaceShipData.spaceShips){
+  //     SpaceShipState shipState = spaceShipStates[data.shipClassName]!;
+  //
+  //     if (!shipState.isOwned)
+  //     {
+  //       continue;
+  //     }
+  //     if (shipState.isEquipped){
+  //       equippedShip = data.shipClassName;
+  //       return;
+  //     }
+  //   }
+  // }
 
   bool isShipOwned(String shipClassName){
 

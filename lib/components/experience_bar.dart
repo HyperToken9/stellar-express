@@ -45,7 +45,7 @@ class ExperienceBar extends PositionComponent with HasGameRef<StarRoutes> {
         bottomRight: Radius.circular(radius),
       ));
 
-    print("Ex: $totalExperience");
+    // print("Ex: $totalExperience");
     updateExperienceBar();
 
 

@@ -77,10 +77,10 @@ class SpaceShipState{
   }
 
   String displayCrashes(){
-    return "{$crashes}";
+    return "$crashes";
   }
 
   String displayMissionCount(){
-    return "{$missionsCompleted}";
+    return "$missionsCompleted";
   }
 }

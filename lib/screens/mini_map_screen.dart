@@ -294,7 +294,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                               /* child with text */
                               child: Text(
                                 planet.planetData.planetName,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black87,
                                   fontSize: 15,
                                   decoration: TextDecoration.none,
@@ -307,29 +307,6 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                         ]
                     ),
 
-                    // ...planets.map((planet) {
-                    //   return Card(
-                    //     child: ListTile(
-                    //       title: Text(planet.planetName),
-                    //       onTap: () {
-                    //         _moveToPlanet(planet);
-                    //       },
-                    //     ),
-                    //   );
-                    // }).toList(),
-
-                    // Expanded(
-                    //   child: ListView.builder(
-                    //     itemCount: planets.length,
-                    //     itemBuilder: (context, index) {
-                    //       return Card(
-                    //         child: ListTile(
-                    //           title: Text(planets[index].planetName),
-                    //         ),
-                    //       );
-                    //     },
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -354,13 +331,13 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                       onPressed: () {
 
                         if (_isPlanetFocused){
-                          widget.game.navigationPointer.setNavigationTarget(_focusedPlanet!.position);
+                          widget.game.navigationPointer.setNavigationTarget(_focusedPlanet!.position, _focusedPlanet!.planetData.planetName);
                           setState(() {
                           });
                           _closeMiniMap();
                         }
                         else{
-                          widget.game.navigationPointer.setNavigationTarget(null);
+                          widget.game.navigationPointer.setNavigationTarget(null, "");
                           setState(() {
                           });
                         }

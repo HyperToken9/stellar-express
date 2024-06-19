@@ -93,7 +93,7 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
                 /* Equipping New Ship */
                 shipState.dockedAt = "";
                 shipState.isEquipped = true;
-                game.playerData.equippedShip = shipData.shipClassName;
+                // game.playerData.equippedShip = shipData.shipClassName;
                 game.userShip.spaceShipData = shipData;
                 game.userShip.loadNewShip(atPosition: planetComponent.position);
 

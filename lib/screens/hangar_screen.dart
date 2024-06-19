@@ -27,6 +27,7 @@ class _MainMenuScreenState extends State<HangarScreen> {
     setState(() {
       widget.game.playerData.sellShip(shipData);
     });
+    widget.game.saveGame();
   }
 
   void onBuy(SpaceShipData shipData) {
@@ -35,6 +36,7 @@ class _MainMenuScreenState extends State<HangarScreen> {
     setState(() {
       widget.game.playerData.buyShip(shipData);
     });
+    widget.game.saveGame();
   }
 
   @override
