@@ -25,7 +25,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
   /* Authentication */
-  Authentication _authentication = Authentication();
+  final Authentication _authentication = Authentication();
 
   /* Validate Login Process */
   void processLogin(String id) {

@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import 'package:star_routes/screens/blank_screen.dart';
+import 'package:star_routes/screens/options_screen.dart';
 import 'firebase_options.dart';
 
 import 'package:star_routes/game/star_routes.dart';
@@ -80,6 +81,7 @@ class _GameAppState extends State<GameApp> {
         HangarScreen.id: (context, _) => HangarScreen(game: game),
         DashboardScreen.id: (context, _) => DashboardScreen(game: game),
         BlankScreen.id: (context, _) => BlankScreen(game: game),
+        OptionsScreen.id: (context, _) => OptionsScreen(game: game),
       },
     );
   }

@@ -79,8 +79,8 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
     double visibleWidth = size.width;
     double visibleHeight = size.height;
 
-    double centerX = planet.position.x - Config.worldBoundaryLeft;
-    double centerY = planet.position.y - Config.worldBoundaryTop;
+    double centerX = planet.position.x / Config.spaceScaleFactor - Config.worldBoundaryLeft;
+    double centerY = planet.position.y / Config.spaceScaleFactor - Config.worldBoundaryTop;
 
     double initialX = visibleWidth / 2 - centerX;
     double initialY = visibleHeight / 2 - centerY;

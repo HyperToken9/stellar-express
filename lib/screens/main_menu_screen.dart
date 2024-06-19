@@ -5,6 +5,7 @@ import 'package:star_routes/game/star_routes.dart';
 
 import 'package:star_routes/screens/blank_screen.dart';
 import 'package:star_routes/screens/hangar_screen.dart';
+import 'package:star_routes/screens/options_screen.dart';
 
 
 class MainMenuScreen extends StatefulWidget {
@@ -53,7 +54,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    print("Options");
+                    widget.game.pauseEngine();
+                    widget.game.overlays.remove(MainMenuScreen.id);
+                    widget.game.overlays.add(OptionsScreen.id);
+                    // print("Options");
                   },
                   child: Image.asset('assets/images/user_interface/options_button.png'),
                 ),

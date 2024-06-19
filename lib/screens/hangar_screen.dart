@@ -48,15 +48,38 @@ class _MainMenuScreenState extends State<HangarScreen> {
             padding: const EdgeInsets.fromLTRB(10.0, 45.0, 0.0, 0.0),
 
               // (horizontal: 22.0, vertical: 32.0),
-            child: Text(
-              'Hangar'.toUpperCase(),
-              style: const TextStyle(
-                fontSize: 30.0,
-                fontFamily: 'Audiowide',
-                color: Colors.white,
-                letterSpacing: -2,
-              ),
-              textAlign: TextAlign.left,
+            child: Row(
+              children: [
+                TextButton(
+                    style: ButtonStyle(
+                      padding: WidgetStateProperty.all(const EdgeInsets.all(0.0)),
+                      minimumSize: WidgetStateProperty.all<Size>(Size.zero),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: (){
+                        widget.game.overlays.remove(HangarScreen.id);
+                        widget.game.overlays.add(MainMenuScreen.id);
+                        widget.game.pauseEngine();
+                      },
+                    child: Image.asset(
+                      "assets/images/user_interface/back_button_icon.png",
+                      scale: 1,
+                      fit: BoxFit.contain,
+                    )
+
+                ),
+                // const SizedBox(width: 10),
+                Text(
+                  'Hangar'.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 30.0,
+                    fontFamily: 'Audiowide',
+                    color: Colors.white,
+                    letterSpacing: -2,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -102,7 +125,6 @@ class _MainMenuScreenState extends State<HangarScreen> {
     super.initState();
     widget.game.resumeEngine();
     BackButtonInterceptor.add(myInterceptor);
-    // widget.game.l
     widget.game.setupHanger();
     print("Hangar Screen Initialized");
   }
