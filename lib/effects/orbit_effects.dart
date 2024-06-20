@@ -6,11 +6,12 @@ import 'package:flame/extensions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
+import 'package:star_routes/game/priorities.dart';
 
 class OrbitEffects{
 
   List<Effect> orbitEffect(double duration, double scaleBy, double rotateBy,
-                     void Function()? onComplete, Component target){
+                     void Function()? onComplete, Component target, Component? target2){
 
     Path path = makeOrbitPath();
 
@@ -35,7 +36,10 @@ class OrbitEffects{
               duration: duration/3,
           ),
           onComplete: () {
-            target.priority = 4;
+            target.priority = Priorities.aheadPlanet2;
+            if (target2 != null){
+              target2.priority = Priorities.aheadPlanet1;
+            }
           }
         ),
           ScaleEffect.by(
@@ -62,7 +66,7 @@ class OrbitEffects{
   }
 
   List<Effect> deOrbitEffect(double duration, double scaleBy, double rotateBy,
-                       void Function()? onComplete, Component target){
+                       void Function()? onComplete, Component target, Component? target2){
 
     Path path = makeDeOrbitPath();
     path = scalePath(path, scaleBy);
@@ -89,7 +93,10 @@ class OrbitEffects{
               Vector2.all(1),
               EffectController(duration: duration/3),
               onComplete: () {
-                target.priority = 1;
+                target.priority = Priorities.behindPlanet1;
+                if (target2 != null){
+                  target2.priority = Priorities.behindPlanet2;
+                }
               }
           ),
           ScaleEffect.by(

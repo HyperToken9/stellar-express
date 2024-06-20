@@ -8,6 +8,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:star_routes/effects/orbit_effects.dart';
 import 'package:star_routes/game/config.dart';
+import 'package:star_routes/game/priorities.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 
@@ -24,7 +25,7 @@ class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
 
   Planet({required this.planetData}) {
     // Initiate the background loading of the image
-    priority = 2;
+    priority = Priorities.planet;
     imageLoader = _loadImage();
   }
 

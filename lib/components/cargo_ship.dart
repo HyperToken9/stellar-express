@@ -68,7 +68,7 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
             targetOrbitRadius = game.userShip.orbitRadius;
             orbitRadius = orbitCenter.distanceTo(position);
           },
-          this
+          this, null
       );
 
 
@@ -126,7 +126,7 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
                   print("Is this is on complete effect");
                   onDeliveryComplete();
                   removeFromParent();
-                }, this);
+                }, this, null);
 
         addAll(deOrbitingEffect);
         applyPhysics = false;

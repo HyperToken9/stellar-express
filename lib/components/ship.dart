@@ -16,6 +16,7 @@ import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
 
 import 'package:star_routes/game/config.dart';
+import 'package:star_routes/game/priorities.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/assets.dart';
@@ -67,7 +68,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
                    spaceShipData.spriteSize[1].toDouble());
     position = spawnLocation;
-    priority = 6;
+    priority = Priorities.aheadPlanet2;
   }
 
   @override

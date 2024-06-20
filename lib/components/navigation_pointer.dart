@@ -82,8 +82,8 @@ class NavigationPointer extends SpriteComponent with HasGameRef<StarRoutes> {
 
     if (game.userShip.inOrbit &&
         game.userShip.orbitCenter.distanceTo(targetLocation!) < 100){
-      setNavigationTarget(null, "");
       game.displayMessage("Reached $destinationName");
+      setNavigationTarget(null, "");
       return;
     }
 
@@ -91,8 +91,8 @@ class NavigationPointer extends SpriteComponent with HasGameRef<StarRoutes> {
       // print("Destination is clsoe");
       // print("Speed Threshold: $speedThreshold User Speed: ${game.userShip.linearVelocity.length}");
       if (game.userShip.linearVelocity.length < speedThreshold) {
-        setNavigationTarget(null, "");
         game.displayMessage("Reached $destinationName");
+        setNavigationTarget(null, "");
         // print("User reached destination");
         return;
       }

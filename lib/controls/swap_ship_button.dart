@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
@@ -11,6 +12,7 @@ import 'package:star_routes/data/space_ship_state.dart';
 import 'package:star_routes/effects/orbit_effects.dart';
 
 import 'package:star_routes/components/planet.dart';
+import 'package:star_routes/game/priorities.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/tappable_region.dart';
@@ -79,7 +81,7 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
               //   return;
               // }
               game.userShip.cargo.offsetAngle = - pi / 2;
-
+              game.userShip.cargo.priority = Priorities.aheadPlanet1;
               /* Land Current Ship */
               double orbitRotateByAngle = atan2(game.userShip.position.y - game.userShip.orbitCenter.y,
                   game.userShip.position.x - game.userShip.orbitCenter.x);
@@ -112,7 +114,7 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
                   game.userShip.offsetAngle = 0;
                   game.userShip.cargo.offsetAngle = 0;
                   gameRef.userShip.detectShipSwapping(planetComponent);
-                }, game.userShip);
+                }, game.userShip, game.userShip.cargo);
 
                 game.userShip.addAll(orbitEffect);
 
@@ -121,7 +123,7 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
               gameRef.swapShipButton.setState(SwapShipButtonStates.inactive);
               final List<Effect> deOrbitingEffect = OrbitEffects()
                   .deOrbitEffect(10, game.userShip.orbitRadius, orbitRotateByAngle,
-                                 onDeOrbitComplete, game.userShip);
+                                 onDeOrbitComplete, game.userShip, game.userShip.cargo);
 
               game.userShip.applyPhysics = false;
               game.userShip.offsetAngle = - pi / 2;

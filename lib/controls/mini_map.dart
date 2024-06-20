@@ -114,7 +114,7 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
     final dstRect = Rect.fromLTWH(0, 0, size.x, size.y);
 
     /* Masking Mini Map */
-    // canvas.clipPath(miniMapMask);
+    canvas.clipPath(miniMapMask);
 
     canvas.translate(size.x / 2, size.y / 2);
     canvas.rotate(gameRef.userShip.angle);

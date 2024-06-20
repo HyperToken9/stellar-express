@@ -69,4 +69,5 @@ class Cargo extends SpriteComponent with HasGameRef<StarRoutes>{
     super.angle = newAngle - offsetAngle;
   }
 
+
 }
