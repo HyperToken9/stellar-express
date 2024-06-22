@@ -1,7 +1,6 @@
 
 import 'dart:math';
 
-import 'package:flame/components.dart';
 import 'package:star_routes/data/cargo_types.dart';
 import 'package:star_routes/data/cargo_type_size_data.dart';
 

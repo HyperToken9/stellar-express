@@ -2,7 +2,6 @@
 
 import 'dart:ui' as ui;
 
-import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
 import 'package:star_routes/controls/dashboard_button.dart';

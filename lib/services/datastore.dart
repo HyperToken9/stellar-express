@@ -7,12 +7,10 @@ import 'package:hive/hive.dart';
 
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/player_data.dart';
-import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/config.dart';
-import 'package:star_routes/main.dart';
 
 
 class Datastore {

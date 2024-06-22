@@ -13,7 +13,7 @@ class LoadingScreen extends StatefulWidget {
   /* Pre load image */
   // final image = Image.asset('assets/images/user_interface/title.png');
 
-  AssetImage image = AssetImage('assets/images/user_interface/title.png');
+  AssetImage image = const AssetImage('assets/images/user_interface/title.png');
 
   LoadingScreen({super.key, required this.game});
 
@@ -38,7 +38,7 @@ class _MainMenuScreenState extends State<LoadingScreen> {
               ),
             ),
 
-            AnimatedProgressBar(),
+            const AnimatedProgressBar(),
 
           ],
         ),
@@ -49,6 +49,8 @@ class _MainMenuScreenState extends State<LoadingScreen> {
 
 
 class AnimatedProgressBar extends StatefulWidget {
+  const AnimatedProgressBar({super.key});
+
   @override
   _AnimatedProgressBarState createState() => _AnimatedProgressBarState();
 }
@@ -62,7 +64,7 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 10),
+      duration: const Duration(seconds: 10),
     )..addListener(() {
       setState(() {});
     });
@@ -84,9 +86,9 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
           value: _controller!.value,
           minHeight: 10,
           backgroundColor: Colors.grey[300],
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
             if (_controller!.isAnimating) {

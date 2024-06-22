@@ -58,7 +58,7 @@ class _MainMenuScreenState extends State<OptionsScreen> {
                 Text(
                   'Options'.toUpperCase(),
                   style: const TextStyle(
-                    fontSize: 30.0,
+                    fontSize: 20.0,
                     fontFamily: 'Audiowide',
                     color: Colors.white,
                     letterSpacing: -2,

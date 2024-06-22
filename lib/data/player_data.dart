@@ -1,15 +1,12 @@
 
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/components.dart';
-import 'package:star_routes/data/planet_data.dart';
 
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/world_data.dart';
-import 'package:star_routes/services/datastore.dart';
 
 class PlayerData{
 

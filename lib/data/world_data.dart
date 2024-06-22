@@ -4,8 +4,6 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 
 import 'package:star_routes/data/planet_data.dart';
-import 'package:star_routes/data/space_ship_data.dart';
-import 'package:star_routes/data/cargo_types.dart';
 
 class WorldData{
 

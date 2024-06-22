@@ -289,7 +289,7 @@ class MissionData{
           sourcePlanet == other.sourcePlanet &&
           destinationPlanet == other.destinationPlanet &&
           eligibleShips.length == other.eligibleShips.length &&
-          ListEquality().equals(eligibleShips, other.eligibleShips) &&
+          const ListEquality().equals(eligibleShips, other.eligibleShips) &&
           cargoTypeSizeData == other.cargoTypeSizeData &&
           cargoCategoryName == other.cargoCategoryName &&
           cargoItemName == other.cargoItemName &&

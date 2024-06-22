@@ -2,7 +2,6 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:star_routes/components/ship.dart';
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/game/star_routes.dart';
 
@@ -50,38 +49,46 @@ class _MainMenuScreenState extends State<HangarScreen> {
             padding: const EdgeInsets.fromLTRB(10.0, 45.0, 0.0, 0.0),
 
               // (horizontal: 22.0, vertical: 32.0),
-            child: Row(
-              children: [
-                TextButton(
-                    style: ButtonStyle(
-                      padding: WidgetStateProperty.all(const EdgeInsets.all(0.0)),
-                      minimumSize: WidgetStateProperty.all<Size>(Size.zero),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    onPressed: (){
-                        widget.game.overlays.remove(HangarScreen.id);
-                        widget.game.overlays.add(MainMenuScreen.id);
-                        widget.game.pauseEngine();
-                      },
-                    child: Image.asset(
-                      "assets/images/user_interface/back_button_icon.png",
-                      scale: 1,
-                      fit: BoxFit.contain,
-                    )
+            child: Container(
+              margin: const EdgeInsets.only(right: 210.0),
+              // constraints: ,
+              // color: const Color(0x4500FF00),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Row(
+                  children: [
+                    TextButton(
+                        style: ButtonStyle(
+                          padding: WidgetStateProperty.all(const EdgeInsets.all(0.0)),
+                          minimumSize: WidgetStateProperty.all<Size>(Size.zero),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: (){
+                            widget.game.overlays.remove(HangarScreen.id);
+                            widget.game.overlays.add(MainMenuScreen.id);
+                            widget.game.pauseEngine();
+                          },
+                        child: Image.asset(
+                          "assets/images/user_interface/back_button_icon.png",
+                          scale: 1,
+                          fit: BoxFit.contain,
+                        )
 
+                    ),
+                    // const SizedBox(width: 10),
+                    Text(
+                      'Hangar'.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 30.0,
+                        fontFamily: 'Audiowide',
+                        color: Colors.white,
+                        letterSpacing: -2,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
                 ),
-                // const SizedBox(width: 10),
-                Text(
-                  'Hangar'.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 30.0,
-                    fontFamily: 'Audiowide',
-                    color: Colors.white,
-                    letterSpacing: -2,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ],
+              ),
             ),
           ),
           Expanded(
@@ -105,7 +112,7 @@ class _MainMenuScreenState extends State<HangarScreen> {
                     onSell: onSell,
                     onBuy: onBuy,
                   );
-                }).toList(),
+                }),
                 // Add more slides as needed
               ],
             ),

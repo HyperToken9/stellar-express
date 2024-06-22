@@ -1,16 +1,12 @@
 
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 
-import 'package:flutter/material.dart';
 import 'package:star_routes/components/cargo.dart';
 import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/components/thrusters.dart';
-import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';

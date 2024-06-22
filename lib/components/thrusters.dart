@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
 import 'package:flame/particles.dart';
-import 'package:star_routes/components/ship.dart';
 import 'package:star_routes/game/star_routes.dart';
 
 

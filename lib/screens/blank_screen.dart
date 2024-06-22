@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/screens/main_menu_screen.dart';
 
-import 'package:star_routes/services/datastore.dart';
 
 class BlankScreen extends StatefulWidget {
 

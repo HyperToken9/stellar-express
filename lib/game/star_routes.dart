@@ -1,7 +1,6 @@
 
 
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -148,7 +147,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
   void setupHanger() {
     print("Setting up Hangar");
-
+    userShip.applyPhysics = false;
     if (usingAsJoyStickController){
       joystick.setState(false);
     }else{
@@ -212,7 +211,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
         world.remove(ship);
       }
     }
-
+    userShip.applyPhysics = true;
     for (Planet planetComponent in starWorld.planetComponents){
       planetComponent.opacity = 1;
     }

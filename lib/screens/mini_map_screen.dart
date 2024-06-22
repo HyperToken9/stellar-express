@@ -2,12 +2,10 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
-import 'package:star_routes/data/world_data.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/config.dart';
 
-import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/screens/blank_screen.dart';
 
@@ -18,7 +16,7 @@ class MiniMapScreen extends StatefulWidget {
   final StarRoutes game;
   static const String id = "miniMap";
 
-  MiniMapScreen({super.key, required this.game});
+  const MiniMapScreen({super.key, required this.game});
 
 
   @override
@@ -189,7 +187,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                           ],
                         ),
                       );
-                    }).toList(),
+                    }),
                   ],
                 ),
               ),
@@ -209,7 +207,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
                       width: 200,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Color(0xEEEFEFEF),
+                        color: const Color(0xEEEFEFEF),
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: TextFormField(
@@ -316,7 +314,7 @@ class _MiniMapScreenState extends State<MiniMapScreen> {
               curve: Curves.easeInOut,
               bottom: 90,
               right: 20,
-              duration: Duration(milliseconds: 3000),
+              duration: const Duration(milliseconds: 3000),
               child: Container(
                 // width: 200,
                 // height: 150,

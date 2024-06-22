@@ -54,7 +54,7 @@ class NavigationPointer extends SpriteComponent with HasGameRef<StarRoutes> {
 
     double scaledDistanceRounded = (scaledDistance * 10).round() / 10;
 
-    return "${scaledDistanceRounded} AU";
+    return "$scaledDistanceRounded AU";
   }
 
   @override

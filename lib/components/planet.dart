@@ -1,12 +1,9 @@
 
 
-import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
-import 'package:star_routes/effects/orbit_effects.dart';
 import 'package:star_routes/game/config.dart';
 import 'package:star_routes/game/priorities.dart';
 
@@ -76,7 +73,7 @@ class Planet extends SpriteAnimationComponent with HasGameRef<StarRoutes>{
         planetData.miniMapColor.withAlpha(70),  // Fully opaque green
         const Color(0x00000000),  // Fully transparent green
       ],
-      stops: [0.0, 1.0],  // Define the stops for the gradient
+      stops: const [0.0, 1.0],  // Define the stops for the gradient
     );
 
     // Create a Paint object with the gradient shader

@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:star_routes/data/planet_data.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 

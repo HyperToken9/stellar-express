@@ -1,7 +1,6 @@
 
 import 'package:flame/components.dart';
 import 'package:star_routes/components/cargo_ship.dart';
-import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';

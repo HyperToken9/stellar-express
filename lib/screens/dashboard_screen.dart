@@ -49,7 +49,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
 
     return Container(
       /* Rounded borders */
-      margin: EdgeInsets.only(top: 95, left: 20, right: 20, bottom: 50),
+      margin: const EdgeInsets.only(top: 95, left: 20, right: 20, bottom: 50),
       child: ClipRect(
 
         child: BackdropFilter(
@@ -82,8 +82,8 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                         toolbarHeight: 0,
                         bottom: TabBar(
 
-                          indicatorColor: Color(0xFAEEEEEE),
-                          labelColor: Color(0xFAEEEEEE),
+                          indicatorColor: const Color(0xFAEEEEEE),
+                          labelColor: const Color(0xFAEEEEEE),
                           unselectedLabelColor: Colors.white.withOpacity(0.3),
                           tabs: [
                             Tab(
