@@ -1,5 +1,6 @@
 
 
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
@@ -36,8 +37,11 @@ class MiniMap extends PositionComponent with HasGameRef<StarRoutes>{
 
     // Load the mini map image
     miniMap = await gameRef.images.load(Assets.miniMap);
-    // miniMap.size = Vector2(175, 175);
-    size = Vector2(150, 150);
+
+    /* */
+
+    size = Vector2(min(150, game.size.x - 160),
+                   min(150, game.size.x - 160));
     position = margin;
     anchor = Anchor.topLeft;
     // priority = 5;

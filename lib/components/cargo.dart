@@ -26,7 +26,7 @@ class Cargo extends SpriteComponent with HasGameRef<StarRoutes>{
   }
 
   void setCargoSize(String cargoSize){
-    print("Cargo size: $cargoSize");
+    // print("Cargo size: $cargoSize");
     if (cargoSize == "Small") {
       size = Vector2(142, 300);
     } else if (cargoSize == "Medium") {
@@ -57,6 +57,9 @@ class Cargo extends SpriteComponent with HasGameRef<StarRoutes>{
 
     } else{
       position = Vector2(scaledSize.x*2, 0);
+      angle = offsetAngle;
+      // print("Cargo Angle: $angle");
+
     }
 
   }

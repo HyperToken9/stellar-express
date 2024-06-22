@@ -13,7 +13,7 @@ class Thrusters extends Component with HasGameRef<StarRoutes> {
   List<Thruster> thrusters = [];
   late Map<String, List<Thruster>> thrusterMap;
 
-  late String currentShipThrusters;
+  // String currentShipThrusters = "None";
 
   @override
   Future<void> onLoad() async {
@@ -160,14 +160,14 @@ class Thrusters extends Component with HasGameRef<StarRoutes> {
 
     };
 
-    currentShipThrusters = gameRef.playerData.equippedShip;
+    // currentShipThrusters = gameRef.playerData.equippedShip;
 
-    updateThrusters();
+    // updateThrusters();
 
   }
 
-  void updateThrusters(){
-
+  void updateThrusters(String currentShipThrusters){
+    // print("Ship Thrusters Updated: $currentShipThrusters");
     thrusters = thrusterMap[currentShipThrusters] ?? [];
   }
 
@@ -176,10 +176,10 @@ class Thrusters extends Component with HasGameRef<StarRoutes> {
     super.update(dt);
     // print("In Thrusters Update");
     // print("No. thrusters: ${thrusters.length}");
-    if (currentShipThrusters != gameRef.playerData.equippedShip){
-      currentShipThrusters = gameRef.playerData.equippedShip;
-      updateThrusters();
-    }
+    // if (currentShipThrusters != gameRef.playerData.equippedShip){
+    //   currentShipThrusters = gameRef.playerData.equippedShip;
+    //   updateThrusters();
+    // }
 
     // Add particle systems for the thrusters
     if (gameRef.userShip.impulse.x > 0) {

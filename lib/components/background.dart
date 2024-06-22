@@ -25,11 +25,11 @@ class Background extends ParallaxComponent<StarRoutes>
     parallax = Parallax([
       ParallaxLayer(
           ParallaxImage(backgroundAway, repeat: ImageRepeat.repeat),
-          velocityMultiplier: Vector2(3, 3) / Config.spaceScaleFactor,
+          velocityMultiplier: Vector2(6, 6) / Config.spaceScaleFactor,
       ),
       ParallaxLayer(
           ParallaxImage(backgroundClose, repeat: ImageRepeat.repeat),
-          velocityMultiplier: Vector2(0.5, 0.51) / Config.spaceScaleFactor,
+          velocityMultiplier: Vector2(3, 3) / Config.spaceScaleFactor,
       )
     ]);
 

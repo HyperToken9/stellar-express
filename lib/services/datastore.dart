@@ -22,9 +22,9 @@ class Datastore {
   final CollectionReference playerCollection = FirebaseFirestore.instance.collection('players');
 
   final Map<String, dynamic> defaultPlayerData = {
-    'coin': 100,
+    'coin': 696969,
     'totalExperience': 0,
-    'shipSpawnLocation': [0, 0],
+    'shipSpawnLocation': [270.0* Config.spaceScaleFactor, -3960.0 * Config.spaceScaleFactor],
     'spaceShipStates': {
       'Small Courier': SpaceShipState(isOwned: true, isEquipped: true).toJson(),
       'Express Shuttle': SpaceShipState(isOwned: false, isEquipped: false).toJson(),
@@ -38,17 +38,17 @@ class Datastore {
     'completedMissions': <MissionData>[],
     'initiatedMissions': <MissionData>[],
     'acceptedMissions': <MissionData>[],
-    // 'availableMissions': [],
+    'availableMissions': <MissionData>[],
 
   };
 
   final Map<String, dynamic> overrideCustomData = {
-    'coin': 696969,
+    // 'coin': 696969,
     // 'totalExperience': 0,
-    // 'shipSpawnLocation': [230.0* Config.spaceScaleFactor, -3960.0 * Config.spaceScaleFactor],
+    // 'shipSpawnLocation': [270.0* Config.spaceScaleFactor, -3960.0 * Config.spaceScaleFactor],
     // 'spaceShipStates': {
-      // 'Small Courier': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
-      // 'Express Shuttle': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
+    //   'Small Courier': SpaceShipState(isOwned: false, isEquipped: false, dockedAt: "").toJson(),
+    //   'Express Shuttle': SpaceShipState(isOwned: true, isEquipped: true, dockedAt: "").toJson(),
       // 'Large Freighter': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Icarion").toJson(),
       // 'Endurance Cruiser': SpaceShipState(isOwned: false, isEquipped: true).toJson(),
       // 'Stealth Courier': SpaceShipState(isOwned: true, isEquipped: false, dockedAt: "Marid").toJson(),
@@ -108,12 +108,7 @@ class Datastore {
                                     return MapEntry(key, SpaceShipState.fromJson(Map<String, dynamic>.from(value)));
                                   });
 
-    for (SpaceShipData shipData in SpaceShipData.spaceShips){
-      if (!playerData.spaceShipStates.containsKey(shipData.shipClassName)){
-        // print("Loading Additionaonals: ${shipData.shipClassName}");
-        playerData.spaceShipStates[shipData.shipClassName] = SpaceShipState(isOwned: false, isEquipped: false);
-      }
-    }
+
 
     playerData.archivedMissions = (playerDocument['archivedMissions'] ??
                                       defaultPlayerData['archivedMissions'])
@@ -127,7 +122,9 @@ class Datastore {
     playerData.acceptedMissions = (playerDocument['acceptedMissions'] ??
                                       defaultPlayerData['acceptedMissions'])
                                   .map<MissionData>((data) => MissionData.fromJson(Map<String, dynamic>.from(data))).toList();
-
+    playerData.availableMissions = (playerDocument['availableMissions'] ??
+                                  defaultPlayerData['availableMissions'])
+                                  .map<MissionData>((data) => MissionData.fromJson(Map<String, dynamic>.from(data))).toList();
   }
 
 
@@ -151,7 +148,8 @@ class Datastore {
                                           (mission) => mission.toJson()).toList();
     playerDocument['acceptedMissions'] = playerData.acceptedMissions.map(
                                           (mission) => mission.toJson()).toList();
-    // playerDocument['availableMissions'] = playerData.availableMissions;
+    playerDocument['availableMissions'] = playerData.availableMissions.map(
+            (mission) => mission.toJson()).toList();
   }
 
   Future<void> _saveDataToFireBase(StarRoutes game) async {
@@ -165,29 +163,45 @@ class Datastore {
     await playerDoc.set(playerDocument);
   }
 
-  void saveDataLocally(StarRoutes game){
+  void saveDataLocally(StarRoutes game) async{
 
     /* Save To Document */
     _playerDataToPlayerDocument(game);
-
     final Box<dynamic> playerDataBox = Hive.box("playerData");
 
-    playerDataBox.put('data', playerDocument);
-    print("Player Data Saved Locally");
+    await playerDataBox.put('data', playerDocument);
+    // print("Player Data Saved Locally");
+    // print("Saving Ship Spawn Location: ${playerDocument['shipSpawnLocation']}");
 
   }
 
   void loadDataLocally(PlayerData playerData){
     final Box<dynamic> playerDataBox = Hive.box("playerData");
-    print("Loading Data Locally");
+    // print("Loading Data Locally");
+
     playerDocument = Map<String, dynamic>.from(playerDataBox.get('data')
                                             ?? defaultPlayerData);
 
 
     for (String key in overrideCustomData.keys){
       playerDocument[key] = overrideCustomData[key];
+      // print("Overriding: ${overrideCustomData[key]}");
     }
     _playerDocumentToPlayerData(playerData);
+    // print("Geeting Ship Spawn Location: ${playerDocument['shipSpawnLocation']}");
+
+  }
+
+
+  void resetToDefaultData(PlayerData playerData) async{
+    playerDocument = defaultPlayerData;
+    // _playerDocumentToPlayerData(playerData);
+    final Box<dynamic> playerDataBox = Hive.box("playerData");
+
+    await playerDataBox.put('data', playerDocument);
+    loadDataLocally(playerData);
+    // saveDataLocally(game)
+
   }
 
 }

@@ -90,7 +90,7 @@ class _MainMenuScreenState extends State<HangarScreen> {
 
                 widget.game.adjustCameraZoom(
                     objectSize: widget.game.showRoomShips[index].size,
-                    screenPercentage: 70);
+                    screenPercentage: widget.game.showRoomShips[index].spaceShipData.zoomPercentage * 2);
 
                 widget.game.camera.moveTo(
                     widget.game.showRoomShips[index].position + Vector2(0, 30),

@@ -62,7 +62,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   late ParticleSystemComponent particleComponent;
   late Cargo cargo;
-
+  late Thrusters thrusters;
   Ship({required this.spaceShipData, required this.spawnLocation}){
   // Ship(){
     size = Vector2(spaceShipData.spriteSize[0].toDouble(),
@@ -89,7 +89,8 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     /* Add Hit Box */
     add(RectangleHitbox());
 
-    add(Thrusters());
+    thrusters = Thrusters();
+    add(thrusters);
 
   }
 
@@ -111,8 +112,14 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     Vector2 bufferLinearVelocity = linearVelocity;
     double currentSpeed = bufferLinearVelocity.length;
 
+    double dampingFactor = 1;
+    if (game.usingAsJoyStickController){
+      dampingFactor = 0.3;
+    }
+
     /* Calculate Error  */
-    angularVelocity += (_maxAngularVelocity * impulse.y - angularVelocity) * _angularAcceleration;
+    angularVelocity += (_maxAngularVelocity * impulse.y * dampingFactor - angularVelocity)
+                        * _angularAcceleration ;
 
     bufferLinearVelocity += addedLinearVelocity;
 
@@ -234,7 +241,11 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
                              screenPercentage: 95);
 
     /* Disable D-Pad */
-    gameRef.dpad.setState(DPadStates.inactive);
+    if (gameRef.usingAsJoyStickController){
+      gameRef.joystick.setState(false);
+    }else{
+      gameRef.dpad.setState(DPadStates.inactive);
+    }
 
     // /* Disable MiniMap */
     // gameRef.miniMap.setState(false);
@@ -311,7 +322,11 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
 
     /* Enable DPad */
-    gameRef.dpad.setState(DPadStates.idle);
+    if (gameRef.usingAsJoyStickController){
+      gameRef.joystick.setState(true);
+    }else{
+      gameRef.dpad.setState(DPadStates.idle);
+    }
     /* Enable MiniMap */
     // gameRef.miniMap.setState(true);
 
@@ -334,7 +349,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
 
   }
 
-  void loadNewShip({Vector2? atPosition}) async {
+  Future<void> loadNewShip({Vector2? atPosition}) async {
     for  (SpaceShipData shipData in SpaceShipData.spaceShips){
       if (shipData.shipClassName == game.playerData.equippedShip){
         spaceShipData = shipData;
@@ -353,6 +368,8 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     _linearAcceleration = spaceShipData.linearAcceleration;
     _angularAcceleration = spaceShipData.angularAcceleration;
 
+    thrusters.updateThrusters(spaceShipData.shipClassName);
+
     SpaceShipState shipState = game.playerData.getEquippedShipState();
 
     if (shipState.isCarryingCargo && shipState.currentMission != null){
@@ -360,7 +377,9 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
       MissionData mission = shipState.currentMission!;
 
       cargo.setCargoSize(mission.cargoTypeSizeData.cargoSize);
+      cargo.offsetAngle = 0;
       game.world.add(cargo);
+      print("Offset Angle: ${cargo.offsetAngle}");
     }else{
       if (game.world.contains(cargo)){
         game.world.remove(cargo);
@@ -371,7 +390,12 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
       game.adjustCameraZoom(objectSize: size, screenPercentage: spaceShipData.zoomPercentage);
       game.camera.follow(this);
     }else{
-      game.dpad.setState(DPadStates.inactive);
+
+      if (game.usingAsJoyStickController){
+        game.joystick.setState(false);
+      }else{
+        game.dpad.setState(DPadStates.inactive);
+      }
       // game.miniMap.setState(false);
     }
 

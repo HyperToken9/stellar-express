@@ -40,9 +40,6 @@ class PlayerData{
     /* Assign Player ID */
     this.playerId = playerId;
 
-    Datastore dataStore = Datastore();
-    /* Load Data from Local Cache */
-    dataStore.loadDataLocally(this);
 
     /* Load Player Data from Firebase */
 
@@ -51,15 +48,17 @@ class PlayerData{
 
 
     /* Initializes Mission States*/
-    for (int i = 0; i < 7; i++) {
+    while (availableMissions.length < 2){
       MissionData? mission = MissionData.sampleMissionByDifficulty(this, 0);
 
       if (mission != null){
         availableMissions.add(mission);
+        // print("Adding Mission");
       }
+      // print("Dinf addmisison");
 
     }
-
+    // dataStore.saveDataLocally();
     // setEquippedShip();
 
   }

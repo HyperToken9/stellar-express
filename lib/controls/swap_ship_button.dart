@@ -17,6 +17,8 @@ import 'package:star_routes/game/priorities.dart';
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/tappable_region.dart';
 import 'package:star_routes/game/assets.dart';
+import 'package:star_routes/states/delivery_button.dart';
+import 'package:star_routes/states/orbit_button.dart';
 
 import 'package:star_routes/states/swap_ship_button.dart';
 
@@ -24,7 +26,7 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
 
 
   late Planet planetComponent;
-
+  bool effectComplete = false;
   SwapShipButton() : super(priority: 1);
 
   @override
@@ -56,86 +58,72 @@ class SwapShipButton extends SpriteGroupComponent<SwapShipButtonStates> with Has
           size: size,
           onTap: () {
             print("Swapping Ship");
-            for (SpaceShipData shipData in SpaceShipData.spaceShips){
+            effectComplete = false;
+            for (SpaceShipData shipData in SpaceShipData.spaceShips) {
               SpaceShipState? shipState = game.playerData.spaceShipStates[shipData.shipClassName];
-              // print("Ship State: ${shipState}");
-
-              if (shipState == null){
-                continue;
-              }
-              if (!shipState.isOwned){
-                continue;
-              }
-              // print("Equipped: ${shipState.isEquipped}");
-              if (shipState.isEquipped){
+              if (shipState == null || !shipState.isOwned || shipState.isEquipped || shipState.dockedAt != planetComponent.planetData.planetName) {
                 continue;
               }
 
-              if (shipState.dockedAt != planetComponent.planetData.planetName){
-                continue;
-              }
               print("Swapping Ship from ${game.playerData.equippedShip} to ${shipData.shipClassName}");
 
-              // if (game.playerData.getEquippedShipState().isCarryingCargo){
-              //   print("Can not swap ship while carrying cargo");
-              //   return;
-              // }
-              game.userShip.cargo.offsetAngle = - pi / 2;
               game.userShip.cargo.priority = Priorities.aheadPlanet1;
-              /* Land Current Ship */
+
               double orbitRotateByAngle = atan2(game.userShip.position.y - game.userShip.orbitCenter.y,
                   game.userShip.position.x - game.userShip.orbitCenter.x);
 
-              onDeOrbitComplete() {
-
-
-                /* Unequipped Old ship */
+              onDeOrbitComplete() async {
                 SpaceShipState oldShipState = game.playerData.spaceShipStates[game.playerData.equippedShip]!;
                 oldShipState.dockedAt = planetComponent.planetData.planetName;
                 oldShipState.isEquipped = false;
 
-                // game.userShip.position = planetComponent.position;
-
-                /* Equipping New Ship */
                 shipState.dockedAt = "";
                 shipState.isEquipped = true;
-                // game.playerData.equippedShip = shipData.shipClassName;
                 game.userShip.spaceShipData = shipData;
-                game.userShip.loadNewShip(atPosition: planetComponent.position);
+                await game.userShip.loadNewShip(atPosition: planetComponent.position);
 
-                print("Ship Position: ${game.userShip.position}");
+                print("New ship loaded");
 
-                /* Orbit New Ship*/
-                final List<Effect> orbitEffect = OrbitEffects()
-                    .orbitEffect(10, game.userShip.orbitRadius, 0, (){
-                  /* Reset Physics */
+                final List<Effect> orbitEffect = OrbitEffects().orbitEffect(10, game.userShip.orbitRadius, 0, () {
+                  print("Orbit Complete");
                   game.userShip.insertIntoOrbit();
                   game.userShip.applyPhysics = true;
                   game.userShip.offsetAngle = 0;
                   game.userShip.cargo.offsetAngle = 0;
-                  gameRef.userShip.detectShipSwapping(planetComponent);
+                  game.userShip.detectShipSwapping(planetComponent);
+                  game.userShip.detectCargoDelivery(planetComponent);
+                  game.orbitButton.setState(OrbitButtonStates.exitOrbitIdle);
+                  effectComplete = true;
                 }, game.userShip, game.userShip.cargo);
+
+                game.userShip.applyPhysics = false;
+                game.userShip.offsetAngle = -pi / 2;
+                game.userShip.cargo.offsetAngle = -pi / 2;
+
+                // print("Ship Offset Angle: ${game.userShip.offsetAngle}");
+                // print("Cargo Offset Angle: ${game.userShip.cargo.offsetAngle}");
 
                 game.userShip.addAll(orbitEffect);
 
-
               }
-              gameRef.swapShipButton.setState(SwapShipButtonStates.inactive);
-              final List<Effect> deOrbitingEffect = OrbitEffects()
-                  .deOrbitEffect(10, game.userShip.orbitRadius, orbitRotateByAngle,
-                                 onDeOrbitComplete, game.userShip, game.userShip.cargo);
+
+              game.swapShipButton.setState(SwapShipButtonStates.inactive);
+              game.orbitButton.setState(OrbitButtonStates.inactive);
+              game.deliveryButton.setState(DeliveryButtonStates.inactive);
+
+              final List<Effect> deOrbitingEffect = OrbitEffects().deOrbitEffect(10, game.userShip.orbitRadius, orbitRotateByAngle,
+                  onDeOrbitComplete, game.userShip, game.userShip.cargo);
 
               game.userShip.applyPhysics = false;
-              game.userShip.offsetAngle = - pi / 2;
-
-
+              game.userShip.offsetAngle = -pi / 2;
+              game.userShip.cargo.offsetAngle = -pi / 2;
+              // print("is in ship ${game.userShip.cargo.isInUserShip}");
               game.userShip.addAll(deOrbitingEffect);
 
               break;
-
-
-
             }
+
+            print("Heading out");
           },
           onRelease: () {},
           buttonEnabled: isEnabled,

@@ -76,7 +76,7 @@ class SpaceShipData{
       displaySpeed: 3,
       displayManeuverability: 3,
       baseCostValue: 3000,
-      baseSalvageValue: 999500,
+      baseSalvageValue: 4500,
       cargoCapacities: {"Small"},
       cargoTypes: {CargoTypes.parcels, CargoTypes.specialCargo, CargoTypes.timeSensitive},
       spriteName: "small_courier",
@@ -85,8 +85,8 @@ class SpaceShipData{
       maxVelocity: 250,
       linearAcceleration: 1.5,
       maxAngularVelocity: 7,
-      angularAcceleration: 0.002,
-      zoomPercentage: 70.0,
+      angularAcceleration: 0.13,
+      zoomPercentage: 20.0,
     ),
     SpaceShipData(
       shipClassName: "Express Shuttle",
@@ -104,7 +104,7 @@ class SpaceShipData{
       maxVelocity: 700,
       linearAcceleration: 4.0,
       maxAngularVelocity: 10,
-      angularAcceleration: 0.007,
+      angularAcceleration: 0.24,
       // zoomPercentage: 70.0,
     ),
     SpaceShipData(

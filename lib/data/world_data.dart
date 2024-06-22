@@ -13,7 +13,6 @@ class WorldData{
     "Zeloris",
     "Icarion",
     "Targalon",
-    "Noridia",
     "Cryon",
     "Elysara",
     "Pyros",

@@ -62,6 +62,7 @@ class NavigationPointer extends SpriteComponent with HasGameRef<StarRoutes> {
     super.update(dt);
 
     if (targetLocation == null) {
+      opacity = 0;
       return;
     }
 
@@ -97,25 +98,28 @@ class NavigationPointer extends SpriteComponent with HasGameRef<StarRoutes> {
         return;
       }
 
-
-      //TODO: Make a overlay to display user reached destination
     }
 
 
   }
 
 
-  void setNavigationTarget(Vector2? target, String destinationName){
+  void setNavigationTarget(Vector2? target, String destination){
 
     if (target == null ){
       opacity = 0;
       targetLocation = null;
-      distanceText.removeFromParent();
+      if (contains(distanceText)) {
+        distanceText.removeFromParent();
+      }
     }
     else{
       targetLocation = target;
+      destinationName = destination;
       opacity = 1;
-      add(distanceText);
+      if (!contains(distanceText)){
+        add(distanceText);
+      }
     }
 
   }

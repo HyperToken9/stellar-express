@@ -1,6 +1,7 @@
 
 import 'package:flame/components.dart';
 import 'package:star_routes/components/cargo_ship.dart';
+import 'package:star_routes/components/planet.dart';
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
@@ -11,6 +12,7 @@ import 'package:star_routes/game/tappable_region.dart';
 
 import 'package:star_routes/states/delivery_button.dart';
 import 'package:star_routes/states/orbit_button.dart';
+import 'package:star_routes/states/swap_ship_button.dart';
 
 class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with HasGameRef<StarRoutes>{
 
@@ -69,6 +71,7 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
             shipState.isCarryingCargo = false;
             shipState.currentMission = null;
 
+            print("From Delivery");
             game.userShip.loadNewShip();
 
             game.world.add(cargoShip);
@@ -76,6 +79,8 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
           }else{
             /* Move the mission to initiaed */
             game.orbitButton.setState(OrbitButtonStates.inactive);
+            game.swapShipButton.setState(SwapShipButtonStates.inactive);
+
             game.playerData.initiatedMissions.add(missionData!);
             game.playerData.acceptedMissions.remove(missionData!);
 
@@ -104,7 +109,11 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
     game.playerData.getEquippedShipState().isCarryingCargo = true;
     game.playerData.getEquippedShipState().currentMission = missionData!;
     game.orbitButton.setState(OrbitButtonStates.exitOrbitIdle);
-
+    if (game.userShip.orbitingPlanet != null) {
+      // Planet planet = game.userShip.orbitingPlanet=;
+      game.userShip.detectShipSwapping(game.userShip.orbitingPlanet!);
+    }
+    print("From Loading Cargo");
     game.userShip.loadNewShip();
   }
 

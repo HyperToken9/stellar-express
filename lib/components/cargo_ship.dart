@@ -30,8 +30,10 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
   bool toOrbit;
   Function onDeliveryComplete;
 
-  MissionData missionData;
+  double offsetAngle = pi / 2;
 
+  MissionData missionData;
+  late Cargo cargo;
   CargoShip({required this.missionData, required this.toOrbit, required this.onDeliveryComplete}) : super();
 
   @override
@@ -39,7 +41,11 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
     // sprite = await Sprite.load(Assets.cargoShip);
     size = Vector2(560, 184);
     anchor = Anchor.center;
-    add(Cargo(cargoSize: missionData.cargoTypeSizeData.cargoSize, isInUserShip: false));
+
+    cargo = Cargo(cargoSize: missionData.cargoTypeSizeData.cargoSize, isInUserShip: false);
+
+    add(cargo);
+
     if (toOrbit){
       position = gameRef.userShip.orbitCenter;
       priority = 1;
@@ -144,6 +150,16 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
     angle += deltaAngle * 0.05;
 
   }
+
+
+  @override
+  double get angle => super.angle + offsetAngle;
+
+  @override
+  set angle(double newAngle) {
+    super.angle = newAngle - offsetAngle;
+  }
+
 
 
 

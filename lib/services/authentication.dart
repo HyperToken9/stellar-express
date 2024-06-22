@@ -43,6 +43,9 @@ class Authentication {
   // Sign out
   Future<void> signOut() async {
     await _auth.signOut();
+    if (await _googleSignIn.isSignedIn()) {
+      await _googleSignIn.signOut();
+    }
   }
 
   Future<String> getCurrentUser() async {
