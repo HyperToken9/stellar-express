@@ -110,19 +110,23 @@ class HangarSlide extends StatelessWidget {
                       SizedBox(height: calculatedHeight * 0.07),
                       Stack(
                         children: [
-                          TextButton(
-                            style: ButtonStyle(
-                              padding: WidgetStateProperty.all(const EdgeInsets.all(0.0)),
-                              minimumSize: WidgetStateProperty.all<Size>(Size.zero),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            onPressed: () {
-                              shipState.isOwned ? onSell(shipData) : onBuy(shipData);
-                            },
-                            child: Image(
-                              image: AssetImage('assets/images/user_interface/${shipState.isOwned ? "sell_button" : "buy_button"}.png'),
-                              width: availableWidth * 0.66,
-                              fit: BoxFit.contain,
+                          Container(
+                            // color: Colors.red,
+                            child: TextButton(
+                              style: ButtonStyle(
+                                padding: WidgetStateProperty.all(const EdgeInsets.all(0.0)),
+                                minimumSize: WidgetStateProperty.all<Size>(Size.zero),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              onPressed: () {
+                                // print("CLick");
+                                shipState.isOwned ? onSell(shipData) : onBuy(shipData);
+                              },
+                              child: Image(
+                                image: AssetImage('assets/images/user_interface/${shipState.isOwned ? "sell_button" : "buy_button"}.png'),
+                                width: availableWidth * 0.66,
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
                           Positioned(

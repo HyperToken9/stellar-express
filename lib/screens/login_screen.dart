@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:star_routes/game/star_routes.dart';
+import 'package:star_routes/screens/dashboard_screen.dart';
 // import 'package:star_routes/screen_components/button.dart';
 
 // import 'package:star_routes/services/authentication.dart';
@@ -42,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // widget.game.experienceBar.up
     widget.game.overlays.add(MainMenuScreen.id);
+    // widget.game.overlays.add(DashboardScreen.id);
     widget.game.overlays.remove(LoginScreen.id);
 
   }

@@ -30,6 +30,7 @@ class MissionData{
 
   double difficulty;
   int reward;
+  int experiencePoints;
 
   MissionData({
     required this.missionId,
@@ -44,6 +45,7 @@ class MissionData{
 
     required this.difficulty,
     required this.reward,
+    required this.experiencePoints,
   });
 
   static MissionData? makeMission(PlayerData playerData){
@@ -133,7 +135,7 @@ class MissionData{
         cargoItemName: selectedItem.name,
         difficulty: hDifficulty,
         reward: 1000,
-
+        experiencePoints: 100,
       );
 
 
@@ -206,6 +208,19 @@ class MissionData{
     /* Last digit must be 0 */
     maxReward = maxReward ~/ 10 * 10;
 
+    int minExperiencePoints =  max(PlayerData.expRequired(playerData.getPlayerLevel()) * 0.02 ~/ 10 * 10, 1);
+    int maxExperiencePoints = PlayerData.expRequired(playerData.getPlayerLevel()) * 0.1 ~/ 10 * 10;
+
+    // print("Penalty Percentage: $penaltyPercentage");
+    // print("Min exp: $minExperiencePoints");
+    // print("Mex exp: $maxExperiencePoints");
+    /* Given penalty percentage and min & max Exp determine the exp of the mission */
+    int experiencePoints = minExperiencePoints + ((maxExperiencePoints - minExperiencePoints) * penaltyPercentage / 100).toInt();
+
+    /* add a little noise to the exp */
+    // experiencePoints += Random().nextInt(10) - 5;
+
+    sampleMissions[missionIndex].experiencePoints = experiencePoints;
     sampleMissions[missionIndex].reward = maxReward;
     return selectedMission;
 
@@ -232,6 +247,7 @@ class MissionData{
       'cargoItemName': cargoItemName,
       'difficulty': difficulty,
       'reward': reward,
+      'experiencePoints': experiencePoints,
     };
   }
 
@@ -248,6 +264,7 @@ class MissionData{
       cargoItemName: json['cargoItemName'],
       reward: json['reward'],
       difficulty: json['difficulty'],
+      experiencePoints: json['experiencePoints'] ?? 20,
     );
   }
 

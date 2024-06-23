@@ -3,10 +3,14 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 
+import 'package:star_routes/components/ship.dart';
+
+import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/world_data.dart';
+import 'package:star_routes/game/config.dart';
 
 class PlayerData{
 
@@ -33,6 +37,18 @@ class PlayerData{
 
   List<MissionData> availableMissions = [];
 
+  PlayerData(){
+
+    for (SpaceShipData shipData in SpaceShipData.spaceShips){
+      if (!spaceShipStates.containsKey(shipData.shipClassName)){
+        // print("Loading Additionaonals: ${shipData.shipClassName}");
+        spaceShipStates[shipData.shipClassName] = SpaceShipState(isOwned: false, isEquipped: false);
+      }
+    }
+
+  }
+
+
   void loadPlayerData(String playerId){
     /* Assign Player ID */
     this.playerId = playerId;
@@ -46,7 +62,7 @@ class PlayerData{
 
     /* Initializes Mission States*/
     while (availableMissions.length < 2){
-      MissionData? mission = MissionData.sampleMissionByDifficulty(this, 0);
+      MissionData? mission = MissionData.sampleMissionByDifficulty(this, 1);
 
       if (mission != null){
         availableMissions.add(mission);
@@ -69,7 +85,7 @@ class PlayerData{
         return data.shipClassName;
       }
     }
-    assert(false, "No Equipped Ship Found");
+    // assert(false, "No Equipped Ship Found");
     return "";
   }
 
@@ -119,7 +135,7 @@ class PlayerData{
     return '$buffer'.toUpperCase();
   }
 
-  int expRequired(int level) {
+  static int expRequired(int level) {
 
     double xp = 100;
     for (int i = 1; i < level; i++) {
@@ -174,11 +190,12 @@ class PlayerData{
     return xp/ xpRequired;
   }
 
-  bool sellShip(SpaceShipData shipData)
+  bool sellShip(SpaceShipData shipData, void Function(String) displayMessage)
   {
     SpaceShipState shipState = spaceShipStates[shipData.shipClassName]!;
 
     if (shipState.isCarryingCargo){
+      displayMessage("Denied:\nShip is on A Mission");
       return false;
     }
 
@@ -191,14 +208,18 @@ class PlayerData{
     /* Add amount to wallet */
     coin += shipData.baseSalvageValue;
 
+    displayMessage("Ship Sold");
     return true;
 
   }
 
-  bool buyShip(SpaceShipData shipData)
+  bool buyShip(SpaceShipData shipData,
+               void Function(String) displayMessage,
+               Ship userShip)
   {
     SpaceShipState shipState = spaceShipStates[shipData.shipClassName]!;
     if (coin < shipData.baseCostValue){
+      displayMessage("Insufficient Funds");
       return false;
     }
 
@@ -217,15 +238,37 @@ class PlayerData{
       // print("Removing ${state.dockedAt} from possible docked planets");
       possibleDockedPlanets.remove(state.dockedAt);
     }
-    // print("Possible Docked Planets: $possibleDockedPlanets");
+
+    /* Does the player have an equipped ship */
+    String equippedShip = this.equippedShip;
+
+
     /*Pick a random planet from possibleDockedPlanets */
     Random random = Random();
     shipState.dockedAt = possibleDockedPlanets[random.nextInt(possibleDockedPlanets.length)];
 
     shipState.currentMission = null;
 
+    if (equippedShip == ""){
+      // possibleDockedPlanets.remove(spaceShipStates[equippedShip]!.dockedAt);
+      print("No Equipped Ship");
+      PlanetData planetData = WorldData.planets.where((element) => element.planetName == shipState.dockedAt).first;
+      userShip.position = planetData.location * Config.spaceScaleFactor;
+      Vector2 offsetPosition = Vector2.random(random).normalized() * planetData.radius * Config.radiusScaleFactor;
+      userShip.position += offsetPosition;
+
+
+      shipState.isEquipped = true;
+      shipState.dockedAt = "";
+      print("Ship Spawn: $shipSpawnLocation");
+      displayMessage("Ship Purchased\n Parked at ${planetData.planetName}");
+      return true;
+    }
+
     /* Deduct amount from wallet */
     coin -= shipData.baseCostValue;
+
+    displayMessage("Ship Purchased\nDocked at ${shipState.dockedAt}");
 
     return true;
   }

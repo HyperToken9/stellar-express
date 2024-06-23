@@ -61,7 +61,9 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   late ExperienceBar experienceBar;
   late Balance balance;
 
-  String overlayDisplayMessage = "";
+  bool isShowingMessage = false;
+  String overlayDisplayMessage = ""; /* Unused */
+  List<String> messageQueue = <String>[];
 
   bool isDetectingPlanet = false;
   bool usingAsJoyStickController = true;
@@ -154,12 +156,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
       dpad.setState(DPadStates.inactive);
     }
 
-    for (SpaceShipData shipData in SpaceShipData.spaceShips){
-      if (!playerData.spaceShipStates.containsKey(shipData.shipClassName)){
-        // print("Loading Additionaonals: ${shipData.shipClassName}");
-        playerData.spaceShipStates[shipData.shipClassName] = SpaceShipState(isOwned: false, isEquipped: false);
-      }
-    }
+
 
 
     miniMap.setState(false);
@@ -196,6 +193,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
   void setupGame(){
     // print("Setting Up game");
+    print("Spwan Location9: ${playerData.shipSpawnLocation}");
     loadGame();
 
     miniMap.setState(true);
@@ -232,11 +230,14 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
         dpad.setState(DPadStates.idle);
       }
     }
+
     userShip.opacity = 1;
     print("From Setup Game");
     userShip.loadNewShip();
     // playerData.setEquippedShip();
     print("Equipped Ship: ${playerData.equippedShip}");
+    print("Ship Location: ${userShip.position}");
+    print("Spwan Location: ${playerData.shipSpawnLocation}");
 
   }
 
@@ -332,6 +333,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
 
   void displayMessage(String message){
+    overlays.remove(MessageScreen.id);
     overlayDisplayMessage = message;
     overlays.add(MessageScreen.id);
   }
@@ -359,6 +361,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   @override
   void update(double dt) {
     super.update(dt);
+    // print("Is Showing Message: $isShowingMessage");
 
     updateClosestPlanets();
 

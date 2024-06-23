@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flame/components.dart';
 import 'package:hive/hive.dart';
 
-
+import 'package:star_routes/data/space_ship_data.dart';
 import 'package:star_routes/data/mission_data.dart';
 import 'package:star_routes/data/player_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
@@ -41,7 +41,7 @@ class Datastore {
   };
 
   final Map<String, dynamic> overrideCustomData = {
-    // 'coin': 696969,
+    // 'coin': 98,
     // 'totalExperience': 0,
     // 'shipSpawnLocation': [270.0* Config.spaceScaleFactor, -3960.0 * Config.spaceScaleFactor],
     // 'spaceShipStates': {
@@ -106,6 +106,12 @@ class Datastore {
                                     return MapEntry(key, SpaceShipState.fromJson(Map<String, dynamic>.from(value)));
                                   });
 
+    for (SpaceShipData shipData in SpaceShipData.spaceShips){
+      if (!playerData.spaceShipStates.containsKey(shipData.shipClassName)){
+        // print("Loading Additionaonals: ${shipData.shipClassName}");
+        playerData.spaceShipStates[shipData.shipClassName] = SpaceShipState(isOwned: false, isEquipped: false);
+      }
+    }
 
 
     playerData.archivedMissions = (playerDocument['archivedMissions'] ??
@@ -161,14 +167,15 @@ class Datastore {
     await playerDoc.set(playerDocument);
   }
 
-  void saveDataLocally(StarRoutes game) async{
+  Future<void> saveDataLocally(StarRoutes game) async{
 
     /* Save To Document */
     _playerDataToPlayerDocument(game);
     final Box<dynamic> playerDataBox = Hive.box("playerData");
 
     await playerDataBox.put('data', playerDocument);
-    // print("Player Data Saved Locally");
+
+    print("Player Data Saved Locally");
     // print("Saving Ship Spawn Location: ${playerDocument['shipSpawnLocation']}");
 
   }

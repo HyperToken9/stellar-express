@@ -38,6 +38,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 TextButton(
                   onPressed: () {
                     print("Play Game");
+
+                    if (widget.game.playerData.equippedShip == ""){
+                      widget.game.displayMessage("No Ship Owned");
+                      return;
+                    }
+
                     widget.game.resumeEngine();
                     widget.game.overlays.remove(MainMenuScreen.id);
                     widget.game.overlays.add(BlankScreen.id);

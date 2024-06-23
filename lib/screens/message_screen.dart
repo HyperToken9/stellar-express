@@ -26,8 +26,8 @@ class _MessageScreenState extends State<MessageScreen> with SingleTickerProvider
       duration: const Duration(seconds: 1),
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
-
-    showMessage(widget.game.overlayDisplayMessage, const Duration(seconds: 6));
+    widget.game.isShowingMessage = true;
+    showMessage(widget.game.overlayDisplayMessage, const Duration(seconds: 3));
 
   }
 
@@ -43,6 +43,7 @@ class _MessageScreenState extends State<MessageScreen> with SingleTickerProvider
       _controller.reverse().then((_) {
         widget.game.overlayDisplayMessage = '';
         widget.game.overlays.remove(MessageScreen.id);
+        widget.game.isShowingMessage = false;
         // print('Message dismissed');
       });
     });
@@ -51,8 +52,11 @@ class _MessageScreenState extends State<MessageScreen> with SingleTickerProvider
   @override
   void dispose() {
     _controller.dispose();
+    _message = '';
+    print("Trinf to dispose message screen");
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {

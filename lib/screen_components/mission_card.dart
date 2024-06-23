@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:star_routes/data/mission_data.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class MissionCard extends StatelessWidget {
   final MissionData missionData;
@@ -139,6 +140,7 @@ class MissionCard extends StatelessWidget {
                   ),
                 ),
               ),
+              /* Reward */
               Positioned(
                 bottom: calculatedHeight * 0.06,
                 left: 10,
@@ -173,6 +175,39 @@ class MissionCard extends StatelessWidget {
                       width: 20,
                       height: 20,
                     ),
+                    const SizedBox(width: 25),
+                    if (isAccepted)
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: missionData.experiencePoints.toString(),
+                              style: const TextStyle(
+                                fontSize: 17.0,
+                                fontFamily: 'SpaceMono',
+                                color: Color(0xFF141414),
+                                letterSpacing: -0.54,
+                                /*Italics */
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Exp".toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 15.0,
+                                // fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic,
+                                fontFamily: 'SpaceMono',
+                                color: Color(0xFF141414),
+                                letterSpacing: -0.54,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+
+
                   ],
                 ),
               ),

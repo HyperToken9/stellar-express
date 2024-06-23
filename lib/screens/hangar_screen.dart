@@ -23,19 +23,31 @@ class _MainMenuScreenState extends State<HangarScreen> {
 
   void onSell(SpaceShipData shipData) {
     print("Selling Ship");
-    setState(() {
-      widget.game.playerData.sellShip(shipData);
-    });
+    widget.game.playerData.sellShip(
+      shipData,
+      widget.game.displayMessage,
+    );
     widget.game.saveGame();
+
+
+    setState(() {
+
+    });
   }
 
   void onBuy(SpaceShipData shipData) {
-    print("Buying Ship");
     // widget.game.buyShip(shipData);
-    setState(() {
-      widget.game.playerData.buyShip(shipData);
-    });
+    widget.game.playerData.buyShip(
+        shipData,
+        widget.game.displayMessage,
+        widget.game.userShip
+    );
     widget.game.saveGame();
+
+    setState(() {
+
+    });
+
   }
 
   @override
