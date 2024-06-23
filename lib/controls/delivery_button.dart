@@ -6,6 +6,7 @@ import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/space_ship_state.dart';
 
 import 'package:star_routes/game/assets.dart';
+import 'package:star_routes/game/priorities.dart';
 import 'package:star_routes/game/star_routes.dart';
 import 'package:star_routes/game/tappable_region.dart';
 
@@ -54,15 +55,11 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
 
             CargoShip cargoShip = CargoShip(missionData: missionData!, toOrbit: false,
                 onDeliveryComplete: () {
-                  // print("Delivery Complete");
-                  // print("Initiated Missions: ${game.playerData.initiatedMissions}");
-                  game.playerData.initiatedMissions.remove(missionData!);
-                  // print("Initiated Missions: ${game.playerData.initiatedMissions}");
-                  game.playerData.completedMissions.add(missionData!);
-
-                  game.displayMessage("Mission Complete\n +${missionData!.reward} ATH");
-                  /* Add Money to the player */
-                  game.playerData.coin += missionData!.reward;
+                  // game.playerData.initiatedMissions.remove(missionData!);
+                  // game.playerData.completedMissions.add(missionData!);
+                  //
+                  // game.displayMessage("Mission Complete\n +${missionData!.reward} ATH");
+                  // game.playerData.coin += missionData!.reward;
 
                 });
 
@@ -85,7 +82,7 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
 
             CargoShip cargoShip = CargoShip(missionData: missionData!, toOrbit: true,
                                             onDeliveryComplete: onLoadingCargo);
-            cargoShip.size /= 2;
+            // cargoShip.size /= 2;
             game.world.add(cargoShip);
 
           }

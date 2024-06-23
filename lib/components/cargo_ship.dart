@@ -4,8 +4,10 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 
 import 'package:star_routes/components/cargo.dart';
+import 'package:star_routes/components/thrusters.dart';
 
 import 'package:star_routes/effects/orbit_effects.dart';
+import 'package:star_routes/game/priorities.dart';
 
 import 'package:star_routes/game/star_routes.dart';
 
@@ -34,6 +36,7 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
 
   MissionData missionData;
   late Cargo cargo;
+  late Thrusters thrusters;
   CargoShip({required this.missionData, required this.toOrbit, required this.onDeliveryComplete}) : super();
 
   @override
@@ -43,12 +46,15 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
     anchor = Anchor.center;
 
     cargo = Cargo(cargoSize: missionData.cargoTypeSizeData.cargoSize, isInUserShip: false);
+    thrusters = Thrusters(attachedTo: this);
+    thrusters.updateThrusters("Cargo Ship");
 
     add(cargo);
+    add(thrusters);
 
     if (toOrbit){
       position = gameRef.userShip.orbitCenter;
-      priority = 1;
+      priority = 2;
 
       double effectDuration = 10;
 
@@ -59,7 +65,9 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
 
       double rotateBy = estimateShipAngle % (2 * pi) + 180 * degrees2Radians;
 
-
+      // cargo.scale /= 2;
+      // scale /= 2;
+      // thrusters /= 2;
 
       final List<Effect> orbitEffect =
       OrbitEffects().orbitEffect(
@@ -79,12 +87,13 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
 
 
       addAll(orbitEffect);
+
     }else{
       position = gameRef.userShip.position;
       orbitCenter = gameRef.userShip.orbitCenter;
       orbitRadius = gameRef.userShip.orbitRadius;
       angle = gameRef.userShip.angle - pi /2;
-      priority = 4;
+      priority = Priorities.aheadPlanet1;
     }
 
 
@@ -92,7 +101,12 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
 
   @override
   void update(double dt) {
+    // print("Offset Angle: $offsetAngle");
     super.update(dt);
+
+    // print("Position: $position");
+
+    thrusters.forwardThrusters(1);
 
     if (!applyPhysics){
       return;
@@ -147,7 +161,7 @@ class CargoShip extends PositionComponent with HasGameRef<StarRoutes> {
     } else if (deltaAngle < -pi) {
       deltaAngle += 2 * pi;
     }
-    angle += deltaAngle * 0.05;
+    angle += deltaAngle * 0.12;
 
   }
 

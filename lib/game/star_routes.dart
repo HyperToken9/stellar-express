@@ -197,11 +197,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   void setupGame(){
     // print("Setting Up game");
     loadGame();
-    if (usingAsJoyStickController) {
-      joystick.setState(true);
-    }else {
-      dpad.setState(DPadStates.idle);
-    }
+
     miniMap.setState(true);
     navigationPointer.opacity = 1;
     isDetectingPlanet = true;
@@ -230,6 +226,11 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
     }else{
       camera.follow(userShip);
+      if (usingAsJoyStickController) {
+        joystick.setState(true);
+      }else {
+        dpad.setState(DPadStates.idle);
+      }
     }
     userShip.opacity = 1;
     print("From Setup Game");

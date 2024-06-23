@@ -85,7 +85,7 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
     /* Add Hit Box */
     add(RectangleHitbox());
 
-    thrusters = Thrusters();
+    thrusters = Thrusters(attachedTo: this);
     add(thrusters);
 
   }
@@ -189,6 +189,21 @@ class Ship extends SpriteComponent with HasGameRef<StarRoutes>{
       position += linearVelocity * dt;
       angle += angularVelocity * dt;
     }
+
+    /* Trigger Thrusters */
+    // print("Impulse: ${impulse.x}");
+    if (impulse.x > 0){
+      thrusters.forwardThrusters(impulse.x);
+    }else if (impulse.x < 0) {
+      thrusters.backwardThrusters(impulse.x);
+    }
+
+    if (impulse.y > 0){
+      thrusters.rightThrusters(impulse.y);
+    }else if (impulse.y < 0) {
+      thrusters.leftThrusters(impulse.y);
+    }
+
 
 
     /* Clip By Boundary */

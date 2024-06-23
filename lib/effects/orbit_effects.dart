@@ -57,6 +57,8 @@ class OrbitEffects{
     ScaleEffect scaleEffect = ScaleEffect.by(
       Vector2.all(2),
       EffectController(duration: duration),
+      key: target.key,
+
     );
 
     return [moveEffect, spritePriorityEffect];
