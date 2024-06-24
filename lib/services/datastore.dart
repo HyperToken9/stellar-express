@@ -20,7 +20,7 @@ class Datastore {
   final CollectionReference playerCollection = FirebaseFirestore.instance.collection('players');
 
   final Map<String, dynamic> defaultPlayerData = {
-    'coin': 696969,
+    'coin': 0,
     'totalExperience': 0,
     'shipSpawnLocation': [270.0* Config.spaceScaleFactor, -3960.0 * Config.spaceScaleFactor],
     'spaceShipStates': {

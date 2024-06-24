@@ -55,28 +55,12 @@ class PlayerData{
     /* Assign Player ID */
     this.playerId = playerId;
 
-
-    /* Load Player Data from Firebase */
-
-    // dataStore.loadDataFromFireBase(this);
-    // print("Loading Player Data");
-
-
-    /* Initializes Mission States*/
-    while (availableMissions.length < getMissionSlotsAvailable()+ 10){
-      MissionData? mission = MissionData.sampleMissionByDifficulty(this, Random().nextDouble());
-
-      if (mission != null){
-        availableMissions.add(mission);
-        // print("Adding Mission");
-      }
-      // print("Dinf addmisison");
-
-    }
     // dataStore.saveDataLocally();
     // setEquippedShip();
 
   }
+
+
 
   /* Getter function for equipped ship */
   String get equippedShip{
@@ -91,21 +75,6 @@ class PlayerData{
     return "";
   }
 
-  // void setEquippedShip(){
-  //   // print("Setting Equipped Ship");
-  //   for (SpaceShipData data in SpaceShipData.spaceShips){
-  //     SpaceShipState shipState = spaceShipStates[data.shipClassName]!;
-  //
-  //     if (!shipState.isOwned)
-  //     {
-  //       continue;
-  //     }
-  //     if (shipState.isEquipped){
-  //       equippedShip = data.shipClassName;
-  //       return;
-  //     }
-  //   }
-  // }
 
   bool isShipOwned(String shipClassName){
 

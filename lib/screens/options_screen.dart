@@ -92,6 +92,8 @@ class _MainMenuScreenState extends State<OptionsScreen> {
                         onPressed: (){
                           Datastore().resetToDefaultData(widget.game.playerData);
                           widget.game.displayMessage("Player Data Reset");
+                          // widget
+                          widget.game.addMission();
                           widget.game.overlays.remove(OptionsScreen.id);
                           widget.game.overlays.add(MainMenuScreen.id);
 

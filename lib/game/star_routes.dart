@@ -5,10 +5,11 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 
+import 'dart:async' as async;
 
-import 'package:star_routes/data/space_ship_state.dart';
 import 'package:star_routes/data/player_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
+import 'package:star_routes/data/mission_data.dart';
 
 import 'package:star_routes/game/star_world.dart';
 import 'package:star_routes/game/config.dart';
@@ -61,6 +62,8 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   late ExperienceBar experienceBar;
   late Balance balance;
 
+  late async.Timer missionGenerationTimer;
+
   bool isShowingMessage = false;
   String overlayDisplayMessage = ""; /* Unused */
   List<String> messageQueue = <String>[];
@@ -71,6 +74,7 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   List<Planet> closestPlanets = [];
 
   List<Ship> showRoomShips = [];
+
 
   StarRoutes({required this.playerData});
 
@@ -143,7 +147,13 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
     }
 
 
-    // print("Loaded Game");
+    /* Mission Generation Timer */
+    missionGenerationTimer = async.Timer.periodic(
+        const Duration(minutes: 2),
+        (timer) {
+          // print("CALIN tiMES");
+          addMission();
+        });
 
   }
 
@@ -255,6 +265,30 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
 
   }
 
+  void addMission(){
+
+    Random random = Random();
+
+    /* 2 in 3 chance of adding a mission */
+    if (random.nextInt(3) == 0){
+      return;
+    }
+
+    if ((playerData.availableMissions.length
+         + playerData.acceptedMissions.length
+         + playerData.initiatedMissions.length)
+                          < playerData.getMissionSlotsAvailable()){
+      MissionData? mission = MissionData.sampleMissionByDifficulty(
+          playerData, random.nextDouble());
+
+      if (mission != null){
+        displayMessage("New Mission Added");
+        playerData.availableMissions.add(mission);
+        saveGame();
+      }
+
+    }
+  }
 
   void initializePlayerData(String playerId){
 
@@ -374,6 +408,10 @@ class StarRoutes extends FlameGame with HasCollisionDetection{
   }
 
 
-
+  @override
+  void onRemove(){
+    missionGenerationTimer.cancel();
+    super.onRemove();
+  }
 
 }

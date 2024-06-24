@@ -119,7 +119,7 @@ class HangarSlide extends StatelessWidget {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               onPressed: () {
-                                // print("CLick");
+
                                 shipState.isOwned ? onSell(shipData) : onBuy(shipData);
                               },
                               child: Image(
