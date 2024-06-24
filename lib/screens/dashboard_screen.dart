@@ -117,6 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                               availableMissions: availableMissions,
                               onAccept: acceptMissionCallback,
                               onReject: rejectMissionCallback,
+                              playerLevel: widget.game.playerData.getPlayerLevel()
                           ),
                           SpaceShipsPage(
                             spaceShipStates: widget.game.playerData.spaceShipStates,

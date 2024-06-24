@@ -31,8 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_launcher_icons: ^0.9.2
-
+  flutter_launcher_icons: ^0.13.1
   provider: ^6.1.2
   flame: ^1.17.0
   back_button_interceptor: ^7.0.3
@@ -58,6 +57,7 @@ dependencies:
 
 
   collection: any
+
 flutter_icons:
   ios: true
   android: "launcher_icon"

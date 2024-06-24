@@ -1,6 +1,7 @@
 
 import 'dart:math';
 import 'package:collection/collection.dart';
+import 'package:star_routes/data/cargo_types.dart';
 import 'package:star_routes/data/planet_data.dart';
 import 'package:star_routes/data/world_data.dart';
 import 'package:star_routes/data/space_ship_data.dart';
@@ -169,8 +170,9 @@ class MissionData{
     if (sampleMissions.isEmpty){
       return null;
     }
-
+    print("Difficulty: $difficulty");
     int missionIndex = (max(difficulty * sampleMissions.length - 1, 0)).toInt();
+    print("Mission Index: $missionIndex");
     // print("Number of Missions: ${sampleMissions.length}");
     // print("Mission Index: $missionIndex");
     MissionData selectedMission = sampleMissions[missionIndex];
@@ -289,6 +291,9 @@ class MissionData{
     return result;
   }
   String getDisplayBackgroundImagePath(){
+    if (sourcePlanet == ""){
+      return "assets/images/user_interface/mission_cards/locked_slot.png";
+    }
     return "assets/images/user_interface/mission_cards/${cargoCategoryName.toLowerCase().replaceAll(' ', '_')}.png";
   }
 
@@ -326,4 +331,18 @@ class MissionData{
     reward.hashCode;
   }
 
+
+  /* Constructor for blank mission */
+  MissionData.blank() : missionId = 0,
+    sourcePlanet = "",
+    destinationPlanet = "",
+    eligibleShips = [],
+    cargoTypeSizeData = const CargoTypeSizeData(
+                                cargoType: CargoTypes.specialCargo,
+                                cargoSize: "Small"),
+    cargoCategoryName = "",
+    cargoItemName = "",
+    difficulty = 0,
+    reward = 0,
+    experiencePoints = 0;
 }

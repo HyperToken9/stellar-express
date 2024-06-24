@@ -34,14 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
       print("Login Attempt failed");
       return;
     }
-    /*
-      TODO Replace with load data method call
-    */
-
 
     widget.game.initializePlayerData(id);
 
-    // widget.game.experienceBar.up
     widget.game.overlays.add(MainMenuScreen.id);
     // widget.game.overlays.add(DashboardScreen.id);
     widget.game.overlays.remove(LoginScreen.id);

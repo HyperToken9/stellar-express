@@ -37,6 +37,8 @@ class PlayerData{
 
   List<MissionData> availableMissions = [];
 
+  static const List<int> missionSlotUnlockLevels = [5, 20, 50, 100];
+
   PlayerData(){
 
     for (SpaceShipData shipData in SpaceShipData.spaceShips){
@@ -61,8 +63,8 @@ class PlayerData{
 
 
     /* Initializes Mission States*/
-    while (availableMissions.length < 2){
-      MissionData? mission = MissionData.sampleMissionByDifficulty(this, 1);
+    while (availableMissions.length < getMissionSlotsAvailable()+ 10){
+      MissionData? mission = MissionData.sampleMissionByDifficulty(this, Random().nextDouble());
 
       if (mission != null){
         availableMissions.add(mission);
@@ -175,6 +177,20 @@ class PlayerData{
     }
 
     return level;
+  }
+
+  int getMissionSlotsAvailable(){
+    int level = getPlayerLevel();
+    int slots = 1;
+
+    for (int i in missionSlotUnlockLevels){
+      if (level >= i){
+        slots++;
+      }else{
+        break;
+      }
+    }
+    return slots;
   }
 
   double getExperienceLevelProgress(){

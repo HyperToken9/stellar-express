@@ -1,5 +1,3 @@
-
-
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
@@ -18,22 +16,10 @@ import 'package:star_routes/screens/mini_map_screen.dart';
 import 'package:star_routes/screens/message_screen.dart';
 
 import 'package:star_routes/game/star_routes.dart';
-
 import 'package:star_routes/data/player_data.dart';
 
-
-
 void main() async {
-
-  /* Today's Date if more than 25 June 2023 do not open the app */
-  // DateTime today = DateTime.now();
-  // DateTime lastDate = DateTime(2023, 6, 25);
-  // if (today.isAfter(lastDate)){
-  //   return;
-  // }
-
   WidgetsFlutterBinding.ensureInitialized();
-  // TODO: This is very forced, but no time right now
   Flame.device.setPortraitUpOnly();
 
   await Hive.initFlutter();
@@ -46,16 +32,14 @@ void main() async {
   final StarRoutes game = StarRoutes(playerData: playerData);
 
   runApp(
-      MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: GameApp(game: game),
-      )
-      // )GameApp(game: game),
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(game: game),
+    ),
   );
 }
 
 class GameApp extends StatefulWidget {
-
   final StarRoutes game;
 
   const GameApp({super.key, required this.game});
@@ -65,7 +49,6 @@ class GameApp extends StatefulWidget {
 }
 
 class _GameAppState extends State<GameApp> {
-
   @override
   Widget build(BuildContext context) {
     final StarRoutes game = widget.game;
@@ -87,6 +70,43 @@ class _GameAppState extends State<GameApp> {
       },
     );
   }
-
 }
 
+class SplashScreen extends StatefulWidget {
+  final StarRoutes game;
+
+  const SplashScreen({super.key, required this.game});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _initializeGame();
+  }
+
+  Future<void> _initializeGame() async {
+    await widget.game.onLoad();
+    await Future.delayed(const Duration(seconds: 5)); // Delay for 5 seconds
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => GameApp(game: widget.game)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black, // Set your splash screen background color
+      body: Center(
+        child: Image.asset(
+          'assets/images/splash_logo.png',
+          width: 320,
+        ), // Set your splash screen image
+      ),
+    );
+  }
+}

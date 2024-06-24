@@ -60,6 +60,7 @@ class DeliveryButton extends SpriteGroupComponent<DeliveryButtonStates> with Has
                   //
                   // game.displayMessage("Mission Complete\n +${missionData!.reward} ATH");
                   // game.playerData.coin += missionData!.reward;
+                  // game.playerData.totalExperience += missionData!.experiencePoints;
 
                 });
 

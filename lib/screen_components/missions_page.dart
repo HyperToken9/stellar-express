@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:star_routes/data/mission_data.dart';
+import 'package:star_routes/data/player_data.dart';
 import 'package:star_routes/screen_components/mission_card.dart';
 
 class MissionsPage extends StatelessWidget {
@@ -13,12 +14,15 @@ class MissionsPage extends StatelessWidget {
   final void Function(MissionData) onAccept;
   final void Function(MissionData) onReject;
 
+  final int playerLevel;
+
   const MissionsPage({super.key,
                       required this.initiatedMissions,
                       required this.availableMissions,
                       required this.acceptedMissions,
                       required this.onAccept,
                       required this.onReject,
+                      required this.playerLevel,
                     });
 
   @override
@@ -31,7 +35,14 @@ class MissionsPage extends StatelessWidget {
       letterSpacing: -0.96,
     );
 
+    int nextUnlockLevel = 0;
 
+    for (int i in PlayerData.missionSlotUnlockLevels){
+      if (playerLevel < i){
+        nextUnlockLevel = i;
+        break;
+      }
+    }
 
 
     return Padding(
@@ -114,6 +125,21 @@ class MissionsPage extends StatelessWidget {
 
               ],
             ),
+            // const SizedBox(height: 12.0),
+            /*Locked Mission Slots */
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (nextUnlockLevel != 0)
+                  MissionCard(
+                    missionData: MissionData.blank(),
+                    onAccept: (MissionData data) {},
+                    onReject: (MissionData data) {},
+                    isAccepted: false,
+                    unlockLevel: nextUnlockLevel,
+                  ),
+              ],
+            )
           ],
         ),
       ),

@@ -7,20 +7,21 @@ class MissionCard extends StatelessWidget {
   final bool isAccepted;
   final void Function(MissionData) onAccept;
   final void Function(MissionData) onReject;
-
+  final int unlockLevel;
   const MissionCard({
     super.key,
     required this.missionData,
     required this.onAccept,
     required this.onReject,
     required this.isAccepted,
+    this.unlockLevel = 0,
   });
 
   @override
   Widget build(BuildContext context) {
     // Define the ratio of height to width
     const double heightToWidthRatio = 0.3389; // Adjust this ratio as needed
-
+    bool isLocked = missionData.sourcePlanet == "";
     return LayoutBuilder(
       builder: (context, constraints) {
         double availableWidth = constraints.maxWidth;
@@ -39,41 +40,74 @@ class MissionCard extends StatelessWidget {
                   missionData.getDisplayBackgroundImagePath(),
                 ),
               ),
-              Positioned(
-                top: calculatedHeight * 0.03,
-                left: 10,
-                child: SizedBox(
-                  width: availableWidth * 0.70, // Adjust as needed
-                  child: FittedBox(
-                    alignment: Alignment.centerLeft,
-                    fit: BoxFit.scaleDown,
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "${missionData.getDisplayItemName()} ",
-                            style: const TextStyle(
-                              fontSize: 22.0,
-                              fontFamily: 'Audiowide',
-                              color: Color(0xFF191919),
-                              letterSpacing: -0.54,
+              (!isLocked)?
+                Positioned(
+                  top: calculatedHeight * 0.03,
+                  left: 10,
+                  child: SizedBox(
+                    width: availableWidth * 0.70, // Adjust as needed
+                    child: FittedBox(
+                      alignment: Alignment.centerLeft,
+                      fit: BoxFit.scaleDown,
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "${missionData.getDisplayItemName()} ",
+                              style: const TextStyle(
+                                fontSize: 22.0,
+                                fontFamily: 'Audiowide',
+                                color: Color(0xFF191919),
+                                letterSpacing: -0.54,
+                              ),
                             ),
-                          ),
-                          TextSpan(
-                            text: missionData.getDisplayCargoSize(),
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                              fontFamily: 'Audiowide',
-                              color: Color(0xFF7B7B7B),
-                              letterSpacing: -0.74,
+                            TextSpan(
+                              text: missionData.getDisplayCargoSize(),
+                              style: const TextStyle(
+                                fontSize: 15.0,
+                                fontFamily: 'Audiowide',
+                                color: Color(0xFF7B7B7B),
+                                letterSpacing: -0.74,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                ):
+                Positioned(
+                    top: calculatedHeight * 0.10,
+                    left: 10,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Mission Slot".toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 22.0,
+                            fontFamily: 'Audiowide',
+                            color: Color(0xFF191919),
+                            letterSpacing: -0.54,
+                            height: 0,
+                          ),
+                        ),
+                        Text(
+                          "Unlock at level $unlockLevel".toUpperCase(),
+                          textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false),
+                          style: const TextStyle(
+                            fontSize: 17.0,
+                            fontFamily: 'SpaceMono',
+                            fontWeight: FontWeight.bold,
+                            height: -10.0,
+                            color: Color(0xFF505050),
+                            letterSpacing: -0.54,
+                          ),
+                        )
+                      ]
+                    )
                 ),
-              ),
+              if (!isLocked)
               Positioned(
                 top: calculatedHeight * 0.29,
                 left: 10,
@@ -94,6 +128,7 @@ class MissionCard extends StatelessWidget {
                   ),
                 ),
               ),
+              if (!isLocked)
               Positioned(
                 top: calculatedHeight * 0.35,
                 left: 10,
@@ -141,6 +176,7 @@ class MissionCard extends StatelessWidget {
                 ),
               ),
               /* Reward */
+              if (!isLocked)
               Positioned(
                 bottom: calculatedHeight * 0.06,
                 left: 10,
@@ -211,7 +247,7 @@ class MissionCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if (!isAccepted)
+              if (!isAccepted && !isLocked)
                 Positioned(
                   right: 10,
                   bottom: calculatedHeight * 0.06,
